@@ -31,6 +31,10 @@ dependencies:
   fluttertoast: ^7.1.1
 
   permission_handler: ^5.1.0+2
+  #UI
+  responsive_builder: ^0.4.0-nullsafety.1
+
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
