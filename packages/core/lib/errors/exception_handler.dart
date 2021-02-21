@@ -16,7 +16,7 @@ class LogStackTraceExceptionHandler extends ExceptionHandlerBase
 
   @override
   void handle(ExceptionContext context) {
-    if (AppConfig.isDebug && context.rawStackTrace != null) {
+    if (kIsDebug && context.rawStackTrace != null) {
       logger.severe(context.rawStackTrace);
     }
   }

@@ -40,7 +40,7 @@ Future<T> executeWithStopwatch<T>(Future<T> Function() f,
     {bool debugOnly = true,
     int thresholdMilliseconds = 20,
     Function(int t)? overAction}) async {
-  if (!debugOnly || AppConfig.isDebug) {
+  if (!debugOnly || kIsDebug) {
     final Stopwatch sw = Stopwatch();
     sw.start();
     final res = await f();

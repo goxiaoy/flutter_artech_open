@@ -13,7 +13,7 @@ extension JsonExtension on Map<String, dynamic>? {
     }
     final map = this ?? <String, dynamic>{};
     final T ret = func(map);
-    if (AppConfig.isDebug) {
+    if (kIsDebug) {
       //compare and check missing keys
       final retJsonKeys =
           (ret as dynamic).toJson().keys.toList() as List<String>;

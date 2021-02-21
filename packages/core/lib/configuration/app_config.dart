@@ -2,12 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:universal_platform/universal_platform.dart';
 
+//should use const for tree shaking
+const kIsDebug = !kReleaseMode;
+
 class AppConfig {
-  static bool get isDebug => !kReleaseMode;
   bool _isLoaded = false;
   Future<void> init() async {
     String environmentJson = '';
-    if (isDebug) {
+    if (kIsDebug) {
       environmentJson = 'appsettings.development';
     } else {
       environmentJson = 'appsettings.production';
