@@ -4,10 +4,22 @@ import 'package:artech_core/store/kv_store.dart';
 import 'package:hive/hive.dart';
 
 class HiveKVStore extends KVStore with ServiceGetter {
-  HiveKVStore(this.box);
-  final Box box;
+  HiveKVStore(this.boxCreator);
+
+  Box? _box;
+
+  Box get box {
+    if (_box == null) {
+      throw Exception('HiveKVStore not initialized');
+    }
+    return _box!;
+  }
+
+  final Future<Box> Function() boxCreator;
+
   Future init() async {
     await services.initHiveSafely();
+    _box = await boxCreator();
   }
 
   Future unInit() async {

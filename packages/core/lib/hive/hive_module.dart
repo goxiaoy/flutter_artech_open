@@ -18,8 +18,8 @@ class HiveModule extends AppSubModuleBase {
     });
 
     services.registerSingletonAsync<SettingStore>(() async {
-      final box = await Hive.openBox<dynamic>(HiveSettingStore.defaultBoxName);
-      final hiveSettingStore = HiveSettingStore(box);
+      final hiveSettingStore = HiveSettingStore(
+          () => Hive.openBox<dynamic>(HiveSettingStore.defaultBoxName));
       await hiveSettingStore.init();
       return hiveSettingStore;
     }, dependsOn: [HiveReady]);
