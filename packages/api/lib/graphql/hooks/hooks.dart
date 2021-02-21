@@ -24,6 +24,26 @@ AsyncSnapshot<T> useMemoizedWatchQuery<T>(
       keys: [query]);
 }
 
+RefreshableAsyncSnapshot<T> useMemoizedRefreshableWatchQuery<T>(
+    ObservableQuery Function() queryBuilder,
+    T Function(QueryResult) deserializeFunc,
+    [List<Object> keys = const <Object>[]]) {
+  final ObservableQuery query = useMemoized(queryBuilder, keys);
+  useEffect(
+    () {
+      //query 变化 或者dispose的时候会调用close
+      return () {
+        _logger.fine('Close watch query');
+        query.close();
+      };
+    },
+    [query],
+  );
+  return RefreshableAsyncSnapshot<T>(
+      useMemoizedStream(() => query.stream.map(deserializeFunc), keys: [query]),
+      () => query.refetch());
+}
+
 AsyncSnapshot<T> useMemoizedQuery<T>(
     Future<QueryResult> Function() queryBuilder,
     T Function(QueryResult) deserializeFunc,
