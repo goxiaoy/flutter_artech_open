@@ -68,8 +68,9 @@ extension GraphQLErrorExtension on GraphQLError {
 
   List<String> tryGetCode() {
     List<String> res = <String>[];
-    if (extensions['exception']['data'] != null) {
-      try {
+
+    try {
+      if (extensions['exception']['data'] != null) {
         //extensions.exception.data.data.messages[].id
         final List<dynamic> m =
             extensions['exception']['data']['data'] as List<dynamic>;
@@ -79,17 +80,18 @@ extension GraphQLErrorExtension on GraphQLError {
           return value;
         }).map((dynamic p) => p['id'].toString());
         res = List<String>.from(codes);
-      } catch (e, s) {
-        _logger.severe(e, e, s);
       }
+    } catch (e, s) {
+      _logger.severe(e, e, s);
     }
+
     return res;
   }
 
   List<String> tryGetMessage() {
     List<String> res = [];
-    if (extensions['exception']['data'] != null) {
-      try {
+    try {
+      if (extensions['exception']['data'] != null) {
         //extensions.exception.data.data.messages.message
         final List<dynamic> m =
             extensions['exception']['data']['data'] as List<dynamic>;
@@ -99,10 +101,11 @@ extension GraphQLErrorExtension on GraphQLError {
           return value;
         }).map((dynamic p) => p['message'].toString());
         res = List<String>.from(messages);
-      } catch (e, s) {
-        _logger.severe(e, e, s);
       }
+    } catch (e, s) {
+      _logger.severe(e, e, s);
     }
+
     return res;
   }
 }
