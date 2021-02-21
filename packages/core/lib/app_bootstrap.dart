@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:artech_core/app_module_base.dart';
 import 'package:artech_core/utils/utils.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 
@@ -14,7 +15,7 @@ class AppBootstrap {
   final _logger = Logger('AppBootstrap');
 
   final List<AppModuleMixin> listOfAllModules = [];
-  final HashSet<String> setOfAllModules = HashSet();
+  final HashSet<Type> setOfAllModules = HashSet();
 
   void _init() {
     //init base on main module
@@ -22,23 +23,23 @@ class AppBootstrap {
     _visitNode([], mainModule);
   }
 
-  void _visitNode(List<String> parentList, AppModuleMixin node) {
+  void _visitNode(List<Type> parentList, AppModuleMixin node) {
     if (node.dependentOn.isNotEmpty) {
-      parentList.add(node.name);
+      parentList.add(node.runtimeType);
       for (final element in node.dependentOn) {
-        if (parentList.contains(element.name)) {
+        if (parentList.contains(element)) {
           throw Exception(
               "Circular dependency detected in ${parentList.join("=>")}");
         }
-        if (!setOfAllModules.contains(element.name)) {
+        if (!setOfAllModules.contains(element)) {
           _visitNode(parentList, element);
         }
       }
-      parentList.remove(node.name);
+      parentList.remove(node.runtimeType);
     }
     listOfAllModules.add(node);
-    setOfAllModules.add(node.name);
-    _logger.info('[${node.name}]');
+    setOfAllModules.add(node.runtimeType);
+    _logger.info('[$node]');
   }
 
   Future<void> load() async {
@@ -64,7 +65,7 @@ class AppBootstrap {
     for (final m in listOfAllModules) {
       await executeWithStopwatch(() => m.beforeApplicationInit(),
           overAction: (t) {
-        _logger.warning('${m.name} beforeApplicationInit cost $t milliseconds');
+        _logger.warning('${m} beforeApplicationInit cost $t milliseconds');
       });
     }
   }
@@ -76,7 +77,7 @@ class AppBootstrap {
     for (final m in listOfAllModules) {
       await executeWithStopwatch(() => m.onApplicationInit(), overAction: (t) {
         _logger.warning(
-          '${m.name} onApplicationInit cost $t milliseconds',
+          '${m} onApplicationInit cost $t milliseconds',
         );
       });
     }
@@ -85,8 +86,36 @@ class AppBootstrap {
   Future<void> executeApplicationQuit() async {
     for (final m in listOfAllModules.reversed) {
       await executeWithStopwatch(() => m.onApplicationQuit(), overAction: (t) {
-        _logger.warning('"${m.name} onApplicationQuit cost $t milliseconds');
+        _logger.warning('"${m} onApplicationQuit cost $t milliseconds');
       });
+    }
+  }
+}
+
+@immutable
+class ModuleApp extends StatelessWidget {
+  const ModuleApp({Key? key, required this.bootstrap}) : super(key: key);
+
+  final AppBootstrap bootstrap;
+  List<AppModuleMixin> get listOfAllModules => bootstrap.listOfAllModules;
+
+  @override
+  Widget build(BuildContext context) {
+    if (listOfAllModules.isEmpty) {
+      return Container(
+        child: const Text('No modules'),
+      );
+    } else {
+      return _buildWidget(0);
+    }
+  }
+
+  Widget _buildWidget(int index) {
+    if (index == listOfAllModules.length - 1) {
+      return (listOfAllModules[index] as AppMainModuleBase).bootstrap;
+    } else {
+      return (listOfAllModules[index] as AppSubModuleBase)
+          .build(_buildWidget(index + 1));
     }
   }
 }

@@ -2,7 +2,11 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
 //App底层代码模块
-abstract class AppSubModuleBase with AppModuleMixin {}
+abstract class AppSubModuleBase with AppModuleMixin {
+  Widget build(Widget child) {
+    return child;
+  }
+}
 
 //App最上层
 abstract class AppMainModuleBase with AppModuleMixin {
@@ -12,8 +16,6 @@ abstract class AppMainModuleBase with AppModuleMixin {
 mixin AppModuleMixin {
   //dependent on modules will be loaded before this module
   late final List<AppModuleMixin> dependentOn = [];
-
-  late final name = runtimeType.toString();
 
   GetIt get services => GetIt.I;
 
@@ -31,16 +33,16 @@ mixin AppModuleMixin {
   //dispose services here
   Future<void> onApplicationQuit() async {}
 
-  void onModuleEnter() {
-    services.pushNewScope(scopeName: name, dispose: disposeScopeServices);
-    configureScopeServices();
-  }
+  // void onModuleEnter() {
+  //   services.pushNewScope(scopeName: name, dispose: disposeScopeServices);
+  //   configureScopeServices();
+  // }
 
   //register get_it scope services here
   void configureScopeServices() {}
   void disposeScopeServices() {}
 
-  void onModuleExit() {
-    services.popScopesTill(name);
-  }
+  // void onModuleExit() {
+  //   services.popScopesTill(name);
+  // }
 }
