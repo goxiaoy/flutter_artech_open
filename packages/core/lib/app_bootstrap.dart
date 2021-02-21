@@ -39,7 +39,7 @@ class AppBootstrap {
     }
     listOfAllModules.add(node);
     setOfAllModules.add(node.runtimeType);
-    _logger.info('[$node]');
+    _logger.info('[${node.runtimeType}]');
   }
 
   Future<void> load() async {
@@ -65,7 +65,8 @@ class AppBootstrap {
     for (final m in listOfAllModules) {
       await executeWithStopwatch(() => m.beforeApplicationInit(),
           overAction: (t) {
-        _logger.warning('${m} beforeApplicationInit cost $t milliseconds');
+        _logger.warning(
+            '${m.runtimeType} beforeApplicationInit cost $t milliseconds');
       });
     }
   }
@@ -77,7 +78,7 @@ class AppBootstrap {
     for (final m in listOfAllModules) {
       await executeWithStopwatch(() => m.onApplicationInit(), overAction: (t) {
         _logger.warning(
-          '${m} onApplicationInit cost $t milliseconds',
+          '${m.runtimeType} onApplicationInit cost $t milliseconds',
         );
       });
     }
@@ -86,7 +87,8 @@ class AppBootstrap {
   Future<void> executeApplicationQuit() async {
     for (final m in listOfAllModules.reversed) {
       await executeWithStopwatch(() => m.onApplicationQuit(), overAction: (t) {
-        _logger.warning('"${m} onApplicationQuit cost $t milliseconds');
+        _logger.warning(
+            '"${m.runtimeType} onApplicationQuit cost $t milliseconds');
       });
     }
   }
