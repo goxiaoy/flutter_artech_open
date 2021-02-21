@@ -27,11 +27,11 @@ class AppBootstrap {
     if (node.dependentOn.isNotEmpty) {
       parentList.add(node.runtimeType);
       for (final element in node.dependentOn) {
-        if (parentList.contains(element)) {
+        if (parentList.contains(element.runtimeType)) {
           throw Exception(
               "Circular dependency detected in ${parentList.join("=>")}");
         }
-        if (!setOfAllModules.contains(element)) {
+        if (!setOfAllModules.contains(element.runtimeType)) {
           _visitNode(parentList, element);
         }
       }
