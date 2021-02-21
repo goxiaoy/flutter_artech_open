@@ -25,8 +25,8 @@ AsyncSnapshot<T> useMemoizedStream<T>(
 
 /// Stores an [AsyncSnapshot] as well as a reference to a function [refresh]
 /// that should re-call the future that was used to generate the [snapshot].
-class MemoizedRefreshableAsyncSnapshot<T> {
-  const MemoizedRefreshableAsyncSnapshot(this.snapshot, this.refresh);
+class RefreshableAsyncSnapshot<T> {
+  const RefreshableAsyncSnapshot(this.snapshot, this.refresh);
   final AsyncSnapshot<T> snapshot;
   final Function() refresh;
 }
@@ -44,7 +44,7 @@ class MemoizedRefreshableAsyncSnapshot<T> {
 /// See also:
 ///   * [useFuture], the hook responsible for getting the future.
 ///   * [useMemoized], the hook responsible for the memoization.
-MemoizedRefreshableAsyncSnapshot<T> useMemoizedRefreshableFuture<T>(
+RefreshableAsyncSnapshot<T> useMemoizedRefreshableFuture<T>(
   Future<T> Function() future, {
   List<Object> keys = const [],
   T? initialData,
@@ -59,5 +59,5 @@ MemoizedRefreshableAsyncSnapshot<T> useMemoizedRefreshableFuture<T>(
   );
 
   void refreshMe() => refresh.value++;
-  return MemoizedRefreshableAsyncSnapshot<T>(result, refreshMe);
+  return RefreshableAsyncSnapshot<T>(result, refreshMe);
 }
