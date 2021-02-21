@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:artech_core/app_module_base.dart';
 import 'package:artech_core/errors/exception_handler.dart';
 import 'package:artech_core/errors/exception_processor.dart';
+import 'package:artech_core/l10n/localization_option.dart';
 import 'package:artech_core/security/app_persistent_security_storage.dart';
 import 'package:artech_core/security/persistent_security_storage.dart';
 import 'package:artech_core/security/web_persistent_security_storage.dart';
@@ -20,6 +23,12 @@ class CoreModule extends AppSubModuleBase {
 
   @override
   void configureServices() {
+    configTyped<LocalizationOption>(
+        creator: () => LocalizationOption()
+          ..support.addAll([
+            const Locale('en'), // English
+            const Locale('zh')
+          ]));
     configTyped<ExceptionProcessor>(
         creator: () =>
             ExceptionProcessor()..addHandler(LogStackTraceExceptionHandler()));

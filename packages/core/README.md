@@ -14,5 +14,21 @@ https://github.com/Baseflow/flutter-permission-handler
 因为绝大部分类都会被注入成单例，如果不是Lazy的类，后面会Module替换掉的话会不起作用
 
 
+## Localization
+
+- Basic: https://flutter.dev/docs/development/accessibility-and-localization/internationalization
+- Config and use:
+```
+    configTyped<LocalizationOption>(
+        creator: () => LocalizationOption()
+          ..support.addAll([
+            const Locale('en'), // English
+            const Locale('zh')
+          ]));
+```
+```
+    servicegetter.get<LocalizationOption>
+```
+
 
 

@@ -11,6 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   #common
   rxdart: ^0.25.0
   get_it: ^5.0.3
@@ -46,8 +48,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
-  # To add assets to your package, add an assets section, like this:
+  generate: true
+    # To add assets to your package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
