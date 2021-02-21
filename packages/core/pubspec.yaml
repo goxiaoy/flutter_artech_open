@@ -11,29 +11,31 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^0.5.12+4
-  universal_html: ^1.2.3
-  flutter_secure_storage: ^3.3.5
+  #common
   rxdart: ^0.25.0
   get_it: ^5.0.3
   logging: ^0.11.4
   collection: ^1.15.0
+  intl: ^0.17.0
+  #config
   global_configuration: ^1.6.0
   #timezone
   flutter_native_timezone: ^1.0.4
   timezone: ^0.5.6
 
+  #storage
+  shared_preferences: ^0.5.12+4
+  universal_html: ^1.2.3
+  flutter_secure_storage: ^3.3.5
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
 
-  flutter_hooks: ^0.15.0
-  fluttertoast: ^7.1.1
-
+  #permission
   permission_handler: ^5.1.0+2
   #UI
   responsive_builder: ^0.4.0-nullsafety.1
-
-  intl: ^0.17.0
+  fluttertoast: ^7.1.1
+  flutter_hooks: ^0.15.0
 
 dev_dependencies:
   flutter_test:
