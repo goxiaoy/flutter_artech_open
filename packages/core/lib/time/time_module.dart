@@ -1,9 +1,9 @@
 import 'package:artech_core/app_module_base.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:logging/logging.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:universal_platform/universal_platform.dart';
 
 late Future loadTimeFuture;
 
@@ -27,7 +27,7 @@ class TimeModule extends AppSubModuleBase {
   Future<void> setCurrentZoneTime() async {
     try {
       tz.initializeTimeZones(); // There is no checking, call this anyway
-      if (!UniversalPlatform.isWeb) {
+      if (!kIsWeb) {
         //TODO GMT can not be used https://github.com/pinkfish/flutter_native_timezone/issues/15
         final String currentTimeZone =
             await FlutterNativeTimezone.getLocalTimezone();

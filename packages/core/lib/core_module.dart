@@ -8,8 +8,8 @@ import 'package:artech_core/settings/memory_setting_store.dart';
 import 'package:artech_core/settings/setting_store.dart';
 import 'package:artech_core/time/time.dart';
 import 'package:artech_core/ui/ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
-import 'package:universal_platform/universal_platform.dart';
 
 import 'configuration/app_config.dart';
 import 'services_extension.dart';
@@ -29,7 +29,7 @@ class CoreModule extends AppSubModuleBase {
     });
 
     services.registerLazySingleton<PersistentSecurityStorageBase>(() {
-      if (!UniversalPlatform.isWeb) {
+      if (!kIsWeb) {
         return AppPersistentSecurityStorage();
       } else {
         return WebPersistentSecurityStorage();
