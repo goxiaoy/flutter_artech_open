@@ -19,7 +19,7 @@ class AppConfig {
         .loadFromAsset('appsettings')
         .then((p) => p.loadFromAsset(environmentJson));
 
-    if (Platform.isAndroid) {
+    if (!kIsWeb && Platform.isAndroid) {
       //android simulator will be 10.0.2.2
       for (final keyValue in GlobalConfiguration().appConfig.entries) {
         if (keyValue.value is String) {
