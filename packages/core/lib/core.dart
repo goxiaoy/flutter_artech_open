@@ -1,5 +1,7 @@
 library core;
 
+import 'package:get_it/get_it.dart';
+
 export 'package:artech_core/app_bootstrap.dart';
 export 'package:artech_core/app_module_base.dart';
 export 'package:artech_core/configuration/app_config.dart';
@@ -19,3 +21,5 @@ export 'package:artech_core/ui/ui.dart';
 export 'package:artech_core/utils/utils.dart';
 
 export 'services_extension.dart';
+
+final serviceLocator = GetIt.I;
