@@ -5,21 +5,55 @@ import 'package:json_annotation/json_annotation.dart' as j;
 //turn artemis client codes into graphql_flutter client codes
 extension GraphQLQueryExtension<T, U extends j.JsonSerializable>
     on GraphQLQuery<T, U> {
-  QueryOptions toQueryOption() {
+  QueryOptions toQueryOption(
+      {Duration pullInterval = Duration.zero,
+      bool fetchResults = true,
+      FetchPolicy fetchPolicy,
+      ErrorPolicy errorPolicy,
+      CacheRereadPolicy cacheRereadPolicy}) {
     return QueryOptions(
-        document: document,
-        operationName: operationName,
-        variables: getVariablesMap());
+      document: document,
+      operationName: operationName,
+      variables: getVariablesMap(),
+      pollInterval: pullInterval,
+      fetchPolicy: fetchPolicy,
+      errorPolicy: errorPolicy,
+      cacheRereadPolicy: cacheRereadPolicy,
+    );
   }
 
   WatchQueryOptions toWatchQuery(
-      {Duration pullInterval = Duration.zero, bool fetchResults = true}) {
+      {Duration pullInterval = Duration.zero,
+      bool fetchResults = true,
+      FetchPolicy fetchPolicy,
+      ErrorPolicy errorPolicy,
+      CacheRereadPolicy cacheRereadPolicy}) {
     return WatchQueryOptions(
         document: document,
         operationName: operationName,
         variables: getVariablesMap(),
         pollInterval: pullInterval,
         fetchResults: true,
+        fetchPolicy: fetchPolicy,
+        errorPolicy: errorPolicy,
+        cacheRereadPolicy: cacheRereadPolicy,
+        eagerlyFetchResults: true);
+  }
+
+  WatchQueryOptions toNetworkOnlyWatchQuery(
+      {Duration pullInterval = Duration.zero,
+      bool fetchResults = true,
+      ErrorPolicy errorPolicy,
+      CacheRereadPolicy cacheRereadPolicy}) {
+    return WatchQueryOptions(
+        document: document,
+        operationName: operationName,
+        variables: getVariablesMap(),
+        pollInterval: pullInterval,
+        fetchResults: true,
+        fetchPolicy: FetchPolicy.networkOnly,
+        errorPolicy: errorPolicy,
+        cacheRereadPolicy: cacheRereadPolicy,
         eagerlyFetchResults: true);
   }
 }
