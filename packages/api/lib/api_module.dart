@@ -1,10 +1,13 @@
 import 'package:artech_core/core.dart';
 import 'package:artech_core/hive/hive.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hive/hive.dart';
 
 import 'exception_handlers.dart';
 import 'graphql/graphql.dart';
+import 'health/health.dart';
+import 'ui/health_provider.dart';
 
 class ApiModule extends AppSubModuleBase with HasSelfLoggerTyped<ApiModule> {
   @override
@@ -22,6 +25,16 @@ class ApiModule extends AppSubModuleBase with HasSelfLoggerTyped<ApiModule> {
       await Hive.openBox<dynamic>(HiveStore.defaultBoxName);
       return ApiStoreReady();
     }, dependsOn: [HiveReady]);
+
+    configTyped<HealthCheckOption>(creator: () => HealthCheckOption());
+
+    // services.registerSingleton<HealthCheckEndpoint>(
+    //     ClientSelfHealthCheckEndpoint());
+  }
+
+  @override
+  Widget build(Widget child) {
+    return HealthProvider(child: child);
   }
 }
 

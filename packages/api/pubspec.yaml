@@ -13,11 +13,11 @@ dependencies:
     sdk: flutter
   dio: ^3.0.10
   web_socket_channel: ^1.2.0
-
+  connectivity: ^2.0.2
   #grapqhQL
   equatable: ^1.2.5
   json_serializable: ^3.5.0
-  graphql_flutter: ^4.0.0
+  graphql_flutter: ^4.0.2-beta.1
   artemis: ^6.13.1-beta.1
   artech_core:
     path: ../core
