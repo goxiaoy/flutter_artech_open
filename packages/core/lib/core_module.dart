@@ -12,6 +12,7 @@ import 'package:artech_core/settings/setting_store.dart';
 import 'package:artech_core/time/time.dart';
 import 'package:artech_core/ui/ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
 
 import 'configuration/app_config.dart';
@@ -26,8 +27,15 @@ class CoreModule extends AppSubModuleBase {
     configTyped<LocalizationOption>(
         creator: () => LocalizationOption()
           ..support.addAll([
-            const Locale('en'), // English
-            const Locale('zh')
+            SettingLocale(
+                locale: const Locale('en'),
+                textBuilder: (_) => 'English'), // English
+            SettingLocale(locale: const Locale('zh'), textBuilder: (_) => '中文'),
+          ])
+          ..delegates.addAll([
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
           ]));
     configTyped<ExceptionProcessor>(
         creator: () =>
