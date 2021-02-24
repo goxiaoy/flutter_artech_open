@@ -111,13 +111,13 @@ class MenuItem {
       {this.priority = 0,
       this.widget,
       this.widget2,
-      String Function()? label}) {
-    this.label = label ?? () => name;
+      String Function(BuildContext context)? label}) {
+    this.label = label ?? (_) => name;
   }
   final String name;
   final Map<String, dynamic> extra = <String, dynamic>{};
 
-  late final String Function() label;
+  late final String Function(BuildContext context) label;
 
   final WidgetBuilder? widget;
   final WidgetBuilder? widget2;
