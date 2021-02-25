@@ -24,22 +24,18 @@ class AppBootstrap {
   }
 
   void _visitNode(List<Type> parentList, AppModuleMixin node) {
-    if (node.dependentOn.isNotEmpty) {
-      parentList.add(node.runtimeType);
-      for (final element in node.dependentOn) {
-        if (parentList.contains(element.runtimeType)) {
-          throw Exception(
-              "Circular dependency detected in ${parentList.join("=>")}");
-        }
-        if (!setOfAllModules.contains(element.runtimeType)) {
-          _visitNode(parentList, element);
-        }
+    dfs<AppModuleMixin, Type>(node, (n) => n.runtimeType, (n) => n.dependentOn,
+        (node, parents) {
+      if (parents.any((element) => element.runtimeType == node.runtimeType)) {
+        throw Exception("Circular dependency detected in ${[
+          ...parentList.map((e) => e.runtimeType),
+          node.runtimeType
+        ].join("=>")}");
       }
-      parentList.remove(node.runtimeType);
-    }
-    listOfAllModules.add(node);
-    setOfAllModules.add(node.runtimeType);
-    _logger.info('[${node.runtimeType}]');
+      listOfAllModules.add(node);
+      setOfAllModules.add(node.runtimeType);
+      _logger.info('[${node.runtimeType}]');
+    });
   }
 
   Future<void> load() async {

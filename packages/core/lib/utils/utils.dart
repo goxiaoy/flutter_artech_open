@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:artech_core/configuration/app_config.dart';
 
 export 'package:artech_core/utils/json_extension.dart';
@@ -62,4 +64,37 @@ extension IterableExtension<T> on Iterable<T> {
       index = index + 1;
     }
   }
+}
+
+///dfs access node
+void dfs<T, TKey>(
+  T node,
+  TKey Function(T node) keyAccessor,
+  Iterable<T> Function(T node) childrenAccessor,
+  void Function(T node, List<T> parents) access,
+) {
+  return _dfsWithParent(
+      node, keyAccessor, childrenAccessor, access, HashSet<TKey>(), <T>[]);
+}
+
+void _dfsWithParent<T, TKey>(
+    T node,
+    TKey Function(T node) keyAccessor,
+    Iterable<T> Function(T node) childrenAccessor,
+    void Function(T node, List<T> parents) access,
+    HashSet<TKey> accessed,
+    List<T> parents) {
+  final children = childrenAccessor(node);
+  if (children.isNotEmpty) {
+    parents.add(node);
+    for (final child in children) {
+      if (!accessed.contains(keyAccessor(child))) {
+        _dfsWithParent(
+            child, keyAccessor, childrenAccessor, access, accessed, parents);
+      }
+    }
+    parents.remove(node);
+  }
+  access(node, parents);
+  accessed.add(keyAccessor(node));
 }

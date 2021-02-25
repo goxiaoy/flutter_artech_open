@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+export 'dev/module_visualization.dart';
 export 'dialogs.dart';
 export 'hex_color.dart';
 export 'menu/menu.dart';
