@@ -2,19 +2,29 @@ import 'package:artech_core/app_module_base.dart';
 import 'package:artech_core/core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:graphview/GraphView.dart';
 
-@immutable
-class ModuleVisualization extends HookWidget {
-  ModuleVisualization({Key? key, required this.mainModule}) : super(key: key);
+class ModuleVisualization extends StatefulWidget {
+  const ModuleVisualization({Key? key, required this.mainModule})
+      : super(key: key);
   final AppMainModuleBase mainModule;
+  @override
+  State<StatefulWidget> createState() => _ModuleVisualizationState();
+}
+
+class _ModuleVisualizationState extends State<ModuleVisualization> {
+  AppMainModuleBase get mainModule => widget.mainModule;
   SugiyamaConfiguration builder = SugiyamaConfiguration();
+
+  late Graph g;
+  @override
+  void initState() {
+    super.initState();
+    g = _buildGraph();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final g = useMemoized(() => _buildGraph());
-    final state = useState(true);
     return SafeArea(
         child: Scaffold(
             body: Column(
@@ -29,7 +39,7 @@ class ModuleVisualization extends HookWidget {
                 decoration: const InputDecoration(labelText: "Node Separation"),
                 onChanged: (text) {
                   builder.nodeSeparation = int.tryParse(text) ?? 100;
-                  state.value = !state.value;
+                  setState(() {});
                 },
               ),
             ),
@@ -41,7 +51,7 @@ class ModuleVisualization extends HookWidget {
                     const InputDecoration(labelText: "Level Separation"),
                 onChanged: (text) {
                   builder.levelSeparation = int.tryParse(text) ?? 100;
-                  state.value = !state.value;
+                  setState(() {});
                 },
               ),
             ),
@@ -52,7 +62,7 @@ class ModuleVisualization extends HookWidget {
                 decoration: const InputDecoration(labelText: "Orientation"),
                 onChanged: (text) {
                   builder.orientation = int.tryParse(text) ?? 100;
-                  state.value = !state.value;
+                  setState(() {});
                 },
               ),
             ),
