@@ -1,5 +1,11 @@
+import 'dart:async';
+
+import 'package:artech_core/settings/setting_store.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logging/logging.dart';
+
+final Logger _logger = Logger('Hooks');
 
 AsyncSnapshot<T> useMemoizedFuture<T>(
   Future<T> create(), {
@@ -58,6 +64,31 @@ RefreshableAsyncSnapshot<T> useMemoizedRefreshableFuture<T>(
     preserveState: preserveState,
   );
 
-  void refreshMe() => refresh.value++;
-  return RefreshableAsyncSnapshot<T>(result, refreshMe);
+  void refreshFunc() => refresh.value++;
+  return RefreshableAsyncSnapshot<T>(result, refreshFunc);
+}
+
+T? useWatchSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
+  final res = useState<T?>(defaultValue);
+  useMemoizedFuture(() => uss
+          .get<T>(key, defaultValue: defaultValue)
+          .then((value) => res.value = value)
+          .catchError((Object e) {
+        _logger.severe(e, e);
+      }));
+
+  late StreamSubscription ss;
+  useEffect(() {
+    ss = uss.watch(key: key).listen((event) {
+      if (event.isDelete) {
+        res.value = null;
+      } else {
+        res.value = event.value as T;
+      }
+    });
+    return () {
+      ss.cancel();
+    };
+  });
+  return res.value;
 }
