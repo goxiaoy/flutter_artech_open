@@ -98,3 +98,9 @@ void _dfsWithParent<T, TKey>(
   access(node, parents);
   accessed.add(keyAccessor(node));
 }
+
+extension BoolParsing on String? {
+  bool? parseBool() {
+    return this == null ? null : this!.toLowerCase() == 'true';
+  }
+}
