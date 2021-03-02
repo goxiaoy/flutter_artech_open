@@ -12,9 +12,14 @@ AsyncSnapshot<T> useMemoizedWatchQuery<T>(
   final ObservableQuery query = useMemoized(queryBuilder, keys);
   useEffect(
     () {
+      final subs = query.stream.listen((event) {
+        //This is a hack to trigger query immediately. Prevent QueryResultSource.loading state
+        _logger.fine('Load from ${event.source.toString()}, ${event.data}');
+      });
       //query 变化 或者dispose的时候会调用close
       return () {
         _logger.fine('Close watch query');
+        subs.cancel();
         query.close();
       };
     },

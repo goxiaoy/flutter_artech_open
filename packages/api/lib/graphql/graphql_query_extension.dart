@@ -10,13 +10,15 @@ extension GraphQLQueryExtension<T, U extends j.JsonSerializable>
       bool fetchResults = true,
       FetchPolicy fetchPolicy,
       ErrorPolicy errorPolicy,
+      bool networkOnly,
       CacheRereadPolicy cacheRereadPolicy}) {
     return QueryOptions(
       document: document,
       operationName: operationName,
       variables: getVariablesMap(),
       pollInterval: pullInterval,
-      fetchPolicy: fetchPolicy,
+      fetchPolicy:
+          fetchPolicy ?? (networkOnly == true ? FetchPolicy.networkOnly : null),
       errorPolicy: errorPolicy,
       cacheRereadPolicy: cacheRereadPolicy,
     );
@@ -27,6 +29,7 @@ extension GraphQLQueryExtension<T, U extends j.JsonSerializable>
       bool fetchResults = true,
       FetchPolicy fetchPolicy,
       ErrorPolicy errorPolicy,
+      bool networkOnly,
       CacheRereadPolicy cacheRereadPolicy}) {
     return WatchQueryOptions(
         document: document,
@@ -34,7 +37,8 @@ extension GraphQLQueryExtension<T, U extends j.JsonSerializable>
         variables: getVariablesMap(),
         pollInterval: pullInterval,
         fetchResults: true,
-        fetchPolicy: fetchPolicy,
+        fetchPolicy: fetchPolicy ??
+            (networkOnly == true ? FetchPolicy.networkOnly : null),
         errorPolicy: errorPolicy,
         cacheRereadPolicy: cacheRereadPolicy,
         eagerlyFetchResults: true);
