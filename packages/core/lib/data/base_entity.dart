@@ -10,6 +10,17 @@ abstract class BaseStringEntity {
   String toString() {
     return '${runtimeType.toString()}/$id';
   }
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is BaseStringEntity) {
+      return other.id == id;
+    }
+    return false;
+  }
 }
 
 abstract class BaseEntity<T> {
