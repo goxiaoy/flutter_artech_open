@@ -36,7 +36,7 @@ dependencies:
   permission_handler: ^5.1.0+2
   #UI
   responsive_builder: ^0.4.0-nullsafety.1
-  fluttertoast: ^7.1.1
+  fluttertoast: ^7.1.8
   flutter_hooks: ^0.15.0
   graphview: ^0.6.7
   package_info: 0.4.3+4
