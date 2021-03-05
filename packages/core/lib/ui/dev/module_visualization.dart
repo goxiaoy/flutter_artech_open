@@ -36,7 +36,7 @@ class _ModuleVisualizationState extends State<ModuleVisualization> {
               width: 100,
               child: TextFormField(
                 initialValue: builder.nodeSeparation.toString(),
-                decoration: const InputDecoration(labelText: "Node Separation"),
+                decoration: const InputDecoration(labelText: 'Node Separation'),
                 onChanged: (text) {
                   builder.nodeSeparation = int.tryParse(text) ?? 100;
                   setState(() {});
@@ -48,7 +48,7 @@ class _ModuleVisualizationState extends State<ModuleVisualization> {
               child: TextFormField(
                 initialValue: builder.levelSeparation.toString(),
                 decoration:
-                    const InputDecoration(labelText: "Level Separation"),
+                    const InputDecoration(labelText: 'Level Separation'),
                 onChanged: (text) {
                   builder.levelSeparation = int.tryParse(text) ?? 100;
                   setState(() {});
@@ -59,7 +59,7 @@ class _ModuleVisualizationState extends State<ModuleVisualization> {
               width: 100,
               child: TextFormField(
                 initialValue: builder.orientation.toString(),
-                decoration: const InputDecoration(labelText: "Orientation"),
+                decoration: const InputDecoration(labelText: 'Orientation'),
                 onChanged: (text) {
                   builder.orientation = int.tryParse(text) ?? 100;
                   setState(() {});
