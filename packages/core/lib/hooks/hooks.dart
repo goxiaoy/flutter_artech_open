@@ -7,19 +7,19 @@ import 'package:logging/logging.dart';
 
 final Logger _logger = Logger('Hooks');
 
-AsyncSnapshot<T> useMemoizedFuture<T>(
-  Future<T> create(), {
+AsyncSnapshot<T?> useMemoizedFuture<T>(
+  Future<T?> create(), {
   List<Object> keys = const [],
   T? initialData,
   bool preserveState = true,
 }) {
   final future = useMemoized(create, keys);
-  return useFuture(future,
+  return useFuture<T?>(future,
       initialData: initialData, preserveState: preserveState);
 }
 
-AsyncSnapshot<T> useMemoizedStream<T>(
-  Stream<T> create(), {
+AsyncSnapshot<T?> useMemoizedStream<T>(
+  Stream<T?> create(), {
   List<Object> keys = const [],
   T? initialData,
   bool preserveState = true,
@@ -50,8 +50,8 @@ class RefreshableAsyncSnapshot<T> {
 /// See also:
 ///   * [useFuture], the hook responsible for getting the future.
 ///   * [useMemoized], the hook responsible for the memoization.
-RefreshableAsyncSnapshot<T> useMemoizedRefreshableFuture<T>(
-  Future<T> Function() future, {
+RefreshableAsyncSnapshot<T?> useMemoizedRefreshableFuture<T>(
+  Future<T?> Function() future, {
   List<Object> keys = const [],
   T? initialData,
   bool preserveState = true,
@@ -65,7 +65,7 @@ RefreshableAsyncSnapshot<T> useMemoizedRefreshableFuture<T>(
   );
 
   void refreshFunc() => refresh.value++;
-  return RefreshableAsyncSnapshot<T>(result, refreshFunc);
+  return RefreshableAsyncSnapshot<T?>(result, refreshFunc);
 }
 
 T? useWatchSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {

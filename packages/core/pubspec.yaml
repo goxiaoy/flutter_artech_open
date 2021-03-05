@@ -14,9 +14,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   #common
-  rxdart: ^0.25.0
-  get_it: ^5.0.3
   logging: ^0.11.4
+  rxdart: ^0.26.0
+  get_it: ^6.0.0
   collection: ^1.15.0
   intl: ^0.17.0
   #config
@@ -27,19 +27,19 @@ dependencies:
 
   #storage
   shared_preferences: ^0.5.12+4
-  universal_html: ^1.2.3
-  flutter_secure_storage: ^3.3.5
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
+  universal_html: ^1.2.4
+  flutter_secure_storage: ^4.0.0
 
   #permission
   permission_handler: ^5.1.0+2
   #UI
   responsive_builder: ^0.4.0-nullsafety.1
-  fluttertoast: ^7.1.8
-  flutter_hooks: ^0.15.0
+  fluttertoast: ^8.0.1-nullsafety.0
+  flutter_hooks: ^0.16.0
   graphview: ^0.6.7
-  package_info: 0.4.3+4
+  package_info: ^2.0.0
 
 dev_dependencies:
   flutter_test:

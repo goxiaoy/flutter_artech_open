@@ -11,7 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dio: ^3.0.10
   web_socket_channel: ^1.2.0
   connectivity: ^2.0.2
   #grapqhQL
@@ -26,7 +25,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 dependency_overrides:
-  rxdart: ^0.25.0
+  rxdart: ^0.26.0
 
 
 # For information on the generic Dart part of this file, see the
