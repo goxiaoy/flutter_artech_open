@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logging/logging.dart';
 
+typedef LocalMessageFunc = String Function(BuildContext context);
+
 void showMessageSnackBar(BuildContext context,
     {String message = '',
     Duration duration = const Duration(seconds: 2),
@@ -14,15 +16,15 @@ void showMessageSnackBar(BuildContext context,
   ));
 }
 
-
-Future<bool> showToast(String message,
+Future<bool> showToastContext(LocalMessageFunc messageFunc,
     {MessageType type = MessageType.success,
-      double iconsSize = 100.0,
-      double fontSize = 16.0,
-      bool shortMessage = true,
-      Color textColor = Colors.white}) async {
-  ArgumentError.checkNotNull(message);
-
+    double iconsSize = 100.0,
+    double fontSize = 16.0,
+    bool shortMessage = true,
+    Color textColor = Colors.white}) async {
+  ArgumentError.checkNotNull(messageFunc);
+  ArgumentError.checkNotNull(FToast().context);
+  final message = messageFunc(FToast().context!);
   if (FToast().context == null) {
     return await Fluttertoast.showToast(
         msg: message,
@@ -47,26 +49,45 @@ Future<bool> showToast(String message,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if(type == MessageType.success)
-                Icon(Icons.check_circle_outlined, color: textColor,
-                  size: iconsSize,),
-              if(type == MessageType.error)
-                Icon(Icons.error_outline_rounded, color: textColor,
-                    size: iconsSize),
-              if(type == MessageType.warn)
-                Icon(Icons.warning_amber_outlined, color: textColor,
-                    size: iconsSize),
-              if(type != MessageType.message)
+              if (type == MessageType.success)
+                Icon(
+                  Icons.check_circle_outlined,
+                  color: textColor,
+                  size: iconsSize,
+                ),
+              if (type == MessageType.error)
+                Icon(Icons.error_outline_rounded,
+                    color: textColor, size: iconsSize),
+              if (type == MessageType.warn)
+                Icon(Icons.warning_amber_outlined,
+                    color: textColor, size: iconsSize),
+              if (type != MessageType.message)
                 const SizedBox(
                   height: 12.0,
                 ),
-              Text(message,
-                style: TextStyle(color: textColor, fontSize: fontSize),),
+              Text(
+                message,
+                style: TextStyle(color: textColor, fontSize: fontSize),
+              ),
             ],
           ),
         ));
     return Future.value(true);
   }
+}
+
+Future<bool> showToast(String message,
+    {MessageType type = MessageType.success,
+    double iconsSize = 100.0,
+    double fontSize = 16.0,
+    bool shortMessage = true,
+    Color textColor = Colors.white}) async {
+  return await showToastContext((_) => message,
+      type: type,
+      iconsSize: iconsSize,
+      fontSize: fontSize,
+      shortMessage: shortMessage,
+      textColor: textColor);
 }
 
 enum MessageType {
@@ -94,4 +115,3 @@ extension MessageTypeExtension on MessageType {
     }
   }
 }
-
