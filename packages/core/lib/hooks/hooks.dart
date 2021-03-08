@@ -68,10 +68,20 @@ RefreshableAsyncSnapshot<T?> useMemoizedRefreshableFuture<T>(
   return RefreshableAsyncSnapshot<T?>(result, refreshFunc);
 }
 
+T? useSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
+  final s = useMemoizedFuture(() => uss
+          .get<T?>(key, defaultValue: defaultValue)
+          .catchError((Object e, StackTrace stackTrace) {
+        _logger.severe(e, e, stackTrace);
+        throw e;
+      }));
+  return s.data;
+}
+
 T? useWatchSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
   final res = useState<T?>(defaultValue);
   useMemoizedFuture(() => uss
-          .get<T>(key, defaultValue: defaultValue)
+          .get<T?>(key, defaultValue: defaultValue)
           .then((value) => res.value = value)
           .catchError((Object e) {
         _logger.severe(e, e);
