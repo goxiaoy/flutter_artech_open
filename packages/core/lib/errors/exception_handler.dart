@@ -17,7 +17,8 @@ class LogStackTraceExceptionHandler extends ExceptionHandlerBase
   @override
   void handle(ExceptionContext context) {
     if (kIsDebug && context.rawStackTrace != null) {
-      logger.severe(context.rawStackTrace);
+      logger.severe(context.errors.map((e) => e.toString()).join('\n'),
+          context.latestError, context.rawStackTrace);
     }
   }
 }
