@@ -9,7 +9,7 @@ final Logger _logger = Logger('Hooks');
 
 AsyncSnapshot<T?> useMemoizedFuture<T>(
   Future<T?> create(), {
-  List<Object> keys = const [],
+  List<Object?> keys = const [],
   T? initialData,
   bool preserveState = true,
 }) {
@@ -20,7 +20,7 @@ AsyncSnapshot<T?> useMemoizedFuture<T>(
 
 AsyncSnapshot<T?> useMemoizedStream<T>(
   Stream<T?> create(), {
-  List<Object> keys = const [],
+  List<Object?> keys = const [],
   T? initialData,
   bool preserveState = true,
 }) {
@@ -52,7 +52,7 @@ class RefreshableAsyncSnapshot<T> {
 ///   * [useMemoized], the hook responsible for the memoization.
 RefreshableAsyncSnapshot<T?> useMemoizedRefreshableFuture<T>(
   Future<T?> Function() future, {
-  List<Object> keys = const [],
+  List<Object?> keys = const [],
   T? initialData,
   bool preserveState = true,
 }) {
@@ -74,21 +74,17 @@ T? useSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
           .catchError((Object e, StackTrace stackTrace) {
         _logger.severe(e, e, stackTrace);
         throw e;
-      }));
+      }),keys: [uss,key,defaultValue]);
   return s.data;
 }
 
 T? useWatchSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
   final res = useState<T?>(defaultValue);
-  useMemoizedFuture(() => uss
-          .get<T?>(key, defaultValue: defaultValue)
-          .then((value) => res.value = value)
-          .catchError((Object e) {
-        _logger.severe(e, e);
-      }));
 
   late StreamSubscription ss;
   useEffect(() {
+    //clear previous state
+    res.value = defaultValue;
     ss = uss.watch(key: key).listen((event) {
       if (event.isDelete) {
         res.value = null;
@@ -99,6 +95,12 @@ T? useWatchSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
     return () {
       ss.cancel();
     };
-  });
+  },[uss,key]);
+  useMemoizedFuture(() => uss
+      .get<T?>(key, defaultValue: defaultValue)
+      .then((value) => res.value = value)
+      .catchError((Object e) {
+    _logger.severe(e, e);
+  }),keys: [uss,key,defaultValue]);
   return res.value;
 }
