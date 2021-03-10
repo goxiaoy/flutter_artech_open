@@ -30,9 +30,9 @@ class DateTimeParser {
   }
 
   static String toGraphQlDateTime(DateTime dateTime) {
-    if (!dateTime.isUtc) {
-      _logger.warning('Server date time is not isUtc ${dateTime.toString()}');
-    }
+    // if (!dateTime.isUtc) {
+    //   _logger.warning('Server date time is not isUtc ${dateTime.toString()}');
+    // }
     final tz.TZDateTime tzDateTime = tz.TZDateTime.from(dateTime, tz.local);
     return tzDateTime.toUtc().toIso8601String();
   }
