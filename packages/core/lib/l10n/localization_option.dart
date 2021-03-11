@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 
 class LocalizationOption {
   static const settingKey = 'app.locale.languageCode';
+  //default locale
+  Locale? defaultLocale;
   final Set<SettingLocale> support = <SettingLocale>{};
   final Set<LocalizationsDelegate> delegates = <LocalizationsDelegate>{};
 }
