@@ -22,7 +22,7 @@ dependencies:
   #config
   global_configuration: ^1.6.0
   #timezone
-  flutter_native_timezone: ^1.0.4
+  flutter_native_timezone: ^1.0.10
   timezone: ^0.5.6
 
   #storage
