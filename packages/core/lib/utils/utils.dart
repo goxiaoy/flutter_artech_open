@@ -1,6 +1,8 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:artech_core/configuration/app_config.dart';
+import 'package:path_provider/path_provider.dart';
 
 export 'package:artech_core/utils/json_extension.dart';
 
@@ -102,5 +104,23 @@ void _dfsWithParent<T, TKey>(
 extension BoolParsing on String? {
   bool? parseBool() {
     return this == null ? null : this!.toLowerCase() == 'true';
+  }
+}
+
+Future<String> createFolderInAppDocDir(String folderName) async {
+//Get this App Document Directory
+  final Directory _appDocDir = await getApplicationDocumentsDirectory();
+//App Document Directory + folder name
+  final Directory _appDocDirFolder =
+      Directory('${_appDocDir.path}/$folderName/');
+
+  if (_appDocDirFolder.existsSync()) {
+    //if folder already exists return path
+    return _appDocDirFolder.path;
+  } else {
+    //if folder not exists create folder and then return its path
+    final Directory _appDocDirNewFolder =
+        await _appDocDirFolder.create(recursive: true);
+    return _appDocDirNewFolder.path;
   }
 }
