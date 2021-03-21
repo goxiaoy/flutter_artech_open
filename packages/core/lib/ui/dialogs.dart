@@ -16,7 +16,7 @@ void showMessageSnackBar(BuildContext context,
   ));
 }
 
-Future<bool> showToastContext(LocalMessageFunc messageFunc,
+Future<bool?> showToastContext(LocalMessageFunc messageFunc,
     {MessageType type = MessageType.success,
     double iconsSize = 100.0,
     double fontSize = 16.0,
@@ -76,7 +76,7 @@ Future<bool> showToastContext(LocalMessageFunc messageFunc,
   }
 }
 
-Future<bool> showToast(String message,
+Future<bool?> showToast(String message,
     {MessageType type = MessageType.success,
     double iconsSize = 100.0,
     double fontSize = 16.0,
