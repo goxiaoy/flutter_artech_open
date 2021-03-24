@@ -39,53 +39,55 @@ class AppBootstrap {
   }
 
   Future<void> load() async {
-    await executeBeforeApplicationInit();
-    configureAllServices();
-    await executeApplicationInit();
+    await executeWithStopwatch(() async => await executeBeforeApplicationInit(),
+        name: 'executeBeforeApplicationInit');
+    // await executeBeforeApplicationInit();
+    await executeWithStopwatch(() async => await configureAllServices(),
+        name: 'configureAllServices');
+    await executeWithStopwatch(() async => await executeApplicationInit(),
+        name: 'executeApplicationInit');
+    // await executeApplicationInit();
   }
 
-  void configureAllServices() {
+  Future<void> configureAllServices() async {
     GetIt.I.allowReassignment = true;
     for (final element in listOfAllModules) {
-      element.preConfigureServices();
+      await executeWithStopwatch(() => element.preConfigureServices(),
+          name: '${element.runtimeType} preConfigureServices');
+      //element.preConfigureServices();
     }
     for (final element in listOfAllModules) {
-      element.configureServices();
+      await executeWithStopwatch(() => element.configureServices(),
+          name: '${element.runtimeType} configureServices');
+      //element.configureServices();
     }
     for (final element in listOfAllModules) {
-      element.postConfigureServices();
+      await executeWithStopwatch(() => element.postConfigureServices(),
+          name: '${element.runtimeType} postConfigureServices');
+      //element.postConfigureServices();
     }
   }
 
   Future<void> executeBeforeApplicationInit() async {
     for (final m in listOfAllModules) {
       await executeWithStopwatch(() => m.beforeApplicationInit(),
-          overAction: (t) {
-        _logger.warning(
-            '${m.runtimeType} beforeApplicationInit cost $t milliseconds');
-      });
+          name: '${m.runtimeType} beforeApplicationInit');
     }
   }
 
   Future<void> executeApplicationInit() async {
-    await executeWithStopwatch(() => GetIt.I.allReady(), overAction: (t) {
-      _logger.warning('Injector cost $t milliseconds');
-    });
+    await executeWithStopwatch(() => GetIt.I.allReady(),
+        name: 'Injector Ready');
     for (final m in listOfAllModules) {
-      await executeWithStopwatch(() => m.onApplicationInit(), overAction: (t) {
-        _logger.warning(
-          '${m.runtimeType} onApplicationInit cost $t milliseconds',
-        );
-      });
+      await executeWithStopwatch(() => m.onApplicationInit(),
+          name: '${m.runtimeType} onApplicationInit');
     }
   }
 
   Future<void> executeApplicationQuit() async {
     for (final m in listOfAllModules.reversed) {
-      await executeWithStopwatch(() => m.onApplicationQuit(), overAction: (t) {
-        _logger.warning(
-            '"${m.runtimeType} onApplicationQuit cost $t milliseconds');
-      });
+      await executeWithStopwatch(() => m.onApplicationQuit(),
+          name: '${m.runtimeType} onApplicationQuit');
     }
   }
 }

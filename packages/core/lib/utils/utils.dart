@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:collection';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:artech_core/configuration/app_config.dart';
+import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
 export 'package:artech_core/utils/json_extension.dart';
@@ -40,21 +43,31 @@ Future<T?> getOrAsync<T>(GetFactoryAsync<T> cache, GetFactoryAsync<T> creator,
   return createValue;
 }
 
-Future<T> executeWithStopwatch<T>(Future<T> Function() f,
+final _timeLogger = Logger('ProfileStopwatch');
+Future<T> executeWithStopwatch<T>(FutureOr<T> Function() f,
     {bool debugOnly = true,
+    String name = '',
     int thresholdMilliseconds = 20,
     Function(int t)? overAction}) async {
   if (!debugOnly || kIsDebug) {
     final Stopwatch sw = Stopwatch();
     sw.start();
+    Timeline.startSync(name);
     final res = await f();
+    Timeline.finishSync();
     sw.stop();
     if (sw.elapsedMilliseconds > thresholdMilliseconds) {
+      _timeLogger.warning('Execute $name cost: ${sw.elapsedMilliseconds}');
       overAction?.call(sw.elapsedMilliseconds);
+    } else {
+      _timeLogger.fine('Execute $name cost: ${sw.elapsedMilliseconds}');
     }
     return res;
   } else {
-    return await f();
+    Timeline.startSync(name);
+    final res = await f();
+    Timeline.finishSync();
+    return res;
   }
 }
 

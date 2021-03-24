@@ -67,14 +67,17 @@ class CoreModule extends AppSubModuleBase {
     final appConfig = services.get<AppConfig>();
     final level = appConfig.getValue<String?>('logging.level');
     //init logging
-    Logger.root.level = convertFromString(level);
+    final configLevel = convertFromString(level);
+    if (configLevel != null) {
+      Logger.root.level = configLevel;
+    }
   }
 
-  Level convertFromString(String? level, {Level? l}) {
-    var logLevel = l ?? Level.INFO;
+  Level? convertFromString(String? level, {Level? l}) {
     if (level == null) {
-      return logLevel;
+      return null;
     }
+    var logLevel = l ?? Level.INFO;
 
     switch (level.toUpperCase()) {
       case 'ALL':
