@@ -9,6 +9,9 @@ class LocalizationOption {
   Locale? defaultLocale;
   final Set<SettingLocale> support = <SettingLocale>{};
   final Set<LocalizationsDelegate> delegates = <LocalizationsDelegate>{};
+
+  Iterable<LocalizationsDelegate> get reversedDelegates =>
+      [...delegates].reversed;
 }
 
 @immutable
