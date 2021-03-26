@@ -10,7 +10,7 @@ class ExceptionProcessor {
     _handler.add(handler);
   }
 
-  Object process(Object e, StackTrace stackTrace) {
+  Object process(Object e, StackTrace? stackTrace) {
     final context = ExceptionContext(this, e, stackTrace);
     processContext(context);
     return context.finalException;

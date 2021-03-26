@@ -14,6 +14,7 @@ import 'package:artech_core/ui/ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
+import 'package:artech_core/ui/navigation_service.dart';
 
 import 'configuration/app_config.dart';
 import 'services_extension.dart';
@@ -57,6 +58,8 @@ class CoreModule extends AppSubModuleBase {
       await res.init();
       return res;
     });
+
+    services.registerLazySingleton(() => NavigationService());
 
     configTyped<MenuOption>(
         creator: () => MenuOption().addGroup(MenuGroup(mainMenuName)));
