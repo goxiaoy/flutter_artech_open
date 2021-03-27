@@ -21,6 +21,7 @@ export 'package:artech_core/time/date_time_extension.dart';
 export 'package:artech_core/ui/ui.dart';
 export 'package:artech_core/utils/utils.dart';
 export 'package:artech_core/ui/navigation_service.dart';
+export 'package:artech_core/data/gender.dart';
 
 export 'services_extension.dart';
 
