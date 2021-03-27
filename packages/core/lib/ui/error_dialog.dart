@@ -10,19 +10,21 @@ class ErrorDialog {
   static void showErrorDialog(
       BuildContext context, String title, dynamic error) {
     // TODO: Implementation
-    showDialog<void>(context: context, builder: (_) {
-      return AlertDialog(
-        title: Text(title),
-        content: Text(error.toString()),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel')),
-        ],
-      );
-    });
+    Future<void>.delayed(Duration.zero).then((value) => showDialog<void>(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(error.toString()),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel')),
+            ],
+          );
+        }));
   }
   //   ArgumentError.checkNotNull(context);
   //   ArgumentError.checkNotNull(title);
