@@ -10,7 +10,7 @@ export 'package:artech_core/data/data.dart';
 export 'package:artech_core/errors/errors.dart';
 export 'package:artech_core/hooks/hooks.dart';
 export 'package:artech_core/l10n/localization_option.dart';
-export 'package:artech_core/l10n/multiple_localization.dart';
+export 'package:multiple_localization/multiple_localization.dart';
 export 'package:artech_core/logging/logger_mixin.dart';
 export 'package:artech_core/security/persistent_security_storage.dart';
 export 'package:artech_core/service_getter_mixin.dart';
