@@ -1,6 +1,6 @@
+import 'package:artech_core/core.dart';
 import 'package:artech_core/settings/setting_store.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 mixin MixinSettingState<T extends StatefulWidget> on State<T> {
   @protected
@@ -18,5 +18,5 @@ mixin MixinSettingState<T extends StatefulWidget> on State<T> {
     });
   }
 
-  SettingStore get settingStore => GetIt.I.get<SettingStore>();
+  SettingStore get settingStore => serviceLocator.get<SettingStore>();
 }

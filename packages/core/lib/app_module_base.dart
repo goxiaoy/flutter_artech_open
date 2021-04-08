@@ -1,3 +1,4 @@
+import 'package:artech_core/core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
@@ -17,7 +18,7 @@ mixin AppModuleMixin {
   //dependent on modules will be loaded before this module
   late final List<AppModuleMixin> dependentOn = [];
 
-  GetIt get services => GetIt.I;
+  GetIt get services => serviceLocator;
 
   void preConfigureServices() {}
 
