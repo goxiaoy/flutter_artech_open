@@ -112,10 +112,23 @@ class ModuleApp extends StatelessWidget {
 
   Widget _buildWidget(int index) {
     if (index == listOfAllModules.length - 1) {
-      return (listOfAllModules[index] as AppMainModuleBase).bootstrap;
+      return (listOfAllModules[index] as AppMainModuleBase)
+          .bootstrap((context, child) {
+        return _buildInnerWidget(index, context, child);
+      });
     } else {
       return (listOfAllModules[index] as AppSubModuleBase)
           .build(_buildWidget(index + 1));
+    }
+  }
+
+  Widget _buildInnerWidget(int index, BuildContext context, Widget? child) {
+    if (index == 0) {
+      //build
+      return listOfAllModules[index].innerBuilder()(context, child);
+    } else {
+      return listOfAllModules[index].innerBuilder()(
+          context, _buildInnerWidget(index - 1, context, child));
     }
   }
 }

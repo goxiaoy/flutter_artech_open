@@ -11,7 +11,7 @@ abstract class AppSubModuleBase with AppModuleMixin {
 
 //App最上层
 abstract class AppMainModuleBase with AppModuleMixin {
-  late final Widget bootstrap;
+  late Widget Function(TransitionBuilder innerBuilder) bootstrap;
 }
 
 mixin AppModuleMixin {
@@ -46,4 +46,10 @@ mixin AppModuleMixin {
   // void onModuleExit() {
   //   services.popScopesTill(name);
   // }
+  TransitionBuilder innerBuilder() {
+    return (context, child) {
+      assert(child != null);
+      return child!;
+    };
+  }
 }
