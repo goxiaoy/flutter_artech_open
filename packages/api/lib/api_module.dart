@@ -1,3 +1,4 @@
+import 'package:artech_api/api.dart';
 import 'package:artech_core/core.dart';
 import 'package:artech_core/hive/hive.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,7 +21,7 @@ class ApiModule extends AppSubModuleBase with HasSelfLoggerTyped<ApiModule> {
       p.addHandler(ServerExceptionHandler());
       p.addHandler(OperationExceptionHandler());
     });
-
+    configTyped<DioOptions>(creator: ()=>DioOptions()..interceptors.add(AuthInterceptor()));
     services.registerSingletonAsync(() async {
       await Hive.openBox<dynamic>(HiveStore.defaultBoxName);
       return ApiStoreReady();
