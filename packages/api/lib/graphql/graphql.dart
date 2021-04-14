@@ -6,6 +6,8 @@ export 'package:artech_api/graphql/graphql_query_extension.dart';
 export 'package:artech_api/graphql/hooks/hooks.dart';
 export 'package:artech_api/graphql/remote_repository_base.dart';
 
+export 'disable_auth_entry.dart';
+
 class ServerExceptionHandler implements ExceptionHandlerBase {
   @override
   bool canHandle(Object exception) {

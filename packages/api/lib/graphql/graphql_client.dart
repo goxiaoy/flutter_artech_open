@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:artech_api/api.dart';
 import 'package:artech_core/core.dart';
 import 'package:artemis/client.dart' show ArtemisClient;
 import 'package:flutter/material.dart';
@@ -8,14 +9,14 @@ import 'package:gql_link/gql_link.dart' as gql_link;
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:http/http.dart' as http;
 
-
-Future<String> _getFromTokenManager() async{
-  final token=await serviceLocator.get<TokenManager>().get();
+Future<String> _getFromTokenManager() async {
+  final token = await serviceLocator.get<TokenManager>().get();
   return token?.token;
 }
 
 class AuthenticatedClient extends http.BaseClient {
-  AuthenticatedClient({this.getTokenFromStorage = _getFromTokenManager}) : super();
+  AuthenticatedClient({this.getTokenFromStorage = _getFromTokenManager})
+      : super();
   final http.Client _inner = http.Client();
 
   final Future<String> Function() getTokenFromStorage;
@@ -100,6 +101,11 @@ class _MyAuthLink extends AuthLink {
     FutureOr<String> Function() getToken,
   ) =>
       (Request request) async {
+        //check if need auth
+        final disableAuth = request.context.entry<DisableAuthEntry>();
+        if (disableAuth != null) {
+          return request;
+        }
         final token = await getToken();
         if (token != null) {
           return request.updateContextEntry<HttpLinkHeaders>(
