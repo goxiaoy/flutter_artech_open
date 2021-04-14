@@ -12,7 +12,9 @@ import 'package:artech_core/settings/setting_store.dart';
 import 'package:artech_core/time/time.dart';
 import 'package:artech_core/ui/navigation_service.dart';
 import 'package:artech_core/ui/ui.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
 
@@ -128,5 +130,12 @@ class CoreModule extends AppSubModuleBase {
         throw ArgumentError.value(level, 'Level should be one of ');
     }
     return logLevel;
+  }
+
+  @override
+  TransitionBuilder innerBuilder() {
+    return (context, child) {
+      return EasyLoading.init()(context, child);
+    };
   }
 }

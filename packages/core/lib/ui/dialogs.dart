@@ -1,5 +1,6 @@
+import 'package:artech_core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:logging/logging.dart';
 
 typedef LocalMessageFunc = String Function(BuildContext context);
@@ -16,67 +17,46 @@ void showMessageSnackBar(BuildContext context,
   ));
 }
 
-Future<bool?> showToastContext(LocalMessageFunc messageFunc,
+Future<void> showToastContext(LocalMessageFunc messageFunc,
     {MessageType type = MessageType.success,
     double iconsSize = 100.0,
     double fontSize = 16.0,
     bool shortMessage = true,
     Color textColor = Colors.white}) async {
   ArgumentError.checkNotNull(messageFunc);
-  ArgumentError.checkNotNull(FToast().context);
-  final message = messageFunc(FToast().context!);
-  if (FToast().context == null) {
-    return await Fluttertoast.showToast(
-        msg: message,
-        toastLength: shortMessage ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: type.toColor(),
-        textColor: textColor,
-        fontSize: fontSize);
-  } else {
-    FToast().showToast(
-        toastDuration: shortMessage
-            ? const Duration(seconds: 2)
-            : const Duration(seconds: 5),
-        gravity: ToastGravity.CENTER,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.0),
-            color: type.toColor(),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (type == MessageType.success)
-                Icon(
-                  Icons.check_circle_outlined,
-                  color: textColor,
-                  size: iconsSize,
-                ),
-              if (type == MessageType.error)
-                Icon(Icons.error_outline_rounded,
-                    color: textColor, size: iconsSize),
-              if (type == MessageType.warn)
-                Icon(Icons.warning_amber_outlined,
-                    color: textColor, size: iconsSize),
-              if (type != MessageType.message)
-                const SizedBox(
-                  height: 12.0,
-                ),
-              Text(
-                message,
-                style: TextStyle(color: textColor, fontSize: fontSize),
-              ),
-            ],
-          ),
-        ));
-    return Future.value(true);
-  }
+  final duration =
+      shortMessage ? const Duration(seconds: 1) : const Duration(seconds: 4);
+  final message = messageFunc(serviceLocator
+      .get<NavigationService>()
+      .navigatorKey
+      .currentState!
+      .context);
+  EasyLoading.instance.backgroundColor = type.toColor();
+
+  final f = Builder(builder: (context) {
+    if (type == MessageType.success)
+      return Icon(
+        Icons.check_circle_outlined,
+        color: textColor,
+        size: iconsSize,
+      );
+    if (type == MessageType.error)
+      return Icon(Icons.error_outline_rounded,
+          color: textColor, size: iconsSize);
+    if (type == MessageType.warn)
+      return Icon(Icons.warning_amber_outlined,
+          color: textColor, size: iconsSize);
+
+    return const SizedBox(
+      height: 12.0,
+    );
+  });
+
+  EasyLoading.instance.infoWidget = f;
+  return EasyLoading.showInfo(message, duration: duration);
 }
 
-Future<bool?> showToast(String message,
+Future<void> showToast(String message,
     {MessageType type = MessageType.success,
     double iconsSize = 100.0,
     double fontSize = 16.0,
