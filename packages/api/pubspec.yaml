@@ -20,6 +20,8 @@ dependencies:
   artemis: ^6.13.1-beta.1
   artech_core:
     path: ../core
+  #http
+  dio: ^3.0.10
 
 dev_dependencies:
   flutter_test:
