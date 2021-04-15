@@ -9,5 +9,3 @@ export 'http/dio_options.dart';
 export 'http/http_repo.dart';
 export 'stream_provider.dart';
 export 'ui/health_provider.dart';
-
-const defaultClientName = 'default';

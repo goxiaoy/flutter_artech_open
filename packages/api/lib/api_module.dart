@@ -9,6 +9,8 @@ import 'exception_handlers.dart';
 import 'health/health.dart';
 import 'ui/health_provider.dart';
 
+const String defaultClientName = 'defaultApiClient';
+
 class ApiModule extends AppSubModuleBase with HasSelfLoggerTyped<ApiModule> {
   @override
   List<AppModuleMixin> get dependentOn => [HiveModule()];
@@ -26,7 +28,7 @@ class ApiModule extends AppSubModuleBase with HasSelfLoggerTyped<ApiModule> {
     }, dependsOn: [HiveReady]);
 
     configTyped<HealthCheckOption>(creator: () => HealthCheckOption());
-
+    services.pushNewScope(scopeName: defaultClientName);
     // services.registerSingleton<HealthCheckEndpoint>(
     //     ClientSelfHealthCheckEndpoint());
   }
