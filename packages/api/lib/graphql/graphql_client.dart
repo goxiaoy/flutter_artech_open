@@ -2,32 +2,14 @@ import 'dart:async';
 
 import 'package:artech_api/api.dart';
 import 'package:artech_core/core.dart';
+import 'package:artemis/artemis.dart';
 import 'package:flutter/material.dart';
-import 'package:gql_http_link/gql_http_link.dart' as gql_http_link;
-import 'package:gql_link/gql_link.dart' as gql_link;
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:http/http.dart' as http;
+import 'package:graphql_flutter/graphql_flutter.dart' hide JsonSerializable;
+import 'package:json_annotation/json_annotation.dart';
 
 Future<String> _getFromTokenManager() async {
   final token = await serviceLocator.get<TokenManager>().get();
   return token?.token;
-}
-
-class AuthenticatedClient extends http.BaseClient {
-  AuthenticatedClient({this.getTokenFromStorage = _getFromTokenManager})
-      : super();
-  final http.Client _inner = http.Client();
-
-  final Future<String> Function() getTokenFromStorage;
-
-  @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) async {
-    final token = await getTokenFromStorage();
-    if (token != null) {
-      request.headers['Authorization'] = 'Bearer $token';
-    }
-    return _inner.send(request);
-  }
 }
 
 String uuidFromObject(Object object) {
@@ -67,15 +49,26 @@ GraphQLClient clientFor(String url,
           watchQuery: Policies(fetch: FetchPolicy.cacheAndNetwork)));
 }
 
-ArtemisClient artemisClientFor(String url,
-    {Future<String> Function() getTokenFromStorage = _getFromTokenManager}) {
-  final link = gql_link.Link.from([
-    // SomeLink(),
-    gql_http_link.HttpLink(url,
-        httpClient:
-            AuthenticatedClient(getTokenFromStorage: getTokenFromStorage)),
-  ]);
-  return ArtemisClient.fromLink(link);
+enum OperationType { Query, Mutation }
+
+extension GraphQLClientExtension on GraphQLClient {
+  Future<GraphQLResponse<T>> execute<T, U extends JsonSerializable>(
+      GraphQLQuery<T, U> query, OperationType operation,
+      {Context context = const Context()}) async {
+    if (operation == OperationType.Query) {
+      final resp = await this.query(query.toQueryOption()..context = context);
+      return GraphQLResponse<T>(
+          data: resp.data == null ? null : query.parse(resp.data),
+          errors: resp.exception?.graphqlErrors);
+    } else if (operation == OperationType.Mutation) {
+      final resp = await mutate(query.toMutationOption()..context = context);
+      return GraphQLResponse<T>(
+          data: resp.data == null ? null : query.parse(resp.data),
+          errors: resp.exception?.graphqlErrors);
+    } else {
+      throw UnsupportedError('$operation unsupported');
+    }
+  }
 }
 
 typedef _RequestTransformer = FutureOr<Request> Function(Request request);
