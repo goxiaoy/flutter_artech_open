@@ -6,7 +6,6 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hive/hive.dart';
 
 import 'exception_handlers.dart';
-import 'graphql/graphql.dart';
 import 'health/health.dart';
 import 'ui/health_provider.dart';
 
@@ -18,10 +17,9 @@ class ApiModule extends AppSubModuleBase with HasSelfLoggerTyped<ApiModule> {
   void configureServices() {
     configTyped<ExceptionProcessor>(configurator: (p) {
       p.addHandler(SocketExceptionHandler());
-      p.addHandler(ServerExceptionHandler());
-      p.addHandler(OperationExceptionHandler());
     });
-    configTyped<DioOptions>(creator: ()=>DioOptions()..interceptors.add(AuthInterceptor()));
+    configTyped<DioOptions>(
+        creator: () => DioOptions()..interceptors.add(AuthInterceptor()));
     services.registerSingletonAsync(() async {
       await Hive.openBox<dynamic>(HiveStore.defaultBoxName);
       return ApiStoreReady();
