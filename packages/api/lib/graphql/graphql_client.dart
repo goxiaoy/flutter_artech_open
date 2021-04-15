@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:artech_api/api.dart';
 import 'package:artech_core/core.dart';
-import 'package:artemis/artemis.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart' hide JsonSerializable;
-import 'package:json_annotation/json_annotation.dart';
 
 Future<String> _getFromTokenManager() async {
   final token = await serviceLocator.get<TokenManager>().get();
@@ -47,28 +45,6 @@ GraphQLClient clientFor(String url,
       defaultPolicies: DefaultPolicies(
           query: Policies(fetch: FetchPolicy.cacheAndNetwork),
           watchQuery: Policies(fetch: FetchPolicy.cacheAndNetwork)));
-}
-
-enum OperationType { Query, Mutation }
-
-extension GraphQLClientExtension on GraphQLClient {
-  Future<GraphQLResponse<T>> execute<T, U extends JsonSerializable>(
-      GraphQLQuery<T, U> query, OperationType operation,
-      {Context context = const Context()}) async {
-    if (operation == OperationType.Query) {
-      final resp = await this.query(query.toQueryOption()..context = context);
-      return GraphQLResponse<T>(
-          data: resp.data == null ? null : query.parse(resp.data),
-          errors: resp.exception?.graphqlErrors);
-    } else if (operation == OperationType.Mutation) {
-      final resp = await mutate(query.toMutationOption()..context = context);
-      return GraphQLResponse<T>(
-          data: resp.data == null ? null : query.parse(resp.data),
-          errors: resp.exception?.graphqlErrors);
-    } else {
-      throw UnsupportedError('$operation unsupported');
-    }
-  }
 }
 
 typedef _RequestTransformer = FutureOr<Request> Function(Request request);
