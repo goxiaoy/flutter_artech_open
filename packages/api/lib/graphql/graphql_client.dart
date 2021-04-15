@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:artech_api/api.dart';
 import 'package:artech_core/core.dart';
-import 'package:artemis/client.dart' show ArtemisClient;
 import 'package:flutter/material.dart';
 import 'package:gql_http_link/gql_http_link.dart' as gql_http_link;
 import 'package:gql_link/gql_link.dart' as gql_link;

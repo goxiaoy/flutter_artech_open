@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:artech_core/core.dart';
-import 'package:artemis/client.dart' show ArtemisClient;
 import 'package:artemis/schema/graphql_query.dart';
 import 'package:artemis/schema/graphql_response.dart';
 import 'package:graphql_flutter/graphql_flutter.dart' hide JsonSerializable;
 import 'package:json_annotation/json_annotation.dart';
+
+import 'client.dart';
 
 abstract class GraphQLRemoteRepositoryBase with ServiceGetter, HasSelfLogger {
   ArtemisClient artemisClientNamed({String name}) =>
@@ -16,9 +17,11 @@ abstract class GraphQLRemoteRepositoryBase with ServiceGetter, HasSelfLogger {
   //strong typed client
   Future<GraphQLResponse<T>> execute<T, U extends JsonSerializable>(
       GraphQLQuery<T, U> query,
-      {String name}) async {
+      {String name,
+      Context context = const Context()}) async {
     try {
-      final response = await artemisClientNamed(name: name).execute(query);
+      final response =
+          await artemisClientNamed(name: name).execute(query, context: context);
       checkGraphQLResponseExceptionAndThrow(response);
       return response;
     } catch (error, stackTrace) {
