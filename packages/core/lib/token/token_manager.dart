@@ -21,7 +21,8 @@ class TokenManager with HasSelfLoggerTyped<TokenManager> {
     _startTimer(token.expireAt);
   }
 
-  Future init() async {
+  ///call this after app started
+  Future start() async {
     //load token
     final token = await tokenStorage.get();
     _startTimer(token?.expireAt);
@@ -52,19 +53,21 @@ class TokenManager with HasSelfLoggerTyped<TokenManager> {
     if (expireAt == null) {
       return;
     } else {
-      final delayTime = expireAt.add(const Duration(hours: -1));
+      final delayTime = expireAt.add(const Duration(minutes: -1));
       //提前时间
-      const advanceTime = Duration(hours: 1);
+      const advanceTime = Duration(minutes: 1);
       final time = delayTime
           .toUtc()
           .subtract(advanceTime)
           .difference(DateTime.now().toUtc());
       if (time < const Duration()) {
         logger.info('Refresh token start immediately!');
-        await _fetchNewToken();
+        Timer.run(() {
+          _fetchNewToken();
+        });
       } else {
-        logger.info('Refresh token start in  $time seconds!');
-        _refreshTimer = Timer(time, () => _fetchNewToken);
+        logger.info('Refresh token start in  ${time.inMinutes} minutes!');
+        _refreshTimer = Timer(time, () => _fetchNewToken());
       }
     }
   }
@@ -89,13 +92,8 @@ class TokenManager with HasSelfLoggerTyped<TokenManager> {
     TokenModel? newToken;
 
     try {
-      newToken = await refreshTokenProvider
-          .refreshToken(tokenModel)
-          .then((value) async {
-        // store token
-        await tokenStorage.set(value);
-        return value;
-      });
+      newToken = await refreshTokenProvider.refreshToken(tokenModel);
+      await set(newToken);
     } catch (e, s) {
       logger.severe('Refresh token fail $e', e, s);
       return newToken;
