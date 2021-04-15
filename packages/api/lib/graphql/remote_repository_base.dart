@@ -8,14 +8,17 @@ import 'package:graphql_flutter/graphql_flutter.dart' hide JsonSerializable;
 import 'package:json_annotation/json_annotation.dart';
 
 abstract class GraphQLRemoteRepositoryBase with ServiceGetter, HasSelfLogger {
-  ArtemisClient get artemisClient => services.get<ArtemisClient>();
-  GraphQLClient get client => services.get<GraphQLClient>();
+  ArtemisClient artemisClientNamed({String name}) =>
+      services.get<ArtemisClient>(instanceName: name);
+  GraphQLClient clientNamed({String name}) =>
+      services.get<GraphQLClient>(instanceName: name);
 
   //strong typed client
   Future<GraphQLResponse<T>> execute<T, U extends JsonSerializable>(
-      GraphQLQuery<T, U> query) async {
+      GraphQLQuery<T, U> query,
+      {String name}) async {
     try {
-      final response = await artemisClient.execute(query);
+      final response = await artemisClientNamed(name: name).execute(query);
       checkGraphQLResponseExceptionAndThrow(response);
       return response;
     } catch (error, stackTrace) {
@@ -24,9 +27,9 @@ abstract class GraphQLRemoteRepositoryBase with ServiceGetter, HasSelfLogger {
     }
   }
 
-  Future<QueryResult> mutate(MutationOptions options) async {
+  Future<QueryResult> mutate(MutationOptions options, {String name}) async {
     try {
-      final QueryResult result = await client.mutate(options);
+      final QueryResult result = await clientNamed(name: name).mutate(options);
       checkQueryResultExceptionAndThrow(result);
       return result;
     } catch (error, stackTrace) {
@@ -35,14 +38,14 @@ abstract class GraphQLRemoteRepositoryBase with ServiceGetter, HasSelfLogger {
     }
   }
 
-  ObservableQuery watchQuery(WatchQueryOptions options) {
-    final ObservableQuery result = client.watchQuery(options);
+  ObservableQuery watchQuery(WatchQueryOptions options, {String name}) {
+    final ObservableQuery result = clientNamed(name: name).watchQuery(options);
     return result;
   }
 
-  Future<QueryResult> query(QueryOptions options) async {
+  Future<QueryResult> query(QueryOptions options, {String name}) async {
     try {
-      final QueryResult result = await client.query(options);
+      final QueryResult result = await clientNamed(name: name).query(options);
       checkQueryResultExceptionAndThrow(result);
       return result;
     } catch (error, stackTrace) {
