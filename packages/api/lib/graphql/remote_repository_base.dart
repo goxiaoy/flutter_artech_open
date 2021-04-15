@@ -20,15 +20,14 @@ abstract class GraphQLRemoteRepositoryBase with ServiceGetter, HasSelfLogger {
       {String name, Context context = const Context()}) async {
     try {
       if (operation == OperationType.Query) {
-        final resp = await clientNamed(name: name)
-            .query(query.toQueryOption()..context = context);
-        checkQueryResultExceptionAndThrow(resp);
+        final resp = await this
+            .query(query.toQueryOption()..context = context, name: name);
         return GraphQLResponse<T>(
             data: resp.data == null ? null : query.parse(resp.data),
             errors: resp.exception?.graphqlErrors);
       } else if (operation == OperationType.Mutation) {
-        final resp = await mutate(query.toMutationOption()..context = context);
-        checkQueryResultExceptionAndThrow(resp);
+        final resp = await mutate(query.toMutationOption()..context = context,
+            name: name);
         return GraphQLResponse<T>(
             data: resp.data == null ? null : query.parse(resp.data),
             errors: resp.exception?.graphqlErrors);
