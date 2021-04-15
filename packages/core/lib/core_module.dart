@@ -57,7 +57,7 @@ class CoreModule extends AppSubModuleBase {
         return WebPersistentSecurityStorage();
       }
     });
-    services.registerSingletonAsync(() async {
+    services.registerSingletonAsync<AppConfig>(() async {
       final res = AppConfig();
       await res.init();
       return res;
