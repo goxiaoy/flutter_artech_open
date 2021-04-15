@@ -57,7 +57,7 @@ class CoreModule extends AppSubModuleBase {
         return WebPersistentSecurityStorage();
       }
     });
-    services.registerSingletonAsync(() async {
+    services.registerSingletonAsync<AppConfig>(() async {
       final res = AppConfig();
       await res.init();
       return res;
@@ -69,7 +69,6 @@ class CoreModule extends AppSubModuleBase {
     }, dependsOn: [PersistentSecurityStorageBase]);
     services.registerSingletonAsync<TokenManager>(() async {
       final t = TokenManager();
-      await t.init();
       return t;
     }, dependsOn: [TokenStorage]);
     services.registerLazySingleton(() => NavigationService());
@@ -87,6 +86,7 @@ class CoreModule extends AppSubModuleBase {
     if (configLevel != null) {
       Logger.root.level = configLevel;
     }
+    await services.get<TokenManager>().start();
   }
 
   Level? convertFromString(String? level, {Level? l}) {

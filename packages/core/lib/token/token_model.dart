@@ -32,7 +32,7 @@ class TokenModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['userId'] = userId;
     data['token'] = token;
-    data['expireAt'] = expireAt?.toIso8601String();
+    data['expireAt'] = expireAt?.toUtc().toIso8601String();
     data['refreshToken'] = refreshToken;
     return data;
   }
