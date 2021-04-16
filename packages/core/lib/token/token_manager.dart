@@ -39,7 +39,7 @@ class TokenManager with HasSelfLoggerTyped<TokenManager> {
   }
 
   Future<TokenModel?> get() async {
-    final token = await tokenStorage.get(checkExpire: false);
+    final token = await tokenStorage.get();
     if (token != null && !token.isValid() && _refreshTokenCompleter != null) {
       //token refreshing
       return await _refreshTokenCompleter!.future;

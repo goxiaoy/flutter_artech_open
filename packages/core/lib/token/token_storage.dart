@@ -25,15 +25,9 @@ class TokenStorage with ServiceGetter, HasSelfLoggerTyped<TokenStorage> {
     subject.add(token);
   }
 
-  Future<TokenModel?> get({bool checkExpire = true}) async {
-    var res = subject.value;
-    if (res == null) {
-      return null;
-    }
-    if (!checkExpire) {
-      return res;
-    }
-    return res.isValid() ? res : null;
+  Future<TokenModel?> get() async {
+    final res = subject.value;
+    return res;
   }
 
   Future<void> set(TokenModel? token) async {
