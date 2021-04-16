@@ -14,6 +14,10 @@ extension DateTimeExtension on DateTime {
       ? DateFormat.yMMMEd().format(toLocalTZDateTime)
       : DateFormat(format).format(toLocalTZDateTime);
 
+  String toLocalFormatYearText({String? format}) => format == null
+      ? DateFormat.y().format(toLocalTZDateTime)
+      : DateFormat(format).format(toLocalTZDateTime);
+
   String toLocalFormatDateTimeText({String? format}) =>
       DateFormat(format ?? _kDateTimeFormat).format(toLocalTZDateTime);
 
