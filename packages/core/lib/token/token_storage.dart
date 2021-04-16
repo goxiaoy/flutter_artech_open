@@ -66,13 +66,5 @@ class TokenStorage with ServiceGetter, HasSelfLoggerTyped<TokenStorage> {
   }
 
   //Listen to token update
-  Stream<TokenModel?> get stream => subject.stream.map((event) {
-        if (event == null) {
-          return null;
-        }
-        if (!event.isValid()) {
-          return null;
-        }
-        return event;
-      });
+  Stream<TokenModel?> get stream => subject.stream;
 }

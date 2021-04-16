@@ -62,9 +62,11 @@ class TokenManager with HasSelfLoggerTyped<TokenManager> {
           .difference(DateTime.now().toUtc());
       if (time < const Duration()) {
         logger.info('Refresh token start immediately!');
-        Timer.run(() {
-          _fetchNewToken();
-        });
+        //这里有一个边际情况，如果刚刚返回的refreshtoken检测expire会不再刷新
+        await _fetchNewToken();
+        // Timer.run(() {
+        //    _fetchNewToken();
+        // });
       } else {
         logger.info('Refresh token start in  ${time.inMinutes} minutes!');
         _refreshTimer = Timer(time, () => _fetchNewToken());
