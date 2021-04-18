@@ -20,8 +20,9 @@ extension JsonExtension on Map<String, dynamic>? {
       final missingKeys = map.entries
           .where((element) => element.value != null)
           .map((e) => e.key)
-          .toList()
-          .where((element) => !retJsonKeys.contains(element));
+          .where((element) => !retJsonKeys.contains(element))
+          .where((element) => element != '__typename')
+          .toList();
       if (missingKeys.isNotEmpty) {
         _logger.warning(
             "convert json to [${T.toString()}] missing keys [${missingKeys.join(',')}]");
