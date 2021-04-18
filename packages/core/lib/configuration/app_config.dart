@@ -29,7 +29,6 @@ class AppConfig {
         }
       }
     }
-    print('GlobalConfiguration:${config.appConfig.toString()}');
     _isLoaded = true;
   }
 
