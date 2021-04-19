@@ -11,10 +11,11 @@ AsyncSnapshot<T> useMemoizedStreamProvider<T>(
   useEffect(
     () {
       return () {
-        streamProvider.close();
+        streamProvider?.close();
       };
     },
     [streamProvider],
   );
-  return useMemoizedStream(() => streamProvider.stream, keys: [streamProvider]);
+  return useMemoizedStream(() => streamProvider?.stream,
+      keys: [streamProvider]);
 }

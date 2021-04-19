@@ -19,7 +19,7 @@ AsyncSnapshot<T?> useMemoizedFuture<T>(
 }
 
 AsyncSnapshot<T?> useMemoizedStream<T>(
-  Stream<T?> create(), {
+  Stream<T?>? create(), {
   List<Object?> keys = const [],
   T? initialData,
   bool preserveState = true,
@@ -69,12 +69,14 @@ RefreshableAsyncSnapshot<T?> useMemoizedRefreshableFuture<T>(
 }
 
 T? useSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
-  final s = useMemoizedFuture(() => uss
-          .get<T?>(key, defaultValue: defaultValue)
-          .catchError((Object e, StackTrace stackTrace) {
-        _logger.severe(e, e, stackTrace);
-        throw e;
-      }),keys: [uss,key,defaultValue]);
+  final s = useMemoizedFuture(
+      () => uss
+              .get<T?>(key, defaultValue: defaultValue)
+              .catchError((Object e, StackTrace stackTrace) {
+            _logger.severe(e, e, stackTrace);
+            throw e;
+          }),
+      keys: [uss, key, defaultValue]);
   return s.data;
 }
 
@@ -95,12 +97,14 @@ T? useWatchSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
     return () {
       ss.cancel();
     };
-  },[uss,key]);
-  useMemoizedFuture(() => uss
-      .get<T?>(key, defaultValue: defaultValue)
-      .then((value) => res.value = value)
-      .catchError((Object e) {
-    _logger.severe(e, e);
-  }),keys: [uss,key,defaultValue]);
+  }, [uss, key]);
+  useMemoizedFuture(
+      () => uss
+              .get<T?>(key, defaultValue: defaultValue)
+              .then((value) => res.value = value)
+              .catchError((Object e) {
+            _logger.severe(e, e);
+          }),
+      keys: [uss, key, defaultValue]);
   return res.value;
 }
