@@ -9,6 +9,11 @@ abstract class StreamProvider<T> {
   FutureOr close() {}
 }
 
+abstract class RefreshableStreamProvider<T> extends StreamProvider<T> {
+  ///refresh
+  FutureOr<T> refresh();
+}
+
 class DelegateStreamProvider<T> implements StreamProvider<T> {
   DelegateStreamProvider(
     this.streamFunc,

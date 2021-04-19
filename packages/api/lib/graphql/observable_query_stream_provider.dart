@@ -5,7 +5,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 typedef QueryResultTransformer<T> = T Function(QueryResult queryResult);
 
-class ObservableQueryStreamProvider<T> implements StreamProvider<T> {
+class ObservableQueryStreamProvider<T> implements RefreshableStreamProvider<T> {
   ObservableQueryStreamProvider(this.query, this.transformer);
   final ObservableQuery query;
   final QueryResultTransformer<T> transformer;
@@ -17,4 +17,9 @@ class ObservableQueryStreamProvider<T> implements StreamProvider<T> {
 
   @override
   FutureOr close() => query.close();
+
+  @override
+  FutureOr<T> refresh() async {
+    return transformer(await query.refetch());
+  }
 }
