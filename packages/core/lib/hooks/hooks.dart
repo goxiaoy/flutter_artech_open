@@ -82,8 +82,8 @@ T? useSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
 
 T? useWatchSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
   final res = useState<T?>(defaultValue);
-
   late StreamSubscription ss;
+  final mounted = useIsMounted();
   useEffect(() {
     //clear previous state
     res.value = defaultValue;
@@ -97,14 +97,17 @@ T? useWatchSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
     return () {
       ss.cancel();
     };
-  }, [uss, key]);
-  useMemoizedFuture(
-      () => uss
-              .get<T?>(key, defaultValue: defaultValue)
-              .then((value) => res.value = value)
-              .catchError((Object e) {
-            _logger.severe(e, e);
-          }),
-      keys: [uss, key, defaultValue]);
+  }, [uss, key, defaultValue]);
+  useMemoizedFuture(() async {
+    try {
+      await uss.get<T?>(key, defaultValue: defaultValue).then((value) {
+        if (mounted()) {
+          res.value = value;
+        }
+      });
+    } catch (e, s) {
+      _logger.severe('Fail to get setting key $key from store $uss', e, s);
+    }
+  }, keys: [uss, key, defaultValue]);
   return res.value;
 }

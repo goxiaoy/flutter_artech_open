@@ -2,6 +2,9 @@ import 'package:artech_core/hive/hive.dart';
 import 'package:artech_core/service_getter_mixin.dart';
 import 'package:artech_core/store/kv_store.dart';
 import 'package:hive/hive.dart';
+import 'package:logging/logging.dart';
+
+final Logger _logger = Logger('HiveKVStore');
 
 class HiveKVStore extends KVStore with ServiceGetter {
   HiveKVStore(this.boxCreator);
@@ -20,10 +23,12 @@ class HiveKVStore extends KVStore with ServiceGetter {
   Future init() async {
     await services.initHiveSafely();
     _box = await boxCreator();
+    _logger.info('Created box ${_box?.name}');
   }
 
   Future unInit() async {
     await box.close();
+    _logger.info('Closed box ${_box?.name}');
   }
 
   @override
