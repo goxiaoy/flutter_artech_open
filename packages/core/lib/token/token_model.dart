@@ -1,5 +1,5 @@
 class TokenModel {
-  TokenModel(this.token, this.expireAt, {this.userId, this.refreshToken});
+  TokenModel(this.token, this.expireAt, {this.refreshToken});
 
   factory TokenModel.fromJson(Map<String, dynamic> json) {
     return TokenModel(
@@ -7,12 +7,10 @@ class TokenModel {
       json['expireAt'] == null
           ? null
           : DateTime.parse(json['expireAt'] as String),
-      userId: json['userId'] as String?,
       refreshToken: json['refreshToken'] as String?,
     );
   }
 
-  final String? userId;
   final String token;
   DateTime? expireAt;
   final String? refreshToken;
@@ -30,7 +28,6 @@ class TokenModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['userId'] = userId;
     data['token'] = token;
     data['expireAt'] = expireAt?.toUtc().toIso8601String();
     data['refreshToken'] = refreshToken;
