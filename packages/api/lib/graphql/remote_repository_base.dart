@@ -10,7 +10,8 @@ import 'graphql_query_extension.dart';
 
 enum OperationType { Query, Mutation }
 
-abstract class GraphQLRemoteRepositoryBase with ServiceGetter, HasSelfLogger {
+abstract class GraphQLRemoteRepositoryBase
+    with ServiceGetter, HasSelfLoggerTyped<GraphQLRemoteRepositoryBase> {
   GraphQLClient clientNamed({String name}) =>
       services.get<GraphQLClient>(instanceName: name);
 
