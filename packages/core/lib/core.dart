@@ -2,6 +2,8 @@ library core;
 
 import 'package:get_it/get_it.dart';
 
+import 'event/event_emitter.dart';
+
 export 'package:artech_core/app_bootstrap.dart';
 export 'package:artech_core/app_module_base.dart';
 export 'package:artech_core/configuration/app_config.dart';
@@ -23,8 +25,11 @@ export 'package:artech_core/ui/ui.dart';
 export 'package:artech_core/utils/utils.dart';
 export 'package:multiple_localization/multiple_localization.dart';
 
+export 'event/event_emitter.dart';
 export 'services_extension.dart';
 export 'token/token_manager.dart';
 export 'token/token_model.dart';
 
 final serviceLocator = GetIt.I;
+
+final emitter = EventEmitter();
