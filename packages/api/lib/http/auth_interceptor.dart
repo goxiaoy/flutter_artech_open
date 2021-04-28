@@ -15,14 +15,17 @@ class AuthInterceptor extends Interceptor {
   TokenManager get tokenManager => serviceLocator.get<TokenManager>();
 
   @override
-  Future<dynamic> onRequest(RequestOptions options) async {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (options.extra[disableAuthKey] == true) {
-      return super.onRequest(options);
+      return super.onRequest(options, handler);
     }
-    final token = await tokenManager.get();
-    if (token != null) {
-      options.headers['Authorization'] = 'Bearer ${token.token}';
-    }
-    return super.onRequest(options);
+    tokenManager.get().then((token) {
+      if (token != null) {
+        options.headers['Authorization'] = 'Bearer ${token.token}';
+      }
+      return super.onRequest(options, handler);
+    }, onError: (dynamic e, StackTrace s) {
+      return super.onRequest(options, handler);
+    });
   }
 }
