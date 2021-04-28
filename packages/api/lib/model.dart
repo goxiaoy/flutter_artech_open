@@ -3,7 +3,10 @@ import 'package:flutter/cupertino.dart';
 @immutable
 class SortField {
   const SortField({required this.name, this.desc = false});
-  factory SortField.fromString(String str) {
+  static SortField? fromString(String? str) {
+    if (str == null) {
+      return null;
+    }
     final lastIndex = str.lastIndexOf(':');
     if (lastIndex == -1) {
       return SortField(name: str);
