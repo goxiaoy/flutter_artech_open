@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:pedantic/pedantic.dart';
 
-typedef EventEmitterHandlerFunction<T> = FutureOr Function(T data);
+typedef EventEmitterHandlerFunction<T> = FutureOr Function(T? data);
 
 abstract class EventEmitterHandlerBase {
   FutureOr<bool> canHandle(dynamic data);
