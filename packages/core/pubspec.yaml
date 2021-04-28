@@ -28,7 +28,7 @@ dependencies:
       #https://github.com/Dana-Ferguson/time_machine/issues/55
       url: https://github.com/Dana-Ferguson/time_machine
   timezone: ^0.7.0
-  universal_platform: ^0.1.3
+  universal_platform: ^1.0.0-nullsafety
 
   #storage
   shared_preferences: ^2.0.5
