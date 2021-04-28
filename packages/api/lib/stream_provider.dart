@@ -24,7 +24,7 @@ class DelegateStreamProvider<T> implements StreamProvider<T> {
 
   @override
   FutureOr close() async {
-    await closeFunc?.call();
+    await closeFunc.call();
   }
 
   @override

@@ -97,7 +97,7 @@ Stream<T?> toSingleDataStream<T>(Stream<QueryResult> queryResult,
 
 List<T> toListData<T>(
     QueryResult queryResult, QueryResultToTypedData<T> fromJson, String key) {
-  if (queryResult?.data != null && queryResult.data![key] != null) {
+  if (queryResult.data != null && queryResult.data![key] != null) {
     return List<T>.from((queryResult.data![key] as Iterable<dynamic>).map<T>(
         (dynamic e) => fromJson(e as Map<String, dynamic>, queryResult)));
   }
