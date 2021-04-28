@@ -5,7 +5,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:logging/logging.dart';
 
 final Logger _logger = Logger('GraphQLHooks');
-AsyncSnapshot<T> useMemoizedWatchQuery<T>(
+AsyncSnapshot<T?> useMemoizedWatchQuery<T>(
     ObservableQuery Function() queryBuilder,
     T Function(QueryResult) deserializeFunc,
     [List<Object> keys = const <Object>[]]) {
@@ -32,7 +32,7 @@ AsyncSnapshot<T> useMemoizedWatchQuery<T>(
       keys: [query]);
 }
 
-RefreshableAsyncSnapshot<T> useMemoizedRefreshableWatchQuery<T>(
+RefreshableAsyncSnapshot<T?> useMemoizedRefreshableWatchQuery<T>(
     ObservableQuery Function() queryBuilder,
     T Function(QueryResult) deserializeFunc,
     [List<Object> keys = const <Object>[]]) {
@@ -47,12 +47,12 @@ RefreshableAsyncSnapshot<T> useMemoizedRefreshableWatchQuery<T>(
     },
     [query],
   );
-  return RefreshableAsyncSnapshot<T>(
+  return RefreshableAsyncSnapshot<T?>(
       useMemoizedStream(() => query.stream.map(deserializeFunc), keys: [query]),
       () => query.refetch());
 }
 
-AsyncSnapshot<T> useMemoizedQuery<T>(
+AsyncSnapshot<T?> useMemoizedQuery<T>(
     Future<QueryResult> Function() queryBuilder,
     T Function(QueryResult) deserializeFunc,
     [List<Object> keys = const <Object>[]]) {

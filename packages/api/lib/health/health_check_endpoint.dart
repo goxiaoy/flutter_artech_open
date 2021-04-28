@@ -12,7 +12,7 @@ class ClientSelfHealthCheckEndpoint extends HealthCheckEndpoint {
   Duration get duration =>
       serviceLocator.get<HealthCheckOption>().checkDuration;
 
-  Timer t;
+  Timer? t;
   @override
   Stream<HealthCheckData> connect() {
     return Stream.periodic(duration, (t) {

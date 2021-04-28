@@ -6,7 +6,7 @@ const disableAuthKey = 'disableAuth';
 extension OptionsExtension on Options {
   Options disableAuth() {
     //disable auth
-    extra[disableAuthKey] = true;
+    extra![disableAuthKey] = true;
     return this;
   }
 }

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:artech_api/api.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-typedef QueryResultTransformer<T> = T Function(QueryResult queryResult);
+typedef QueryResultTransformer<T> = T Function(QueryResult? queryResult);
 
 class ObservableQueryStreamProvider<T> implements RefreshableStreamProvider<T> {
   ObservableQueryStreamProvider(this.query, this.transformer);

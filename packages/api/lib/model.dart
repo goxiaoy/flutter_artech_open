@@ -2,11 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 @immutable
 class SortField {
-  const SortField({this.name, this.desc = false});
+  const SortField({required this.name, this.desc = false});
   factory SortField.fromString(String str) {
-    if (str == null) {
-      return null;
-    }
     final lastIndex = str.lastIndexOf(':');
     if (lastIndex == -1) {
       return SortField(name: str);
@@ -43,8 +40,8 @@ class SortField {
 @immutable
 class PageOption {
   const PageOption({this.start, this.limit});
-  final int start;
-  final int limit;
+  final int? start;
+  final int? limit;
 
   @override
   int get hashCode => start.hashCode ^ limit.hashCode;

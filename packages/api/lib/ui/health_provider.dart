@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class HealthProvider extends HookWidget {
-  HealthProvider({@required this.child})
+  HealthProvider({required this.child})
       : canCheckEndpoint = serviceLocator.isRegistered<HealthCheckEndpoint>();
 
   final Widget child;
@@ -20,7 +20,7 @@ class HealthProvider extends HookWidget {
         ? HookBuilder(
             builder: (context) {
               final endpoint = serviceLocator.get<HealthCheckEndpoint>();
-              final AsyncSnapshot<HealthCheckData> healthCheckData =
+              final AsyncSnapshot<HealthCheckData?> healthCheckData =
                   useMemoizedStream(() => endpoint.connect());
               return HealthState(
                 isConnected: network && !healthCheckData.hasError,
@@ -43,7 +43,7 @@ class HealthProvider extends HookWidget {
   }
 }
 
-Duration _calLatency(DateTime a, DateTime b) {
+Duration? _calLatency(DateTime? a, DateTime? b) {
   if (a == null || b == null) {
     return null;
   }
@@ -52,13 +52,13 @@ Duration _calLatency(DateTime a, DateTime b) {
 
 class HealthState extends InheritedWidget {
   const HealthState({
-    Key key,
-    @required this.isConnected,
-    @required Widget child,
+    Key? key,
+    required this.isConnected,
+    required Widget child,
   }) : super(key: key, child: child);
   final bool isConnected;
 
-  static HealthState of(BuildContext context) {
+  static HealthState? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<HealthState>();
   }
 
@@ -70,27 +70,27 @@ class HealthState extends InheritedWidget {
 
 class LatencyState extends InheritedWidget {
   const LatencyState({
-    Key key,
-    @required Widget child,
+    Key? key,
+    required Widget child,
     this.toServerLatency,
     this.fromServerLatency,
     this.serverTime,
   }) : super(key: key, child: child);
 
-  final Duration toServerLatency;
-  final Duration fromServerLatency;
-  final DateTime serverTime;
+  final Duration? toServerLatency;
+  final Duration? fromServerLatency;
+  final DateTime? serverTime;
 
-  static LatencyState of(BuildContext context) {
+  static LatencyState? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<LatencyState>();
   }
 
-  bool get isClientTimeIncorrect {
+  bool? get isClientTimeIncorrect {
     final opt = serviceLocator.get<HealthCheckOption>();
     return fromServerLatency == null
         ? null
-        : (fromServerLatency > opt.clientTolerateDuration ||
-            fromServerLatency < opt.clientTolerateDuration);
+        : (fromServerLatency! > opt.clientTolerateDuration ||
+            fromServerLatency! < opt.clientTolerateDuration);
   }
 
   @override

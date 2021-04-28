@@ -2,9 +2,9 @@ part of 'health.dart';
 
 class HealthCheckData {
   //nullable
-  DateTime clientSendTime;
+  DateTime? clientSendTime;
   //nullable
-  DateTime serverTime;
+  DateTime? serverTime;
   //nullable
-  DateTime clientReceiveTime;
+  DateTime? clientReceiveTime;
 }

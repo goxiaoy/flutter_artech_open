@@ -8,10 +8,10 @@ extension GraphQLQueryExtension<T, U extends j.JsonSerializable>
   QueryOptions toQueryOption(
       {Duration pullInterval = Duration.zero,
       bool fetchResults = true,
-      FetchPolicy fetchPolicy,
-      ErrorPolicy errorPolicy,
-      bool networkOnly,
-      CacheRereadPolicy cacheRereadPolicy}) {
+      FetchPolicy? fetchPolicy,
+      ErrorPolicy? errorPolicy,
+      bool? networkOnly,
+      CacheRereadPolicy? cacheRereadPolicy}) {
     return QueryOptions(
       document: document,
       operationName: operationName,
@@ -27,10 +27,10 @@ extension GraphQLQueryExtension<T, U extends j.JsonSerializable>
   WatchQueryOptions toWatchQuery(
       {Duration pullInterval = Duration.zero,
       bool fetchResults = true,
-      FetchPolicy fetchPolicy,
-      ErrorPolicy errorPolicy,
-      bool networkOnly,
-      CacheRereadPolicy cacheRereadPolicy}) {
+      FetchPolicy? fetchPolicy,
+      ErrorPolicy? errorPolicy,
+      bool? networkOnly,
+      CacheRereadPolicy? cacheRereadPolicy}) {
     return WatchQueryOptions(
         document: document,
         operationName: operationName,
@@ -47,8 +47,8 @@ extension GraphQLQueryExtension<T, U extends j.JsonSerializable>
   WatchQueryOptions toNetworkOnlyWatchQuery(
       {Duration pullInterval = Duration.zero,
       bool fetchResults = true,
-      ErrorPolicy errorPolicy,
-      CacheRereadPolicy cacheRereadPolicy}) {
+      ErrorPolicy? errorPolicy,
+      CacheRereadPolicy? cacheRereadPolicy}) {
     return WatchQueryOptions(
         document: document,
         operationName: operationName,
