@@ -7,7 +7,7 @@ mixin HasSelfLoggerTyped<T> {
 }
 
 mixin HasNamedLogger {
-  late final String loggerName;
+  String get loggerName;
 
   Logger? _logger;
   Logger get logger {
