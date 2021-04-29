@@ -11,7 +11,7 @@ import 'ui/health_provider.dart';
 
 const String defaultClientName = 'defaultApiClient';
 
-class ApiModule extends AppSubModuleBase with HasSelfLoggerTyped<ApiModule> {
+class ApiModule extends AppSubModuleBase with HasNamedLogger {
   @override
   List<AppModuleMixin> get dependentOn => [HiveModule()];
 
@@ -37,6 +37,9 @@ class ApiModule extends AppSubModuleBase with HasSelfLoggerTyped<ApiModule> {
   Widget build(Widget child) {
     return HealthProvider(child: child);
   }
+
+  @override
+  String get loggerName => 'ApiModule';
 }
 
 class ApiStoreReady {}

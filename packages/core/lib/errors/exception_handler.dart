@@ -10,7 +10,7 @@ abstract class ExceptionHandlerBase {
 }
 
 class LogStackTraceExceptionHandler extends ExceptionHandlerBase
-    with HasSelfLoggerTyped<LogStackTraceExceptionHandler> {
+    with HasNamedLogger {
   @override
   bool canHandle(Object exception) => true;
 
@@ -21,4 +21,7 @@ class LogStackTraceExceptionHandler extends ExceptionHandlerBase
           context.latestError, context.rawStackTrace);
     }
   }
+
+  @override
+  String get loggerName => 'LogStackTraceExceptionHandler';
 }

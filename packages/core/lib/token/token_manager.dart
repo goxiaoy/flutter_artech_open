@@ -9,7 +9,7 @@ abstract class RefreshTokenProvider {
   Future<TokenModel> refreshToken(TokenModel token);
 }
 
-class TokenManager with HasSelfLoggerTyped<TokenManager> {
+class TokenManager with HasNamedLogger {
   TokenManager();
   TokenStorage get tokenStorage => serviceLocator.get<TokenStorage>();
   RefreshTokenProvider get refreshTokenProvider =>
@@ -105,4 +105,7 @@ class TokenManager with HasSelfLoggerTyped<TokenManager> {
     }
     return newToken;
   }
+
+  @override
+  String get loggerName => 'TokenManager';
 }

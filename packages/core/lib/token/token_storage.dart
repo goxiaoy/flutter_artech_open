@@ -8,7 +8,7 @@ import 'package:rxdart/rxdart.dart';
 import 'token_model.dart';
 
 ///[TokenStorage] stores tokens and check expire time. Please use [TokenManager] to safely get token
-class TokenStorage with ServiceGetter, HasSelfLoggerTyped<TokenStorage> {
+class TokenStorage with ServiceGetter, HasNamedLogger {
   TokenStorage({this.key = 'jwt'});
 
   final BehaviorSubject<TokenModel?> subject = BehaviorSubject<TokenModel>();
@@ -61,4 +61,7 @@ class TokenStorage with ServiceGetter, HasSelfLoggerTyped<TokenStorage> {
 
   //Listen to token update
   Stream<TokenModel?> get stream => subject.stream;
+
+  @override
+  String get loggerName => 'TokenStorage';
 }

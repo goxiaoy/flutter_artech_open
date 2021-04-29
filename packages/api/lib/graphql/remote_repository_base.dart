@@ -10,8 +10,7 @@ import 'graphql_query_extension.dart';
 
 enum OperationType { Query, Mutation }
 
-abstract class GraphQLRemoteRepositoryBase
-    with ServiceGetter, HasSelfLoggerTyped<GraphQLRemoteRepositoryBase> {
+abstract class GraphQLRemoteRepositoryBase with ServiceGetter, HasNamedLogger {
   GraphQLClient clientNamed({String? name}) =>
       services.get<GraphQLClient>(instanceName: name);
 
@@ -74,6 +73,9 @@ abstract class GraphQLRemoteRepositoryBase
       throw result.exception!;
     }
   }
+
+  @override
+  String get loggerName => 'PostRepositoryImpl';
 }
 
 typedef QueryResultToTypedData<T> = T Function(
