@@ -8,7 +8,7 @@ import 'package:logging/logging.dart';
 final Logger _logger = Logger('Hooks');
 
 AsyncSnapshot<T?> useMemoizedFuture<T>(
-  Future<T?> create(), {
+  Future<T?>? create(), {
   List<Object?> keys = const [],
   T? initialData,
   bool preserveState = true,
@@ -51,7 +51,7 @@ class RefreshableAsyncSnapshot<T> {
 ///   * [useFuture], the hook responsible for getting the future.
 ///   * [useMemoized], the hook responsible for the memoization.
 RefreshableAsyncSnapshot<T?> useMemoizedRefreshableFuture<T>(
-  Future<T?> Function() future, {
+  Future<T?>? Function() future, {
   List<Object?> keys = const [],
   T? initialData,
   bool preserveState = true,
