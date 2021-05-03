@@ -16,7 +16,7 @@ dependencies:
   #common
   logging: ^1.0.1
   rxdart: ^0.26.0
-  get_it: ^6.1.1
+  get_it: ^7.0.0
   collection: ^1.15.0
   intl: ^0.17.0
   #config
