@@ -34,22 +34,22 @@ Future<void> showToastContext(LocalMessageFunc messageFunc,
   EasyLoading.instance.backgroundColor = type.toColor();
 
   final f = Builder(builder: (context) {
-    if (type == MessageType.success)
-      return Icon(
-        Icons.check_circle_outlined,
-        color: textColor,
-        size: iconsSize,
-      );
-    if (type == MessageType.error)
-      return Icon(Icons.error_outline_rounded,
-          color: textColor, size: iconsSize);
-    if (type == MessageType.warn)
-      return Icon(Icons.warning_amber_outlined,
-          color: textColor, size: iconsSize);
-
-    return const SizedBox(
-      height: 12.0,
-    );
+    switch (type) {
+      case MessageType.success:
+        return Icon(
+          Icons.check_circle_outlined,
+          color: textColor,
+          size: iconsSize,
+        );
+      case MessageType.error:
+        return Icon(Icons.error_outline_rounded,
+            color: textColor, size: iconsSize);
+      case MessageType.warn:
+        return Icon(Icons.warning_amber_outlined,
+            color: textColor, size: iconsSize);
+      default:
+        return Icon(Icons.message, color: textColor, size: iconsSize);
+    }
   });
 
   EasyLoading.instance.infoWidget = f;
