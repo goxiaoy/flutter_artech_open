@@ -14,7 +14,7 @@ dependencies:
   #grapqhQL
   json_serializable: ^4.1.1
   graphql_flutter: ^5.0.0-nullsafety.2
-  artemis: ^7.0.0-beta.6
+  artemis: ^7.0.0-beta.10
   artech_core:
     path: ../core
   #http

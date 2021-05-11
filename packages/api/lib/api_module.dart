@@ -1,4 +1,5 @@
 import 'package:artech_api/api.dart';
+import 'package:artech_api/http/timezone_interceptor.dart';
 import 'package:artech_core/core.dart';
 import 'package:artech_core/hive/hive.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,7 +22,8 @@ class ApiModule extends AppSubModuleBase with HasNamedLogger {
       p.addHandler(SocketExceptionHandler());
     });
     configTyped<DioOptions>(
-        creator: () => DioOptions()..interceptors.add(AuthInterceptor()));
+        creator: () => DioOptions()
+          ..interceptors.addAll([AuthInterceptor(), TimeZoneInterceptor()]));
     services.registerSingletonAsync(() async {
       await Hive.openBox<dynamic>(HiveStore.defaultBoxName);
       return ApiStoreReady();

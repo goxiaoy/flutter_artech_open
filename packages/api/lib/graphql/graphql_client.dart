@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:artech_api/api.dart';
 import 'package:artech_core/core.dart';
 import 'package:graphql_flutter/graphql_flutter.dart' hide JsonSerializable;
+import 'package:timezone/timezone.dart' as tz;
 
 Future<String?> _getFromTokenManager() async {
   final token = await serviceLocator.get<TokenManager>().get();
@@ -31,7 +32,9 @@ GraphQLClient clientFor(String url,
       return ret;
     },
   );
-  var link = authLink.concat(httpLink);
+  var link = authLink.concat(httpLink).concat(
+      //just use authlink to add header
+      AuthLink(getToken: () async => tz.local.name, headerKey: 'X-TZ'));
   if (subscriptionUri != null) {
     final WebSocketLink websocketLink = WebSocketLink(
       subscriptionUri,

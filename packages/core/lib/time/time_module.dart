@@ -20,44 +20,45 @@ class TimeModule extends AppSubModuleBase {
 
   @override
   void configureServices() {
-    loadTimeFuture = setCurrentZoneTime();
+    loadTimeFuture = _setCurrentZoneTime();
     // services.registerSingletonAsync(()async{
     //   await setCurrentZoneTime();
     //   return TimeReady();
     // });
   }
 
-  Future<void> setCurrentZoneTime() async {
+  Future<void> _setCurrentZoneTime() async {
     try {
       tz.initializeTimeZones(); //
-
-      if (!kIsWeb) {
-        //TODO GMT can not be used https://github.com/pinkfish/flutter_native_timezone/issues/15
-        final String currentTimeZone = await executeWithStopwatch(
-            () => FlutterNativeTimezone.getLocalTimezone(),
-            name: 'FlutterNativeTimezone.getLocalTimezone');
-        _log.info('Time zone: $currentTimeZone');
-        tz.setLocalLocation(tz.getLocation(currentTimeZone));
-      } else {
-        await _loadFromTimeMachine();
-      }
+      tz.setLocalLocation(tz.getLocation(await _getCurrentTimeZone()));
     } catch (error) {
       _log.severe('configureLocalTimeZone error: $error');
-      await _loadFromTimeMachine();
     }
   }
 
-  Future<void> _loadFromTimeMachine() async {
-    try {
+  Future<String> _getCurrentTimeZone() async {
+    final loadFromTimeMachine = () async {
       await executeWithStopwatch(() async {
         await TimeMachine.initialize(
             <String, dynamic>{'rootBundle': rootBundle});
       }, name: 'Dart Time Machine Init');
       _log.info('Hello, ${DateTimeZone.local} from the Dart Time Machine!\n');
-      tz.setLocalLocation(tz.getLocation(DateTimeZone.local.toString()));
-    } catch (error) {
-      _log.severe('loadFromTimeMachine error: $error');
+      return DateTimeZone.local.toString();
+    };
+    if (!kIsWeb) {
+      //try load from native
+      try {
+        //TODO GMT can not be used https://github.com/pinkfish/flutter_native_timezone/issues/15
+        final String currentTimeZone = await executeWithStopwatch(
+            () => FlutterNativeTimezone.getLocalTimezone(),
+            name: 'FlutterNativeTimezone.getLocalTimezone');
+        _log.info('Native Time zone: $currentTimeZone');
+        return currentTimeZone;
+      } catch (e) {
+        _log.severe('loadFromTimeMachine error: $e');
+      }
     }
+    return await loadFromTimeMachine();
   }
 }
 
