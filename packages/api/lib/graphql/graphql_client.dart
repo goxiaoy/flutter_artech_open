@@ -32,9 +32,11 @@ GraphQLClient clientFor(String url,
       return ret;
     },
   );
-  var link = authLink.concat(httpLink).concat(
-      //just use authlink to add header
-      AuthLink(getToken: () async => tz.local.name, headerKey: 'X-TZ'));
+  var link = authLink
+      .concat(
+          //just use authlink to add header
+          AuthLink(getToken: () async => tz.local.name, headerKey: 'X-TZ'))
+      .concat(httpLink);
   if (subscriptionUri != null) {
     final WebSocketLink websocketLink = WebSocketLink(
       subscriptionUri,
