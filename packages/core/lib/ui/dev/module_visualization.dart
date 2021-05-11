@@ -110,7 +110,7 @@ class _ModuleVisualizationState extends State<ModuleVisualization> {
       //add edge
       if (node.dependentOn.isNotEmpty) {
         for (final c in node.dependentOn) {
-          res.addEdge(uiNode, allNodes[c.runtimeType]);
+          res.addEdge(uiNode, allNodes[c.runtimeType]!);
         }
       }
     });
