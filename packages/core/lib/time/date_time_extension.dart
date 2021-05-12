@@ -30,3 +30,13 @@ extension DateTimeExtension on DateTime {
   String toLocalFormatWeekDayText({String? format}) =>
       DateFormat(format ?? _kWeekDayFormat).format(toLocalTZDateTime);
 }
+
+extension DateTimeNullableExtension on DateTime? {
+  String? toUtcIso8601String() {
+    return dateTimeToUtcIso8601String(this);
+  }
+}
+
+String? dateTimeToUtcIso8601String(DateTime? t) {
+  return t?.toUtc().toIso8601String();
+}
