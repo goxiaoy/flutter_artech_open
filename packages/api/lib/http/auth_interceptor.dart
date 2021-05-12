@@ -6,6 +6,7 @@ const disableAuthKey = 'disableAuth';
 extension OptionsExtension on Options {
   Options disableAuth() {
     //disable auth
+    extra = extra ?? <String, dynamic>{};
     extra![disableAuthKey] = true;
     return this;
   }
