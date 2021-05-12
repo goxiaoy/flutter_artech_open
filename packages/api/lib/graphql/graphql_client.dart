@@ -53,13 +53,11 @@ GraphQLClient clientFor(String url,
 
 typedef _RequestTransformer = FutureOr<Request> Function(Request request);
 
-class _MyAuthLink extends AuthLink {
-  _MyAuthLink(
-      {required FutureOr<String?> Function() getToken,
-      String headerKey = 'Authorization'})
-      : super(
-            getToken: getToken as FutureOr<String>? Function(),
-            headerKey: headerKey);
+class _MyAuthLink extends Link {
+  final FutureOr<String?> Function() getToken;
+  final String headerKey;
+
+  _MyAuthLink({required this.getToken, this.headerKey = 'Authorization'});
 
   @override
   Stream<Response> request(
