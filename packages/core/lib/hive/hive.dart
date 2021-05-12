@@ -7,19 +7,17 @@ export 'hive_kv_store.dart';
 export 'hive_module.dart';
 export 'hive_setting_store.dart';
 
-typedef HasHiveInit = void Function();
-
-HasHiveInit _identifier = () {};
+bool _hasHiveInit = false;
 
 final _logger = Logger('Hive');
 
 extension SafeInitHive on GetIt {
   Future<void> initHiveSafely() async {
-    if (!isRegistered<HasHiveInit>(instance: _identifier)) {
+    if (!_hasHiveInit) {
       //init hive
       _logger.info('Init hive');
       await Hive.initFlutter();
-      registerSingleton(_identifier);
+      _hasHiveInit = true;
     }
   }
 }

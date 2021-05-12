@@ -11,7 +11,7 @@ import 'token_model.dart';
 class TokenStorage with ServiceGetter, HasNamedLogger {
   TokenStorage({this.key = 'jwt'});
 
-  final BehaviorSubject<TokenModel?> subject = BehaviorSubject<TokenModel>();
+  final BehaviorSubject<TokenModel?> subject = BehaviorSubject<TokenModel?>();
 
   PersistentSecurityStorageBase get _storage =>
       services.get<PersistentSecurityStorageBase>();
