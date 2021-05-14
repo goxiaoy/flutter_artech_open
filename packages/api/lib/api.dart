@@ -2,6 +2,7 @@ library api;
 
 export 'package:artech_api/api_module.dart';
 
+export 'filter.dart';
 export 'graphql/graphql.dart';
 export 'hooks/hooks.dart';
 export 'http/auth_interceptor.dart';
