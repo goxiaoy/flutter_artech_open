@@ -15,7 +15,7 @@ class AppConfig {
     } else {
       environmentJson = 'appsettings.production';
     }
-    final GlobalConfiguration config = await GlobalConfiguration()
+    await GlobalConfiguration()
         .loadFromAsset('appsettings')
         .then((p) => p.loadFromAsset(environmentJson));
 

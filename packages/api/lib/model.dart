@@ -41,17 +41,17 @@ class SortField {
 }
 
 @immutable
-class PageOption {
-  const PageOption({this.start, this.limit});
-  final int? start;
-  final int? limit;
+class Pagination {
+  const Pagination({this.offset = 0, this.limit = 10});
+  final int offset;
+  final int limit;
 
   @override
-  int get hashCode => start.hashCode ^ limit.hashCode;
+  int get hashCode => offset.hashCode ^ limit.hashCode;
 
   @override
   bool operator ==(Object other) {
-    return (other is PageOption) &&
-        (other.start == start && other.limit == limit);
+    return (other is Pagination) &&
+        (other.offset == offset && other.limit == limit);
   }
 }
