@@ -19,7 +19,7 @@ AsyncSnapshot<T?> useMemoizedFuture<T>(
 }
 
 AsyncSnapshot<T?> useMemoizedStream<T>(
-  Stream<T?>? create(), {
+  Stream<T>? create(), {
   List<Object?> keys = const [],
   T? initialData,
   bool preserveState = true,
