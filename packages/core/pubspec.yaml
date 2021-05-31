@@ -22,11 +22,12 @@ dependencies:
   #config
   global_configuration: ^2.0.0-nullsafety.1
   #timezone
-  flutter_native_timezone: ^1.0.10
   time_machine:
     git:
       #https://github.com/Dana-Ferguson/time_machine/issues/55
       url: https://github.com/Dana-Ferguson/time_machine
+  # freeze version. newer version needs minsdkversion >= 26
+  flutter_native_timezone: 1.0.10
   timezone: ^0.7.0
   universal_platform: ^1.0.0-nullsafety
 
