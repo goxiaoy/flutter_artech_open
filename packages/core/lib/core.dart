@@ -1,5 +1,6 @@
 library core;
 
+import 'package:artech_core/ui/navigation_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'event/event_emitter.dart';
@@ -34,3 +35,9 @@ export 'token/token_model.dart';
 final serviceLocator = GetIt.I;
 
 final emitter = EventEmitter();
+
+void showErrorDialog(String title,Object error,{StackTrace? stackTrace}) {
+  serviceLocator
+      .get<NavigationService>()
+      .showErrorDialog(title, error, stackTrace: stackTrace);
+}
