@@ -4,7 +4,10 @@ import 'package:artech_core/security/persistent_security_storage.dart';
 import 'package:artech_core/store/kv_store.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class AppPersistentSecurityStorage extends PersistentSecurityStorageBase {
+PersistentSecurityStorage getSecurityStorage() =>
+    AppPersistentSecurityStorage();
+
+class AppPersistentSecurityStorage implements PersistentSecurityStorage {
   final _storage = const FlutterSecureStorage();
 
   @override

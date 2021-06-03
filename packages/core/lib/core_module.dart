@@ -4,16 +4,13 @@ import 'package:artech_core/app_module_base.dart';
 import 'package:artech_core/errors/exception_handler.dart';
 import 'package:artech_core/errors/exception_processor.dart';
 import 'package:artech_core/l10n/localization_option.dart';
-import 'package:artech_core/security/app_persistent_security_storage.dart';
 import 'package:artech_core/security/persistent_security_storage.dart';
-import 'package:artech_core/security/web_persistent_security_storage.dart';
 import 'package:artech_core/settings/memory_setting_store.dart';
 import 'package:artech_core/settings/setting_store.dart';
 import 'package:artech_core/time/time.dart';
 import 'package:artech_core/ui/navigation_service.dart';
 import 'package:artech_core/ui/ui.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
@@ -50,13 +47,8 @@ class CoreModule extends AppSubModuleBase {
       services.registerSingleton<SettingStore>(MemorySettingStore());
     });
 
-    services.registerSingletonAsync<PersistentSecurityStorageBase>(() async {
-      if (!kIsWeb) {
-        return AppPersistentSecurityStorage();
-      } else {
-        return WebPersistentSecurityStorage();
-      }
-    });
+    services.registerSingleton<PersistentSecurityStorage>(
+        PersistentSecurityStorage());
     services.registerSingletonAsync<AppConfig>(() async {
       final res = AppConfig();
       await res.init();
@@ -66,7 +58,7 @@ class CoreModule extends AppSubModuleBase {
       final t = TokenStorage();
       await t.init();
       return t;
-    }, dependsOn: [PersistentSecurityStorageBase]);
+    });
     services.registerSingletonAsync<TokenManager>(() async {
       final t = TokenManager();
       return t;

@@ -2,9 +2,12 @@ import 'package:artech_core/security/persistent_security_storage.dart';
 import 'package:artech_core/store/kv_store.dart';
 import 'package:universal_html/html.dart' show window;
 
+PersistentSecurityStorage getSecurityStorage() =>
+    WebPersistentSecurityStorage();
+
 const defaultPrefix = 's/';
 
-class WebPersistentSecurityStorage extends PersistentSecurityStorageBase {
+class WebPersistentSecurityStorage implements PersistentSecurityStorage {
   WebPersistentSecurityStorage({this.prefix = defaultPrefix});
   final String prefix;
 

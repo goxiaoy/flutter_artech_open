@@ -13,8 +13,8 @@ class TokenStorage with ServiceGetter, HasNamedLogger {
 
   final BehaviorSubject<TokenModel?> subject = BehaviorSubject<TokenModel?>();
 
-  PersistentSecurityStorageBase get _storage =>
-      services.get<PersistentSecurityStorageBase>();
+  PersistentSecurityStorage get _storage =>
+      services.get<PersistentSecurityStorage>();
   final String key;
 
   //Must be called when app stated
