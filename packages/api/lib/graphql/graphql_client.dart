@@ -47,8 +47,13 @@ GraphQLClient clientFor(String url,
       cache: GraphQLCache(store: HiveStore()),
       link: link,
       defaultPolicies: DefaultPolicies(
-          query: Policies(fetch: FetchPolicy.cacheAndNetwork),
-          watchQuery: Policies(fetch: FetchPolicy.cacheAndNetwork)));
+          //query just ignore cache
+          query: Policies(
+              fetch: FetchPolicy.noCache,
+              cacheReread: CacheRereadPolicy.ignoreAll),
+          watchQuery: Policies(
+              fetch: FetchPolicy.cacheAndNetwork,
+              cacheReread: CacheRereadPolicy.ignoreAll)));
 }
 
 typedef _RequestTransformer = FutureOr<Request> Function(Request request);
