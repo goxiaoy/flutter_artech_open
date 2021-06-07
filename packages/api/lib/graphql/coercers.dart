@@ -1,44 +1,46 @@
 import 'package:artech_api/graphql/date_time_parser.dart';
 import 'package:http/http.dart';
 
-DateTime? fromGraphQLDateTimeToDartDateTime(String? date) =>
-    date == null ? null : DateTimeParser.fromGraphQLDateTime(date);
+DateTime fromGraphQLDateTimeToDartDateTime(String date) =>
+    fromGraphQLDateTimeToDartDateTimeNullable(date)!;
 
 DateTime? fromGraphQLDateTimeToDartDateTimeNullable(String? date) =>
-    fromGraphQLDateTimeToDartDateTime(date);
+    date == null ? null : DateTimeParser.fromGraphQLDateTime(date);
 
-DateTime? fromGraphQLDateToDartDateTime(String? date) =>
-    date == null ? null : DateTimeParser.fromGraphQLDate(date);
+DateTime fromGraphQLDateToDartDateTime(String date) =>
+    fromGraphQLDateToDartDateTimeNullable(date)!;
 
 DateTime? fromGraphQLDateToDartDateTimeNullable(String? date) =>
-    fromGraphQLDateToDartDateTime(date);
+    date == null ? null : DateTimeParser.fromGraphQLDate(date);
 
-DateTime? fromGraphQLTimeToDartDateTime(String? time) =>
-    time == null ? null : DateTimeParser.fromGraphQLTime(time);
+DateTime fromGraphQLTimeToDartDateTime(String time) =>
+    fromGraphQLTimeToDartDateTimeNullable(time)!;
+
 DateTime? fromGraphQLTimeToDartDateTimeNullable(String? time) =>
-    fromGraphQLTimeToDartDateTime(time);
+    time == null ? null : DateTimeParser.fromGraphQLTime(time);
 
 // TODO(Goxiaoy): check date
-String? fromDartDateTimeToGraphQLDate(DateTime? date) =>
-    date == null ? null : DateTimeParser.toGraphQlDateTime(date);
-String? fromDartDateTimeToGraphQLDateNullable(DateTime? date) =>
-    fromDartDateTimeToGraphQLDate(date);
+String fromDartDateTimeToGraphQLDate(DateTime date) =>
+    fromDartDateTimeToGraphQLDateNullable(date)!;
 
-String? fromDartDateTimeToGraphQLTime(DateTime? date) =>
-    date == null ? null : DateTimeParser.toGraphQlTime(date);
+String? fromDartDateTimeToGraphQLDateNullable(DateTime? date) =>
+    date == null ? null : DateTimeParser.toGraphQlDateTime(date);
+
+String fromDartDateTimeToGraphQLTime(DateTime date) =>
+    fromDartDateTimeToGraphQLTimeNullable(date)!;
 
 String? fromDartDateTimeToGraphQLTimeNullable(DateTime? date) =>
-    fromDartDateTimeToGraphQLTime(date);
+    date == null ? null : DateTimeParser.toGraphQlTime(date);
 
-String? fromDartDateTimeToGraphQLDateTime(DateTime? dateTime) {
+String fromDartDateTimeToGraphQLDateTime(DateTime dateTime) =>
+    fromDartDateTimeToGraphQLDateTimeNullable(dateTime)!;
+
+String? fromDartDateTimeToGraphQLDateTimeNullable(DateTime? dateTime) {
   if (dateTime != null) {
     return DateTimeParser.toGraphQlDateTime(dateTime);
   }
   return null;
 }
-
-String? fromDartDateTimeToGraphQLDateTimeNullable(DateTime? dateTime) =>
-    fromDartDateTimeToGraphQLDateTime(dateTime);
 
 MultipartFile fromGraphQLUploadToDartMultipartFile(MultipartFile file) => file;
 MultipartFile fromDartMultipartFileToGraphQLUpload(MultipartFile file) => file;
