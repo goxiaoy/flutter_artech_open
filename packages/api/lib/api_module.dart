@@ -20,6 +20,7 @@ class ApiModule extends AppSubModuleBase with HasNamedLogger {
   void configureServices() {
     configTyped<ExceptionProcessor>(configurator: (p) {
       p.addHandler(SocketExceptionHandler());
+      p.addHandler(HandshakeExceptionHandler());
     });
     configTyped<DioOptions>(
         creator: () => DioOptions()

@@ -12,7 +12,22 @@ class SocketExceptionHandler implements ExceptionHandlerBase {
   void handle(ExceptionContext context) {
     final e = context.latestError as SocketException;
     context.hasHandled = true;
-    context.parsedException =
-        UserFriendlyException(code: 'SocketException', message: e.message);
+    context.parsedException = UserFriendlyException(
+        code: 'NetworkException', message: 'Network unavailable');
+  }
+}
+
+class HandshakeExceptionHandler implements ExceptionHandlerBase {
+  @override
+  bool canHandle(Object exception) {
+    return exception is HandshakeException;
+  }
+
+  @override
+  void handle(ExceptionContext context) {
+    final e = context.latestError as SocketException;
+    context.hasHandled = true;
+    context.parsedException = UserFriendlyException(
+        code: 'NetworkException', message: 'Network error');
   }
 }
