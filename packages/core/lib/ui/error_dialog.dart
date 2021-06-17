@@ -18,11 +18,11 @@ class ErrorDialog {
             title: Text(title),
             content: Text(text),
             actions: [
-              TextButton(
+              IconButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Cancel')),
+                  icon: const Icon(Icons.close_outlined)),
             ],
           );
         }));
