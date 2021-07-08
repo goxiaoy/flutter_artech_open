@@ -26,6 +26,8 @@ class AppConfig {
           final String stringValue = keyValue.value as String;
           GlobalConfiguration().updateValue(
               keyValue.key, stringValue.replaceAll('localhost', '10.0.2.2'));
+          GlobalConfiguration().updateValue(
+              keyValue.key, stringValue.replaceAll('127.0.0.1', '10.0.2.2'));
         }
       }
     }
