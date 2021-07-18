@@ -21,13 +21,13 @@ class AppConfig {
 
     if (!kIsWeb && Platform.isAndroid) {
       //android simulator will be 10.0.2.2
-      for (final keyValue in GlobalConfiguration().appConfig.entries) {
+      final items = GlobalConfiguration().appConfig.entries;
+      for (final keyValue in items) {
         if (keyValue.value is String) {
-          final String stringValue = keyValue.value as String;
-          GlobalConfiguration().updateValue(
-              keyValue.key, stringValue.replaceAll('localhost', '10.0.2.2'));
-          GlobalConfiguration().updateValue(
-              keyValue.key, stringValue.replaceAll('127.0.0.1', '10.0.2.2'));
+          String stringValue = keyValue.value as String;
+          stringValue = stringValue.replaceAll('localhost', '10.0.2.2');
+          stringValue = stringValue.replaceAll('127.0.0.1', '10.0.2.2');
+          GlobalConfiguration().updateValue(keyValue.key, stringValue);
         }
       }
     }
