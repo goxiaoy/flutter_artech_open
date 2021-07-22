@@ -52,26 +52,47 @@ class AppBootstrap {
   Future<void> configureAllServices() async {
     GetIt.I.allowReassignment = true;
     for (final element in listOfAllModules) {
-      await executeWithStopwatch(() => element.preConfigureServices(),
-          name: '${element.runtimeType} preConfigureServices');
+      try {
+        await executeWithStopwatch(() => element.preConfigureServices(),
+            name: '${element.runtimeType} preConfigureServices');
+      } catch (error) {
+        _logger
+            .severe('${element.runtimeType} preConfigureServices error $error');
+        listOfAllModules.remove(element);
+      }
       //element.preConfigureServices();
     }
     for (final element in listOfAllModules) {
-      await executeWithStopwatch(() => element.configureServices(),
-          name: '${element.runtimeType} configureServices');
+      try {
+        await executeWithStopwatch(() => element.configureServices(),
+            name: '${element.runtimeType} configureServices');
+      } catch (error) {
+        _logger.severe('${element.runtimeType} configureServices error $error');
+        listOfAllModules.remove(element);
+      }
       //element.configureServices();
     }
     for (final element in listOfAllModules) {
-      await executeWithStopwatch(() => element.postConfigureServices(),
-          name: '${element.runtimeType} postConfigureServices');
-      //element.postConfigureServices();
+      try {
+        await executeWithStopwatch(() => element.postConfigureServices(),
+            name: '${element.runtimeType} postConfigureServices');
+        //element.postConfigureServices();
+      } catch (error) {
+        _logger.severe(
+            '${element.runtimeType} postConfigureServices error $error');
+        listOfAllModules.remove(element);
+      }
     }
   }
 
   Future<void> executeBeforeApplicationInit() async {
     for (final m in listOfAllModules) {
-      await executeWithStopwatch(() => m.beforeApplicationInit(),
-          name: '${m.runtimeType} beforeApplicationInit');
+      try {
+        await executeWithStopwatch(() => m.beforeApplicationInit(),
+            name: '${m.runtimeType} beforeApplicationInit');
+      } catch (error) {
+        _logger.severe('${m.runtimeType} beforeApplicationInit error $error');
+      }
     }
   }
 
