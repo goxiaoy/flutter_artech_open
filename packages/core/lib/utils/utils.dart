@@ -53,34 +53,21 @@ Future<T> executeWithStopwatch<T>(FutureOr<T> Function() f,
     final Stopwatch sw = Stopwatch();
     sw.start();
     Timeline.startSync(name);
-    try {
-      final res = await f();
-      Timeline.finishSync();
-      sw.stop();
-      if (sw.elapsedMilliseconds > thresholdMilliseconds) {
-        _timeLogger.warning('Execute $name cost: ${sw.elapsedMilliseconds}');
-        overAction?.call(sw.elapsedMilliseconds);
-      } else {
-        _timeLogger.fine('Execute $name cost: ${sw.elapsedMilliseconds}');
-      }
-      return res;
-    } catch (error) {
-      Timeline.finishSync();
-      sw.stop();
-      _timeLogger.severe('Execute $name error:$error');
-      return Future.value();
+    final res = await f();
+    Timeline.finishSync();
+    sw.stop();
+    if (sw.elapsedMilliseconds > thresholdMilliseconds) {
+      _timeLogger.warning('Execute $name cost: ${sw.elapsedMilliseconds}');
+      overAction?.call(sw.elapsedMilliseconds);
+    } else {
+      _timeLogger.fine('Execute $name cost: ${sw.elapsedMilliseconds}');
     }
+    return res;
   } else {
     Timeline.startSync(name);
-    try {
-      final res = await f();
-      Timeline.finishSync();
-      return res;
-    } catch (error) {
-      Timeline.finishSync();
-      _timeLogger.severe('Execute $name error:$error');
-      return Future.value();
-    }
+    final res = await f();
+    Timeline.finishSync();
+    return res;
   }
 }
 
