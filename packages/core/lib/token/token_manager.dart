@@ -6,7 +6,7 @@ import 'token_model.dart';
 import 'token_storage.dart';
 
 abstract class RefreshTokenProvider {
-  Future<TokenModel> refreshToken(TokenModel token);
+  Future<TokenModel?> refreshToken(TokenModel token);
 }
 
 class TokenManager with HasNamedLogger {
@@ -16,9 +16,9 @@ class TokenManager with HasNamedLogger {
       serviceLocator.get<RefreshTokenProvider>();
   Timer? _refreshTimer;
   Completer<TokenModel>? _refreshTokenCompleter;
-  Future set(TokenModel token) async {
+  Future set(TokenModel? token) async {
     await tokenStorage.set(token);
-    _startTimer(token.expireAt);
+    if (token != null) _startTimer(token.expireAt);
   }
 
   ///call this after app started
@@ -98,6 +98,7 @@ class TokenManager with HasNamedLogger {
       await set(newToken);
     } catch (e, s) {
       logger.severe('Refresh token fail $e', e, s);
+      await set(newToken);
       return newToken;
     } finally {
       _refreshTokenCompleter!.complete(newToken);
