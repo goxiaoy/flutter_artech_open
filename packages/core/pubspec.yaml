@@ -21,12 +21,6 @@ dependencies:
   intl: ^0.17.0
   #config
   global_configuration: ^2.0.0-nullsafety.1
-  #timezone
-  time_machine:
-    git:
-      #https://github.com/Dana-Ferguson/time_machine/issues/55
-      url: https://github.com/Dana-Ferguson/time_machine
-  # freeze version. newer version needs minsdkversion >= 26
   flutter_native_timezone: ^2.0.0
   timezone: ^0.7.0
   universal_platform: ^1.0.0+1
@@ -40,7 +34,7 @@ dependencies:
   flutter_easyloading: ^3.0.0
 
   #UI
-  responsive_builder: ^0.4.0-nullsafety.1
+  responsive_builder: ^0.4.1
   flutter_hooks: ^0.17.0
   package_info: ^2.0.0
   multiple_localization: ^0.2.2
@@ -61,9 +55,7 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
-  assets:
-    - packages/time_machine/data/cultures/cultures.bin
-    - packages/time_machine/data/tzdb/tzdb.bin
+
   # For details regarding assets in packages, see
   # https://flutter.dev/assets-and-images/#from-packages
   #

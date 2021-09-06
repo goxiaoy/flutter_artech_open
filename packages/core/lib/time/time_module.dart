@@ -1,10 +1,7 @@
 import 'package:artech_core/app_module_base.dart';
 import 'package:artech_core/core.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:logging/logging.dart';
-import 'package:time_machine/time_machine.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -22,7 +19,7 @@ class TimeModule extends AppSubModuleBase {
   void configureServices() {
     loadTimeFuture = _setCurrentZoneTime();
     // services.registerSingletonAsync(()async{
-    //   await setCurrentZoneTime();
+    //   await setCurrentZoneTdevice_calendarime();
     //   return TimeReady();
     // });
   }
@@ -30,35 +27,28 @@ class TimeModule extends AppSubModuleBase {
   Future<void> _setCurrentZoneTime() async {
     try {
       tz.initializeTimeZones(); //
-      tz.setLocalLocation(tz.getLocation(await _getCurrentTimeZone()));
+      final timezone = await _getCurrentTimeZone();
+      if (timezone != null) {
+        tz.setLocalLocation(tz.getLocation(timezone));
+      }
     } catch (error) {
       _log.severe('configureLocalTimeZone error: $error');
     }
   }
 
-  Future<String> _getCurrentTimeZone() async {
-    final loadFromTimeMachine = () async {
-      await executeWithStopwatch(() async {
-        await TimeMachine.initialize(
-            <String, dynamic>{'rootBundle': rootBundle});
-      }, name: 'Dart Time Machine Init');
-      _log.info('Hello, ${DateTimeZone.local} from the Dart Time Machine!\n');
-      return DateTimeZone.local.toString();
-    };
-    if (!kIsWeb) {
-      //try load from native
-      try {
-        //TODO GMT can not be used https://github.com/pinkfish/flutter_native_timezone/issues/15
-        final String currentTimeZone = await executeWithStopwatch(
-            () => FlutterNativeTimezone.getLocalTimezone(),
-            name: 'FlutterNativeTimezone.getLocalTimezone');
-        _log.info('Native Time zone: $currentTimeZone');
-        return currentTimeZone;
-      } catch (e) {
-        _log.severe('loadFromTimeMachine error: $e');
-      }
+  Future<String?> _getCurrentTimeZone() async {
+    //try load from native
+    try {
+      //TODO GMT can not be used https://github.com/pinkfish/flutter_native_timezone/issues/15
+      final String currentTimeZone = await executeWithStopwatch(
+          () => FlutterNativeTimezone.getLocalTimezone(),
+          name: 'FlutterNativeTimezone.getLocalTimezone');
+      _log.info('Native Time zone: $currentTimeZone');
+      return currentTimeZone;
+    } catch (e) {
+      _log.severe('loadFromTimeMachine error: $e');
     }
-    return await loadFromTimeMachine();
+    return null;
   }
 }
 
