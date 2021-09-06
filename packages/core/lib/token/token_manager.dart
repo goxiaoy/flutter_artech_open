@@ -16,6 +16,7 @@ class TokenManager with HasNamedLogger {
       serviceLocator.get<RefreshTokenProvider>();
   Timer? _refreshTimer;
   Completer<TokenModel>? _refreshTokenCompleter;
+
   Future set(TokenModel? token) async {
     await tokenStorage.set(token);
     if (token != null) _startTimer(token.expireAt);
