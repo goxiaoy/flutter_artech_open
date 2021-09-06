@@ -9,7 +9,7 @@ Future<IO.OptionBuilder> resolveBuilder({String tokenKey = 'token'}) async {
   }
   final token = await serviceLocator.get<TokenManager>().get();
   if (token != null) {
-    builder.setAuth(<dynamic, dynamic>{'token': token.token});
+    builder.setAuth(<dynamic, dynamic>{tokenKey: token.token});
   }
   return builder;
 }
