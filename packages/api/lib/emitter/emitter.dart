@@ -57,7 +57,7 @@ class Emitter {
       bool logging = false,
       bool useWebSocket = false}) async {
     final String brokerUrl =
-        useWebSocket ? (secure ? 'wss://' : 'ws://') + host : host;
+        (useWebSocket || kIsWeb) ? (secure ? 'wss://' : 'ws://') + host : host;
 
     _mqtt = getClient(brokerUrl, clientIdentifier);
     if (useWebSocket && !kIsWeb) {

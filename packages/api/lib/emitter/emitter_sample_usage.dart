@@ -1,7 +1,7 @@
 import 'emitter.dart';
 
 void main() async {
-  String secretKey = "J31n6RIj3bgV2uUihswQ5CsjbJJ98yU2";
+  String secretKey = "L8fRRzdy8fn_FHYr1uzBCSQqGerHBiUR";
   Emitter _emitter = Emitter();
   _emitter.onMessage((EmitterMessage message) {
     print("New message: ${message.channel} -> ${message.asString()}");
@@ -10,8 +10,9 @@ void main() async {
     print("OnPresence:");
     print(obj);
   });
-  await _emitter.connect(host: "my.server.com", port: 8080, secure: false);
-  String _key = await _emitter.keygen(secretKey, "mychannel/#/", "rwslpe", 0);
+  await _emitter.connect(
+      host: "localhost", port: 8080, secure: false, logging: true);
+  String _key = await _emitter.keygen(secretKey, "mychannel/#/", "rwslp", 0);
   print("Key generated:" + _key);
   print("Subscribing to mychannel/hello presence");
   _emitter.subscribePresence(_key, "mychannel/");
