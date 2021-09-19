@@ -14,7 +14,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   #common
-  version: ^2.0.0
   logging: ^1.0.1
   rxdart: ^0.26.0
   get_it: ^7.2.0
