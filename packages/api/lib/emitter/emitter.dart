@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:typed_data/typed_data.dart';
@@ -14,6 +15,8 @@ typedef EmitterCallback = void Function(Emitter emitter);
 typedef EmitterSubscribeCallback = void Function(String? topic);
 typedef EmitterPresenceCallback = void Function(dynamic object);
 typedef EmitterMessageCallback = void Function(EmitterMessage message);
+
+final Logger logger = Logger('Emitter');
 
 class Emitter {
   late MqttClient _mqtt;
@@ -55,7 +58,8 @@ class Emitter {
       int port = 8080,
       int keepalive = 60,
       bool logging = false,
-      bool useWebSocket = false}) async {
+      bool useWebSocket = false,
+      String? username}) async {
     final String brokerUrl =
         (useWebSocket || kIsWeb) ? (secure ? 'wss://' : 'ws://') + host : host;
 
@@ -81,19 +85,19 @@ class Emitter {
     _mqtt.connectionMessage = connMess;
 
     try {
-      await _mqtt.connect();
+      await _mqtt.connect(username);
     } on Exception catch (e) {
-      _log('EMITTER::client exception - $e');
+      _log('client exception - $e');
       _mqtt.disconnect();
       return false;
     }
 
     /// Check we are connected
     if (_mqtt.connectionStatus?.state == MqttConnectionState.connected) {
-      _log('EMITTER::Mosquitto client connected');
+      _log('Mosquitto client connected');
     } else {
       _log(
-          'EMITTER::ERROR Mosquitto client connection failed - disconnecting, state is ${_mqtt.connectionStatus?.state}');
+          'ERROR Mosquitto client connection failed - disconnecting, state is ${_mqtt.connectionStatus?.state}');
       _mqtt.disconnect();
       return false;
     }
@@ -142,8 +146,7 @@ class Emitter {
   /*
   * Create a link to a particular channel.
   */
-  Future<dynamic> link(
-      String key, String channel, String name, bool private, bool subscribe,
+  Future<dynamic> link(String key, String channel, String name, bool subscribe,
       {bool me = true, int ttl = 0, int timeout = 5000}) async {
     final options = <String, String>{};
     if (!me) options['me'] = '0';
@@ -153,7 +156,6 @@ class Emitter {
       'key': key,
       'channel': formattedChannel,
       'name': name,
-      'private': private,
       'subscribe': subscribe
     };
     final dynamic response = await _executeAsync(
@@ -292,41 +294,41 @@ class Emitter {
   }
 
   void _onDisconnected() {
-    _log('EMITTER::Disconnected');
+    _log('Disconnected');
     _onDisconnectHandlers.forEach((h) => h(this));
     //if (onDisconnect != null) onDisconnect(this);
   }
 
   void _onConnected() {
-    _log('EMITTER::Connected');
+    _log('Connected');
     _onConnectHandlers.forEach((h) => h(this));
     //if (onConnect != null) onConnect(this);
   }
 
   void _onSubscribed(String topic) {
-    _log('EMITTER::Subscription confirmed for topic $topic');
+    _log('Subscription confirmed for topic $topic');
     _onSubscribedHandlers.forEach((h) => h(topic));
     //if (onSubscribed != null) onSubscribed(topic);
   }
 
   void _onUnsubscribed(String? topic) {
-    _log('EMITTER::Unsubscription confirmed for topic $topic');
+    _log('Unsubscription confirmed for topic $topic');
     _onUnsubscribedHandlers.forEach((h) => h(topic));
     //if (onUnsubscribed != null) onUnsubscribed(topic);
   }
 
   void _onSubscribeFail(String topic) {
-    _log('EMITTER::Subscription failed for topic $topic');
+    _log('Subscription failed for topic $topic');
     _onSubscribeFailHandlers.forEach((h) => h(topic));
     //if (onSubscribeFail != null) onSubscribeFail(topic);
   }
 
   void _pong() {
-    _log('EMITTER::Pong');
+    _log('Pong');
   }
 
   void _log(Object message) {
-    if (_logging) print(message);
+    if (_logging) logger.info(message);
   }
 
   bool _checkRPCResult(EmitterMessage message) {
@@ -358,7 +360,7 @@ class Emitter {
     final MqttPublishMessage msg = c[0].payload as MqttPublishMessage;
     final String topic = c[0].topic;
     final message = EmitterMessage(topic, msg.payload.message);
-    _log('EMITTER::$topic -> ${message.asString()}');
+    _log('$topic -> ${message.asString()}');
     if (topic.startsWith('emitter/presence')) {
       if (!_checkRequestResult(message))
         _onPresenceHandlers.forEach((h) => h(message.asObject()));
@@ -470,7 +472,7 @@ class ReverseTrie {
 
   List<EmitterMessageCallback> _recurMatch(
       List<String> query, int posInQuery, Map<String, ReverseTrie> children) {
-    List<EmitterMessageCallback> matches = [];
+    final List<EmitterMessageCallback> matches = [];
     if (posInQuery == query.length) return matches;
     ReverseTrie? childNode = children['+'];
     if (childNode != null) {
