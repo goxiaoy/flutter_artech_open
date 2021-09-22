@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:artech_core/app_module_base.dart';
 import 'package:artech_core/errors/exception_handler.dart';
 import 'package:artech_core/errors/exception_processor.dart';
+import 'package:artech_core/id/uid_generator.dart';
 import 'package:artech_core/l10n/localization_option.dart';
 import 'package:artech_core/security/persistent_security_storage.dart';
 import 'package:artech_core/settings/memory_setting_store.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
 
 import 'configuration/app_config.dart';
+import 'id/generator.dart';
 import 'services_extension.dart';
 import 'token/token_manager.dart';
 import 'token/token_storage.dart';
@@ -46,7 +48,7 @@ class CoreModule extends AppSubModuleBase {
     ifNotRegistered<SettingStore>((services) {
       services.registerSingleton<SettingStore>(MemorySettingStore());
     });
-
+    services.registerSingleton<IdGenerator>(UIdGenerator());
     services.registerSingleton<PersistentSecurityStorage>(
         PersistentSecurityStorage());
     services.registerSingletonAsync<AppConfig>(() async {
