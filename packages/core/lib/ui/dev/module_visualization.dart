@@ -81,6 +81,9 @@ class _ModuleVisualizationState extends State<ModuleVisualization> {
                   ..color = Colors.green
                   ..strokeWidth = 1
                   ..style = PaintingStyle.stroke,
+                builder: (Node node) {
+                  return Container();
+                },
               )),
         ),
       ],

@@ -40,7 +40,7 @@ dependencies:
   package_info: ^2.0.0
   multiple_localization: ^0.2.2
 
-  graphview: ^1.0.0-nullsafety.1
+  graphview: ^1.0.0
 
 dev_dependencies:
   flutter_test:
