@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:artech_core/configuration/app_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
 typedef FromJsonFunc<T> = T Function(Map<String, dynamic> json);
@@ -30,4 +33,13 @@ extension JsonExtension on Map<String, dynamic>? {
     }
     return ret;
   }
+}
+
+// Must be top-level function
+dynamic _parseAndDecode(String response) {
+  return jsonDecode(response);
+}
+
+dynamic computeParseJson(String text) {
+  return compute<String, dynamic>(_parseAndDecode, text);
 }
