@@ -29,6 +29,7 @@ export 'package:multiple_localization/multiple_localization.dart';
 export 'package:timezone/timezone.dart';
 export 'package:flutter_native_timezone/flutter_native_timezone.dart';
 export 'package:universal_platform/universal_platform.dart';
+export 'package:uuid/uuid.dart';
 
 export 'event/event_emitter.dart';
 export 'services_extension.dart';
