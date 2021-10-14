@@ -7,7 +7,8 @@ import 'package:artech_core/configuration/app_config.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
-export 'package:artech_core/utils/json_extension.dart';
+export 'int.dart';
+export 'json_extension.dart';
 
 typedef GetFactory<T> = T? Function();
 typedef SetFactory<T> = void Function(T? value);
