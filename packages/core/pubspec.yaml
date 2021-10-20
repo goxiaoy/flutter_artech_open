@@ -36,7 +36,7 @@ dependencies:
 
   #UI
   responsive_builder: ^0.4.1
-  flutter_hooks: ^0.17.0
+  flutter_hooks: ^0.18.0
   package_info: ^2.0.0
   multiple_localization: ^0.2.2
 
@@ -45,8 +45,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-
+  json_serializable: ^6.0.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
