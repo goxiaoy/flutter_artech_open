@@ -12,8 +12,13 @@ abstract class RefreshTokenProvider {
 class TokenManager with HasNamedLogger {
   TokenManager();
   TokenStorage get tokenStorage => serviceLocator.get<TokenStorage>();
+
+  bool get supportRefreshToken =>
+      serviceLocator.isRegistered<RefreshTokenProvider>();
+
   RefreshTokenProvider get refreshTokenProvider =>
       serviceLocator.get<RefreshTokenProvider>();
+
   Timer? _refreshTimer;
   Completer<TokenModel>? _refreshTokenCompleter;
 
@@ -50,6 +55,9 @@ class TokenManager with HasNamedLogger {
   }
 
   Future<void> _startTimer(DateTime? expireAt) async {
+    if (!supportRefreshToken) {
+      return;
+    }
     _clearTimer();
     if (expireAt == null) {
       return;
