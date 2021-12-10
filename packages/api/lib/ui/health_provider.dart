@@ -15,15 +15,27 @@ class HealthProvider extends HookWidget {
   Widget build(BuildContext context) {
     final connectState =
         useMemoizedStream(() => Connectivity().onConnectivityChanged);
-    final network = connectState.connectionState != ConnectionState.none;
+    final hasNetwork = connectState.connectionState != ConnectionState.none;
+    RemoteConnectionState s = hasNetwork
+        ? RemoteConnectionState.Connected
+        : RemoteConnectionState.Disconnect;
     return canCheckEndpoint
         ? HookBuilder(
             builder: (context) {
               final endpoint = serviceLocator.get<HealthCheckEndpoint>();
+              final AsyncSnapshot<RemoteConnectionState?> remoteState =
+                  useMemoizedStream<RemoteConnectionState?>(
+                      () => endpoint.state());
+
               final AsyncSnapshot<HealthCheckData?> healthCheckData =
-                  useMemoizedStream(() => endpoint.connect());
+                  useMemoizedStream(() => endpoint.health());
+
+              if (remoteState.hasData && remoteState.data != null) {
+                s = remoteState.data!;
+              }
+
               return HealthState(
-                isConnected: network && !healthCheckData.hasError,
+                connectionState: s,
                 child: LatencyState(
                   child: child,
                   serverTime: healthCheckData.data?.serverTime,
@@ -37,7 +49,7 @@ class HealthProvider extends HookWidget {
             },
           )
         : HealthState(
-            isConnected: network,
+            connectionState: s,
             child: child,
           );
   }
@@ -53,10 +65,10 @@ Duration? _calLatency(DateTime? a, DateTime? b) {
 class HealthState extends InheritedWidget {
   const HealthState({
     Key? key,
-    required this.isConnected,
+    required this.connectionState,
     required Widget child,
   }) : super(key: key, child: child);
-  final bool isConnected;
+  final RemoteConnectionState connectionState;
 
   static HealthState? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<HealthState>();
@@ -64,7 +76,7 @@ class HealthState extends InheritedWidget {
 
   @override
   bool updateShouldNotify(covariant HealthState oldWidget) {
-    return oldWidget.isConnected != isConnected;
+    return oldWidget.connectionState != connectionState;
   }
 }
 

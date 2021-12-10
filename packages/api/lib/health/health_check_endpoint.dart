@@ -1,8 +1,15 @@
 part of 'health.dart';
 
+enum RemoteConnectionState {
+  Disconnect,
+  Connecting,
+  Connected,
+}
+
 /// a remote endpoint which fire health check status periodically
 abstract class HealthCheckEndpoint {
-  Stream<HealthCheckData> connect();
+  Stream<HealthCheckData> health();
+  Stream<RemoteConnectionState?> state();
   void disconnect() {}
 }
 
@@ -14,11 +21,16 @@ class ClientSelfHealthCheckEndpoint extends HealthCheckEndpoint {
 
   Timer? t;
   @override
-  Stream<HealthCheckData> connect() {
+  Stream<HealthCheckData> health() {
     return Stream.periodic(duration, (t) {
       return HealthCheckData()
         ..serverTime = DateTime.now()
         ..clientReceiveTime = DateTime.now();
     });
+  }
+
+  @override
+  Stream<RemoteConnectionState?> state() {
+    return Stream<RemoteConnectionState?>.value(null);
   }
 }
