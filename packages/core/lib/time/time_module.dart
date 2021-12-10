@@ -46,7 +46,7 @@ class TimeModule extends AppSubModuleBase {
       _log.info('Native Time zone: $currentTimeZone');
       return currentTimeZone;
     } catch (e) {
-      _log.severe('loadFromTimeMachine error: $e');
+      _log.severe('FlutterNativeTimezone error: $e');
     }
     return null;
   }
