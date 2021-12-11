@@ -32,9 +32,11 @@ AsyncSnapshot<T?> useMemoizedStream<T>(
 /// Stores an [AsyncSnapshot] as well as a reference to a function [refresh]
 /// that should re-call the future that was used to generate the [snapshot].
 class RefreshableAsyncSnapshot<T> {
-  const RefreshableAsyncSnapshot(this.snapshot, this.refresh);
+  const RefreshableAsyncSnapshot(this.snapshot, this.refresh,
+      {this.isRefreshing});
   final AsyncSnapshot<T> snapshot;
   final Function() refresh;
+  final bool? isRefreshing;
 }
 
 /// Subscribes to a [Future] and returns its current state in a
@@ -51,21 +53,32 @@ class RefreshableAsyncSnapshot<T> {
 ///   * [useFuture], the hook responsible for getting the future.
 ///   * [useMemoized], the hook responsible for the memoization.
 RefreshableAsyncSnapshot<T?> useMemoizedRefreshableFuture<T>(
-  Future<T?>? Function() future, {
+  FutureOr<T?>? Function() future, {
   List<Object?> keys = const [],
   T? initialData,
   bool preserveState = true,
 }) {
   final refresh = useState(0);
+  final isRefreshing = useState(false);
+  final futureWrapper = () async {
+    isRefreshing.value = true;
+    try {
+      await future();
+    } finally {
+      isRefreshing.value = false;
+    }
+  };
+
   final result = useMemoizedFuture(
-    future,
+    futureWrapper,
     keys: [refresh.value, ...keys],
     initialData: initialData,
     preserveState: preserveState,
   );
 
   void refreshFunc() => refresh.value++;
-  return RefreshableAsyncSnapshot<T?>(result, refreshFunc);
+  return RefreshableAsyncSnapshot<T?>(result, refreshFunc,
+      isRefreshing: isRefreshing.value);
 }
 
 T? useSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
