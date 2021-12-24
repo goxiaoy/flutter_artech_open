@@ -63,7 +63,7 @@ RefreshableAsyncSnapshot<T?> useMemoizedRefreshableFuture<T>(
   final futureWrapper = () async {
     isRefreshing.value = true;
     try {
-      await future();
+      return await future();
     } finally {
       isRefreshing.value = false;
     }
@@ -76,7 +76,7 @@ RefreshableAsyncSnapshot<T?> useMemoizedRefreshableFuture<T>(
     preserveState: preserveState,
   );
 
-  void refreshFunc() => refresh.value++;
+  final refreshFunc = () => refresh.value++;
   return RefreshableAsyncSnapshot<T?>(result, refreshFunc,
       isRefreshing: isRefreshing.value);
 }
