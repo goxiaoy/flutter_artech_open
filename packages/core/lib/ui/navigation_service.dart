@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'error_dialog.dart';
 
 class NavigationService {
-  final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   Future<dynamic> navigateTo(String routeName) {
     return navigatorKey.currentState!.pushNamed(routeName);
@@ -18,7 +17,7 @@ class NavigationService {
   void showErrorDialog(String title, Object error, {StackTrace? stackTrace}) {
     final BuildContext context = navigatorKey.currentState!.context;
     final processor = serviceLocator.get<ExceptionProcessor>();
-    var e = processor.process(error, stackTrace);
+    final e = processor.process(error, stackTrace);
     ErrorDialog.showErrorDialog(context, title, e);
   }
 
@@ -26,7 +25,7 @@ class NavigationService {
       BuildContext context, String title, Object error,
       {StackTrace? stackTrace}) {
     final processor = serviceLocator.get<ExceptionProcessor>();
-    var e = processor.process(error, stackTrace);
+    final e = processor.process(error, stackTrace);
     ErrorDialog.showErrorDialog(context, title, e);
   }
 }
