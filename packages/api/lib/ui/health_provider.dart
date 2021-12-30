@@ -1,6 +1,6 @@
 import 'package:artech_api/health/health.dart';
 import 'package:artech_core/core.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 

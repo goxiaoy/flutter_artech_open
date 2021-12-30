@@ -13,12 +13,12 @@ dependencies:
     sdk: flutter
   #grapqhQL
   graphql_flutter: ^5.0.1-beta.2
-  artemis: ^7.0.0-beta.10
+  artemis: ^7.2.3-beta
   artech_core:
     path: ../core
   #http
-  dio: ^4.0.0
-  connectivity: ^3.0.6
+  dio: ^4.0.4
+  connectivity_plus: ^2.1.0
   socket_io_client: ^2.0.0-beta.4-nullsafety.0
 
 dev_dependencies:
