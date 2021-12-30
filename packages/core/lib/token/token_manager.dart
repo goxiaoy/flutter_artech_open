@@ -104,6 +104,7 @@ class TokenManager with HasNamedLogger {
 
     try {
       newToken = await refreshTokenProvider.refreshToken(tokenModel);
+      logger.info('Refresh token successfully');
       await set(newToken);
     } catch (e, s) {
       logger.severe('Refresh token fail $e', e, s);

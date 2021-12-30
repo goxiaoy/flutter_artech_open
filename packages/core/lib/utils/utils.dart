@@ -51,6 +51,7 @@ Future<T> executeWithStopwatch<T>(FutureOr<T> Function() f,
     int thresholdMilliseconds = 20,
     Function(int t)? overAction}) async {
   if (!debugOnly || kIsDebug) {
+    _timeLogger.fine('Start execution $name');
     final Stopwatch sw = Stopwatch();
     sw.start();
     Timeline.startSync(name);
