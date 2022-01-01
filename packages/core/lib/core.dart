@@ -1,9 +1,7 @@
 library core;
 
-import 'package:artech_core/ui/navigation_service.dart';
+import 'package:artech_core/core.dart';
 import 'package:get_it/get_it.dart';
-
-import 'event/event_emitter.dart';
 
 export 'package:artech_core/app_bootstrap.dart';
 export 'package:artech_core/app_module_base.dart';
@@ -21,6 +19,7 @@ export 'package:artech_core/service_getter_mixin.dart';
 export 'package:artech_core/settings/setting_store.dart';
 export 'package:artech_core/store/kv_store.dart';
 export 'package:artech_core/time/date_time_extension.dart';
+export 'package:artech_core/ui/menu/menu.dart';
 export 'package:artech_core/ui/navigation_service.dart';
 export 'package:artech_core/ui/ui.dart';
 export 'package:artech_core/utils/utils.dart';
@@ -41,7 +40,7 @@ final serviceLocator = GetIt.I;
 
 final emitter = EventEmitter();
 
-void showErrorDialog(String title,Object error,{StackTrace? stackTrace}) {
+void showErrorDialog(String title, Object error, {StackTrace? stackTrace}) {
   serviceLocator
       .get<NavigationService>()
       .showErrorDialog(title, error, stackTrace: stackTrace);
