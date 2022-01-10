@@ -16,7 +16,7 @@ class ErrorDialog {
         builder: (_) {
           return AlertDialog(
             title: Text(title),
-            content: Text(text),
+            content: SelectableText(text),
             actions: [
               IconButton(
                   onPressed: () {
