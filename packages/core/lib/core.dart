@@ -8,7 +8,6 @@ export 'package:artech_core/app_module_base.dart';
 export 'package:artech_core/configuration/app_config.dart';
 export 'package:artech_core/core_module.dart';
 export 'package:artech_core/data/data.dart';
-export 'package:artech_core/data/gender.dart';
 export 'package:artech_core/errors/errors.dart';
 export 'package:artech_core/hooks/hooks.dart';
 export 'package:artech_core/l10n/localization_option.dart';

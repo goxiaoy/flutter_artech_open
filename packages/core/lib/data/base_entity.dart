@@ -1,11 +1,4 @@
-//TODO(goxiaoy):cannot extend BaseEntity due to dart compiler
-abstract class BaseStringEntity {
-  String get id;
-
-  set id(String id);
-
-  Map<String, dynamic> toJson();
-
+abstract class BaseStringEntity extends BaseEntity<String> {
   @override
   String toString() {
     return '${runtimeType.toString()}/$id';
