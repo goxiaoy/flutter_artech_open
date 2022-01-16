@@ -1,8 +1,6 @@
 import 'package:artech_core/core.dart';
 import 'package:flutter/material.dart';
 
-import 'error_dialog.dart';
-
 class NavigationService {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -14,18 +12,24 @@ class NavigationService {
     return navigatorKey.currentState!.push(route);
   }
 
-  void showErrorDialog(String title, Object error, {StackTrace? stackTrace}) {
-    final BuildContext context = navigatorKey.currentState!.context;
-    final processor = serviceLocator.get<ExceptionProcessor>();
-    final e = processor.process(error, stackTrace);
-    ErrorDialog.showErrorDialog(context, title, e);
-  }
+  Future showErrorDialog(String title, Object error,
+      {StackTrace? stackTrace}) async {
+    final BuildContext? context = navigatorKey.currentState?.context;
+    if (context != null) {
+      final processor = serviceLocator.get<ExceptionProcessor>();
+      final e = processor.process(error, stackTrace);
 
-  static void showErrorDialogContext(
-      BuildContext context, String title, Object error,
-      {StackTrace? stackTrace}) {
-    final processor = serviceLocator.get<ExceptionProcessor>();
-    final e = processor.process(error, stackTrace);
-    ErrorDialog.showErrorDialog(context, title, e);
+      showDialog<String>(
+          context: context,
+          builder: (_) => AlertDialog(
+                title: Text(title),
+                content: Text(e.toString()),
+                actions: [TextButton(onPressed: (){
+                  Navigator.of(context).pop();
+                }, child: const Text('Close'))],
+              ));
+    } else {
+      return null;
+    }
   }
 }

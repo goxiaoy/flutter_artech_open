@@ -40,7 +40,12 @@ final serviceLocator = GetIt.I;
 
 final emitter = EventEmitter();
 
-void showErrorDialog(String title, Object error, {StackTrace? stackTrace}) {
+/// Utility function
+/// [title] title
+/// [error]
+/// [stackTrace] force to have stackTrace
+void showErrorDialog(String title, Object error,
+    {required StackTrace? stackTrace}) {
   serviceLocator
       .get<NavigationService>()
       .showErrorDialog(title, error, stackTrace: stackTrace);

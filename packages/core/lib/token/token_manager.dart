@@ -1,8 +1,5 @@
 import 'dart:async';
-
 import 'package:artech_core/core.dart';
-
-import 'token_model.dart';
 import 'token_storage.dart';
 
 abstract class RefreshTokenProvider {
