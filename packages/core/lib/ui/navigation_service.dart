@@ -14,8 +14,8 @@ class NavigationService {
   }
 
   Future showErrorDialog(String? title, Object error,
-      {StackTrace? stackTrace}) async {
-    final BuildContext? context = navigatorKey.currentState?.context;
+      {StackTrace? stackTrace,BuildContext? c}) async {
+    final BuildContext? context = c ?? navigatorKey.currentState?.context;
     if (context != null) {
       final processor = serviceLocator.get<ExceptionProcessor>();
       final e = processor.process(error, stackTrace);
@@ -37,7 +37,7 @@ class NavigationService {
       showDialog<String>(
           context: context,
           builder: (_) => AlertDialog(
-                title: Text(codeTitle ?? ""),
+                title: Text(codeTitle ?? ''),
                 content: Text(text),
                 actions: [
                   TextButton(

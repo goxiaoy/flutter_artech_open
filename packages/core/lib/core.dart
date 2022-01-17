@@ -1,6 +1,7 @@
 library core;
 
 import 'package:artech_core/core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 
 export 'package:artech_core/app_bootstrap.dart';
@@ -45,8 +46,8 @@ final emitter = EventEmitter();
 /// [error]
 /// [stackTrace] force to have stackTrace
 void showErrorDialog(String title, Object error,
-    {required StackTrace? stackTrace}) {
+    {StackTrace? stackTrace, BuildContext? context}) {
   serviceLocator
       .get<NavigationService>()
-      .showErrorDialog(title, error, stackTrace: stackTrace);
+      .showErrorDialog(title, error, stackTrace: stackTrace, context: context);
 }
