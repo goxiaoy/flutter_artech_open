@@ -8,7 +8,6 @@ import 'package:hive/hive.dart';
 
 import 'exception_handlers.dart';
 import 'health/health.dart';
-import 'ui/health_provider.dart';
 
 const String defaultClientName = 'defaultApiClient';
 

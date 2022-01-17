@@ -1,0 +1,4 @@
+{
+  "networkUnavailable": "网络无法连接",
+  "networkException": "网络发生错误"
+}

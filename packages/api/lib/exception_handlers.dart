@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:artech_core/core.dart';
 
+import 'generated/l10n.dart';
+
 class SocketExceptionHandler implements ExceptionHandlerBase {
   @override
   bool canHandle(Object exception) {
@@ -12,8 +14,9 @@ class SocketExceptionHandler implements ExceptionHandlerBase {
   void handle(ExceptionContext context) {
     final e = context.latestError as SocketException;
     context.hasHandled = true;
-    context.parsedException = UserFriendlyException(
-        code: 'NetworkException', message: 'Network unavailable');
+    context.parsedException = UserFriendlyException.fromCodeLocaleMessage(
+        code: 'NetworkException',
+        localeText: (context) => S.of(context).networkUnavailable);
   }
 }
 
@@ -27,7 +30,8 @@ class HandshakeExceptionHandler implements ExceptionHandlerBase {
   void handle(ExceptionContext context) {
     final e = context.latestError as SocketException;
     context.hasHandled = true;
-    context.parsedException = UserFriendlyException(
-        code: 'NetworkException', message: 'Network error');
+    context.parsedException = UserFriendlyException.fromCodeLocaleMessage(
+        code: 'NetworkException',
+        localeText: (context) => S.of(context).networkException);
   }
 }
