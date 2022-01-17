@@ -1,7 +1,6 @@
 import 'package:artech_core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:logging/logging.dart';
 
 typedef LocalMessageFunc = String Function(BuildContext context);
 

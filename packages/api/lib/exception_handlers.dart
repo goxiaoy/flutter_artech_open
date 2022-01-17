@@ -15,8 +15,8 @@ class SocketExceptionHandler implements ExceptionHandlerBase {
     final e = context.latestError as SocketException;
     context.hasHandled = true;
     context.parsedException = UserFriendlyException.fromCodeLocaleMessage(
-        code: 'NetworkException',
-        localeText: (context) => S.of(context).networkUnavailable);
+        code: (context) => 'NetworkException',
+        message: (context) => S.of(context).networkUnavailable);
   }
 }
 
@@ -28,10 +28,10 @@ class HandshakeExceptionHandler implements ExceptionHandlerBase {
 
   @override
   void handle(ExceptionContext context) {
-    final e = context.latestError as SocketException;
+    final e = context.latestError as HandshakeException;
     context.hasHandled = true;
     context.parsedException = UserFriendlyException.fromCodeLocaleMessage(
-        code: 'NetworkException',
-        localeText: (context) => S.of(context).networkException);
+        code: (context) => 'NetworkException',
+        message: (context) => S.of(context).networkException);
   }
 }

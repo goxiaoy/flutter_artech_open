@@ -1,4 +1,5 @@
 import 'package:artech_core/core.dart';
+import 'package:artech_core/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 class NavigationService {
@@ -12,21 +13,39 @@ class NavigationService {
     return navigatorKey.currentState!.push(route);
   }
 
-  Future showErrorDialog(String title, Object error,
+  Future showErrorDialog(String? title, Object error,
       {StackTrace? stackTrace}) async {
     final BuildContext? context = navigatorKey.currentState?.context;
     if (context != null) {
       final processor = serviceLocator.get<ExceptionProcessor>();
       final e = processor.process(error, stackTrace);
 
+      String? codeTitle = title;
+      String text = '';
+      if (e is UserFriendlyException) {
+        text = e.getMessage(context);
+        if (codeTitle == null) {
+          final t = e.getCode(context);
+          if (t.isNotEmpty) {
+            codeTitle = t;
+          }
+        }
+      } else {
+        text = e.toString();
+      }
+
       showDialog<String>(
           context: context,
           builder: (_) => AlertDialog(
-                title: Text(title),
-                content: Text(e.toString()),
-                actions: [TextButton(onPressed: (){
-                  Navigator.of(context).pop();
-                }, child: const Text('Close'))],
+                title: Text(codeTitle ?? ""),
+                content: Text(text),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(S.of(context).close))
+                ],
               ));
     } else {
       return null;

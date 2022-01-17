@@ -19,3 +19,46 @@ mixin HasNamedLogger {
         setter: (Logger? l) => _logger = l)!;
   }
 }
+
+Level? convertLogLevelFromString(String? level, {Level? l}) {
+  if (level == null) {
+    return null;
+  }
+  var logLevel = l ?? Level.INFO;
+
+  switch (level.toUpperCase()) {
+    case 'ALL':
+      logLevel = Level.ALL;
+      break;
+    case 'FINEST':
+      logLevel = Level.FINEST;
+      break;
+    case 'FINER':
+      logLevel = Level.FINER;
+      break;
+    case 'FINE':
+      logLevel = Level.FINE;
+      break;
+    case 'CONFIG':
+      logLevel = Level.CONFIG;
+      break;
+    case 'INFO':
+      logLevel = Level.INFO;
+      break;
+    case 'WARNING':
+      logLevel = Level.WARNING;
+      break;
+    case 'SEVERE':
+      logLevel = Level.SEVERE;
+      break;
+    case 'SHOUT':
+      logLevel = Level.SEVERE;
+      break;
+    case 'OFF':
+      logLevel = Level.OFF;
+      break;
+    default:
+      throw ArgumentError.value(level, 'Level should be one of ');
+  }
+  return logLevel;
+}

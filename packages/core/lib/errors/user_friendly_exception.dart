@@ -1,54 +1,64 @@
 import 'package:flutter/cupertino.dart';
 
 class UserFriendlyException implements Exception {
-  UserFriendlyException(
-      {required this.code,
-      this.message,
-      this.details,
-      this.stacktrace,
-      this.localeText});
+  UserFriendlyException._({
+    String? code,
+    this.localeCode,
+    String? message,
+    this.localeText,
+    this.details,
+    this.stacktrace,
+  })  : _code = code,
+        _message = message;
 
   factory UserFriendlyException.fromCodeMessage(
       {required String code,
       String? message,
       dynamic details,
       String? stacktrace}) {
-    return UserFriendlyException(
+    return UserFriendlyException._(
         code: code, message: message, details: details, stacktrace: stacktrace);
   }
 
   factory UserFriendlyException.fromCodeLocaleMessage(
-      {required String code,
-      String Function(BuildContext context)? localeText,
+      {required String Function(BuildContext context) code,
+      String Function(BuildContext context)? message,
       dynamic details,
       String? stacktrace}) {
-    return UserFriendlyException(
-        code: code,
-        localeText: localeText,
+    return UserFriendlyException._(
+        localeCode: code,
+        localeText: message,
         details: details,
         stacktrace: stacktrace);
   }
 
   /// An error code.
-  final String code;
+  final String? _code;
 
-  /// A human-readable error message, possibly null.
-  final String? message;
+  final String? _message;
 
   final dynamic details;
 
   final String? stacktrace;
 
   final String Function(BuildContext context)? localeText;
+  final String Function(BuildContext context)? localeCode;
 
   String getMessage(BuildContext context) {
     if (localeText != null) {
       return localeText!(context);
     }
-    return message ?? '';
+    return _message ?? '';
+  }
+
+  String getCode(BuildContext context) {
+    if (localeCode != null) {
+      return localeCode!(context);
+    }
+    return _code ?? '';
   }
 
   @override
   String toString() =>
-      'UserFriendlyException($code, $message, $details, $stacktrace)';
+      'UserFriendlyException($_code, $_message, $details, $stacktrace)';
 }

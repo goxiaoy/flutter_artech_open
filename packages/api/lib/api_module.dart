@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 
 import 'exception_handlers.dart';
 import 'health/health.dart';
+import 'multi_localization_delegate.dart';
 
 const String defaultClientName = 'defaultApiClient';
 
@@ -17,6 +18,10 @@ class ApiModule extends AppSubModuleBase with HasNamedLogger {
 
   @override
   void configureServices() {
+    configTyped<LocalizationOption>(configurator: (p) {
+      p.delegates.add(MultiAppLocalizationsDelegate.delegate);
+    });
+
     configTyped<ExceptionProcessor>(configurator: (p) {
       p.addHandler(SocketExceptionHandler());
       p.addHandler(HandshakeExceptionHandler());
