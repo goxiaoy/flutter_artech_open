@@ -1,5 +1,6 @@
+import 'dart:ui';
+
 import 'package:artech_core/app_module_base.dart';
-import 'package:artech_core/errors/dio_exception_handler.dart';
 import 'package:artech_core/errors/exception_handler.dart';
 import 'package:artech_core/errors/exception_processor.dart';
 import 'package:artech_core/id/uid_generator.dart';
@@ -68,10 +69,6 @@ class CoreModule extends AppSubModuleBase {
 
     configTyped<MenuOption>(
         creator: () => MenuOption().addGroup(MenuGroup(mainMenuName)));
-
-    configTyped<ExceptionProcessor>(configurator: (p) {
-      p.addHandler(DioExceptionHandler());
-    });
   }
 
   @override
