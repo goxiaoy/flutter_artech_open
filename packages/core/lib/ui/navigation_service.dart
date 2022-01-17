@@ -18,15 +18,18 @@ class NavigationService {
     if (context != null) {
       final processor = serviceLocator.get<ExceptionProcessor>();
       final e = processor.process(error, stackTrace);
-
       showDialog<String>(
           context: context,
           builder: (_) => AlertDialog(
                 title: Text(title),
                 content: Text(e.toString()),
-                actions: [TextButton(onPressed: (){
-                  Navigator.of(context).pop();
-                }, child: const Text('Close'))],
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Close'))
+                ],
               ));
     } else {
       return null;
