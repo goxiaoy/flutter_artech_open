@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:artech_core/core.dart';
+
 import 'token_storage.dart';
 
 abstract class RefreshTokenProvider {
@@ -17,7 +19,7 @@ class TokenManager with HasNamedLogger {
       serviceLocator.get<RefreshTokenProvider>();
 
   Timer? _refreshTimer;
-  Completer<TokenModel>? _refreshTokenCompleter;
+  Completer<TokenModel?>? _refreshTokenCompleter;
 
   Future set(TokenModel? token) async {
     await tokenStorage.set(token);
@@ -92,7 +94,7 @@ class TokenManager with HasNamedLogger {
     if (_refreshTokenCompleter != null) {
       return await _refreshTokenCompleter!.future;
     }
-    _refreshTokenCompleter = Completer<TokenModel>();
+    _refreshTokenCompleter = Completer<TokenModel?>();
     final tokenModel = await tokenStorage.get();
     if (tokenModel == null) {
       return null;
@@ -105,6 +107,7 @@ class TokenManager with HasNamedLogger {
       await set(newToken);
     } catch (e, s) {
       logger.severe('Refresh token fail $e', e, s);
+      //TODO handle retry
       await set(newToken);
       return newToken;
     } finally {
