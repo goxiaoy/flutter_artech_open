@@ -13,23 +13,18 @@ class NavigationService {
     return navigatorKey.currentState!.push(route);
   }
 
-  Future showErrorDialog(String? title, Object error,
+  Future showErrorDialog(String title, Object error,
       {StackTrace? stackTrace, BuildContext? context}) async {
     BuildContext? newCtx = context ?? navigatorKey.currentState?.context;
     if (newCtx != null) {
       final processor = serviceLocator.get<ExceptionProcessor>();
       final e = processor.process(error, stackTrace);
 
-      String? codeTitle = title;
       String text = '';
+      String code = '';
       if (e is UserFriendlyException) {
         text = e.getMessage(newCtx);
-        if (codeTitle == null) {
-          final t = e.getCode(newCtx);
-          if (t.isNotEmpty) {
-            codeTitle = t;
-          }
-        }
+        code = e.getCode(newCtx);
       } else {
         text = e.toString();
       }
@@ -37,8 +32,17 @@ class NavigationService {
       showDialog<String>(
           context: newCtx,
           builder: (_) => AlertDialog(
-                title: Text(codeTitle ?? ''),
-                content: Text(text),
+                title: Text(title),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      code,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(text),
+                  ],
+                ),
                 actions: [
                   TextButton(
                       onPressed: () {
