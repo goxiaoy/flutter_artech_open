@@ -28,8 +28,8 @@ dependencies:
 
   #storage
   shared_preferences: ^2.0.5
-  hive: ^2.0.4
-  hive_flutter: ^1.0.0
+  hive: ^2.0.5
+  hive_flutter: ^1.1.0
   universal_html: ^2.0.8
   flutter_secure_storage: ^5.0.2
   flutter_easyloading: ^3.0.3
