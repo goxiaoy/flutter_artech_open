@@ -1,6 +1,5 @@
-import 'package:artech_core/app_module_base.dart';
 import 'package:artech_core/core.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:artech_ui_kit/ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 
@@ -26,7 +25,7 @@ class _ModuleVisualizationState extends State<ModuleVisualization> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
+        child: scaffoldBuilder(context,
             body: Column(
       mainAxisSize: MainAxisSize.max,
       children: [
