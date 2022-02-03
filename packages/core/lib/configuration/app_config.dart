@@ -15,9 +15,13 @@ class AppConfig {
     } else {
       environmentJson = 'appsettings.production';
     }
-    await GlobalConfiguration()
-        .loadFromAsset('appsettings')
-        .then((p) => p.loadFromAsset(environmentJson));
+    try {
+      await GlobalConfiguration()
+          .loadFromAsset('appsettings')
+          .then((p) => p.loadFromAsset(environmentJson));
+    } catch(error,s) {
+      return;
+    }
 
     if (!kIsWeb && Platform.isAndroid) {
       //android simulator will be 10.0.2.2
@@ -35,7 +39,7 @@ class AppConfig {
   }
 
   T? getValue<T>(String key, {T? defaultValue}) {
-    assert(_isLoaded);
-    return GlobalConfiguration().getValue<T>(key) ?? defaultValue;
+    if(_isLoaded);
+      return GlobalConfiguration().getValue<T>(key) ?? defaultValue;
   }
 }
