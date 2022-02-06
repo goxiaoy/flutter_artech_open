@@ -20,6 +20,7 @@ dependencies:
   uuid: ^3.0.5
   build_runner: ^2.1.4
   json_annotation: ^4.4.0
+  path_provider: ^2.0.8
   #config
   global_configuration: ^2.0.0-nullsafety.1
   flutter_native_timezone: ^2.0.0
