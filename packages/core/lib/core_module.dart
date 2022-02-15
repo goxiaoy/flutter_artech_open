@@ -9,7 +9,6 @@ import 'package:artech_core/settings/setting_store.dart';
 import 'package:artech_core/time/time.dart';
 import 'package:artech_core/token/token_storage.dart';
 import 'package:artech_core/ui/navigation_service.dart';
-import 'package:artech_core/ui/ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -67,9 +66,6 @@ class CoreModule extends AppSubModuleBase {
       return t;
     }, dependsOn: [TokenStorage]);
     services.registerLazySingleton(() => NavigationService());
-
-    configTyped<MenuOption>(
-        creator: () => MenuOption().addGroup(MenuGroup(mainMenuName)));
   }
 
   @override

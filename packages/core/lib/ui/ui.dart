@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 export 'dev/module_visualization.dart';
 export 'dialogs.dart';
 export 'hex_color.dart';
-export 'menu/menu.dart';
 export 'mixin_setting_state.dart';
 export 'responsive.dart';
 

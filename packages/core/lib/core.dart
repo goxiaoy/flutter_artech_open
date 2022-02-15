@@ -19,7 +19,6 @@ export 'package:artech_core/service_getter_mixin.dart';
 export 'package:artech_core/settings/setting_store.dart';
 export 'package:artech_core/store/kv_store.dart';
 export 'package:artech_core/time/date_time_extension.dart';
-export 'package:artech_core/ui/menu/menu.dart';
 export 'package:artech_core/ui/navigation_service.dart';
 export 'package:artech_core/ui/ui.dart';
 export 'package:artech_core/utils/utils.dart';
