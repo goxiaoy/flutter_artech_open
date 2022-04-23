@@ -8,6 +8,7 @@ const kIsDebug = !kReleaseMode;
 
 class AppConfig {
   bool _isLoaded = false;
+
   Future<void> init() async {
     String environmentJson = '';
     if (kIsDebug) {
@@ -19,8 +20,8 @@ class AppConfig {
       await GlobalConfiguration()
           .loadFromAsset('appsettings')
           .then((p) => p.loadFromAsset(environmentJson));
-    } catch(error,s) {
-      return;
+    } catch (e) {
+      print(e);
     }
 
     if (!kIsWeb && Platform.isAndroid) {
@@ -39,7 +40,7 @@ class AppConfig {
   }
 
   T? getValue<T>(String key, {T? defaultValue}) {
-    if(_isLoaded);
-      return GlobalConfiguration().getValue<T>(key) ?? defaultValue;
+    assert(_isLoaded);
+    return GlobalConfiguration().getValue<T>(key) ?? defaultValue;
   }
 }
