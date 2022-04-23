@@ -29,6 +29,19 @@ AsyncSnapshot<T?> useMemoizedStream<T>(
       initialData: initialData, preserveState: preserveState);
 }
 
+void useInterval(FutureOr callback(), Duration delay, {bool initial = false}) {
+  final savedCallback = useRef(callback);
+  savedCallback.value = callback;
+
+  useEffect(() {
+    if (initial) {
+      savedCallback.value();
+    }
+    final timer = Timer.periodic(delay, (_) => savedCallback.value());
+    return timer.cancel;
+  }, [delay, initial]);
+}
+
 /// Stores an [AsyncSnapshot] as well as a reference to a function [refresh]
 /// that should re-call the future that was used to generate the [snapshot].
 class RefreshableAsyncSnapshot<T> {
