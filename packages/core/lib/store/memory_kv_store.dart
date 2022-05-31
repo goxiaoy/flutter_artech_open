@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
+
 import 'kv_store.dart';
 
 class MemoryKVStore extends KVStore {
@@ -39,10 +41,15 @@ class MemoryKVStore extends KVStore {
   }
 
   @override
-  Stream<KeyChangeEvent> watch({String? key}) {
+  Stream<KeyChangeEvent> watch({String? key, bool immediate = true}) {
     var stream = _controller.stream;
     if (key != null) {
       stream = stream.where((event) => event.key == key);
+      if (immediate) {
+        stream = Stream.fromFuture(get(key))
+            .map((event) => KeyChangeEvent(key, event, false))
+            .concatWith([stream]);
+      }
     }
     return stream;
   }

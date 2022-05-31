@@ -3,6 +3,7 @@ import 'package:artech_core/service_getter_mixin.dart';
 import 'package:artech_core/store/kv_store.dart';
 import 'package:hive/hive.dart';
 import 'package:logging/logging.dart';
+import 'package:rxdart/rxdart.dart';
 
 final Logger _logger = Logger('HiveKVStore');
 
@@ -51,9 +52,15 @@ class HiveKVStore extends KVStore with ServiceGetter {
   }
 
   @override
-  Stream<KeyChangeEvent> watch({String? key}) {
-    return box.watch(key: key).map((event) =>
+  Stream<KeyChangeEvent> watch({String? key, bool immediate = true}) {
+    var stream = box.watch(key: key).map((event) =>
         KeyChangeEvent(event.key as String, event.value, event.deleted));
+    if (key != null && immediate) {
+      stream = Stream.fromFuture(get(key))
+          .map((event) => KeyChangeEvent(key, event, false))
+          .concatWith([stream]);
+    }
+    return stream;
   }
 
   @override

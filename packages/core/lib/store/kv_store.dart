@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 abstract class KVStore {
-  Stream<KeyChangeEvent> watch({String? key});
+  Stream<KeyChangeEvent> watch({String? key, bool immediate = true});
 
   Future<T?> get<T>(String key, {T? defaultValue});
 
