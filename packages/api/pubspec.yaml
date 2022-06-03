@@ -12,8 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
   #grapqhQL
-  graphql_flutter: ^5.0.1-beta.2
-  artemis: ^7.2.3-beta
+  graphql_flutter: ^5.1.1-beta.3
+  artemis: ^7.8.0-beta
   artech_core:
     path: ../core
   #http

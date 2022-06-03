@@ -50,3 +50,15 @@ void showErrorDialog(String title, Object error,
       .get<NavigationService>()
       .showErrorDialog(title, error, stackTrace: stackTrace, context: context);
 }
+
+extension GetItExtension on GetIt {
+  Future<T?> safelyGetServiceAsync<T extends Object>(
+      {String? instanceName}) async {
+    final r = isRegistered<T>(instanceName: instanceName);
+    if (!r) {
+      return null;
+    }
+    final item = await getAsync<T>(instanceName: instanceName);
+    return item;
+  }
+}

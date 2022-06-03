@@ -4,7 +4,6 @@ import 'package:artech_core/core.dart';
 import 'package:artech_core/hive/hive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:hive/hive.dart';
 
 import 'exception_handlers.dart';
 import 'health/health.dart';
@@ -29,9 +28,9 @@ class ApiModule extends AppSubModuleBase with HasNamedLogger {
     configTyped<DioOptions>(
         creator: () => DioOptions()
           ..interceptors.addAll([AuthInterceptor(), TimeZoneInterceptor()]));
-    services.registerSingletonAsync(() async {
-      await Hive.openBox<dynamic>(HiveStore.defaultBoxName);
-      return ApiStoreReady();
+
+    services.registerSingletonAsync<Store>(() async {
+      return await HiveStore.open();
     }, dependsOn: [HiveReady]);
 
     configTyped<HealthCheckOption>(creator: () => HealthCheckOption());
@@ -48,5 +47,3 @@ class ApiModule extends AppSubModuleBase with HasNamedLogger {
   @override
   String get loggerName => 'ApiModule';
 }
-
-class ApiStoreReady {}

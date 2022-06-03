@@ -11,12 +11,14 @@ extension GraphQLQueryExtension<T, U extends j.JsonSerializable>
       FetchPolicy? fetchPolicy,
       ErrorPolicy? errorPolicy,
       bool? networkOnly,
-      CacheRereadPolicy? cacheRereadPolicy}) {
+      CacheRereadPolicy? cacheRereadPolicy,
+      Context? context}) {
     return QueryOptions(
       document: document,
       operationName: operationName,
       variables: getVariablesMap(),
       pollInterval: pullInterval,
+      context: context,
       fetchPolicy:
           fetchPolicy ?? (networkOnly == true ? FetchPolicy.networkOnly : null),
       errorPolicy: errorPolicy,
@@ -30,7 +32,8 @@ extension GraphQLQueryExtension<T, U extends j.JsonSerializable>
       FetchPolicy? fetchPolicy,
       ErrorPolicy? errorPolicy,
       bool? networkOnly,
-      CacheRereadPolicy? cacheRereadPolicy}) {
+      CacheRereadPolicy? cacheRereadPolicy,
+      Context? context}) {
     return WatchQueryOptions(
         document: document,
         operationName: operationName,
@@ -41,14 +44,16 @@ extension GraphQLQueryExtension<T, U extends j.JsonSerializable>
             (networkOnly == true ? FetchPolicy.networkOnly : null),
         errorPolicy: errorPolicy,
         cacheRereadPolicy: cacheRereadPolicy,
-        eagerlyFetchResults: true);
+        eagerlyFetchResults: true,
+        context: context);
   }
 
   WatchQueryOptions toNetworkOnlyWatchQuery(
       {Duration pullInterval = Duration.zero,
       bool fetchResults = true,
       ErrorPolicy? errorPolicy,
-      CacheRereadPolicy? cacheRereadPolicy}) {
+      CacheRereadPolicy? cacheRereadPolicy,
+      Context? context}) {
     return WatchQueryOptions(
         document: document,
         operationName: operationName,
@@ -58,16 +63,18 @@ extension GraphQLQueryExtension<T, U extends j.JsonSerializable>
         fetchPolicy: FetchPolicy.networkOnly,
         errorPolicy: errorPolicy,
         cacheRereadPolicy: cacheRereadPolicy,
-        eagerlyFetchResults: true);
+        eagerlyFetchResults: true,
+        context: context);
   }
 }
 
 extension GraphQLMutationExtension<T, U extends j.JsonSerializable>
     on GraphQLQuery<T, U> {
-  MutationOptions toMutationOption() {
+  MutationOptions toMutationOption({Context? context}) {
     return MutationOptions(
         document: document,
         operationName: operationName,
-        variables: getVariablesMap());
+        variables: getVariablesMap(),
+        context: context);
   }
 }

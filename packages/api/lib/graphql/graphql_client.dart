@@ -21,9 +21,10 @@ String? uuidFromObject(Object object) {
   return null;
 }
 
-GraphQLClient clientFor(String url,
+Future<GraphQLClient> clientFor(String url,
     {Future<String?> Function() getTokenFromStorage = _getFromTokenManager,
-    String? subscriptionUri}) {
+    String? subscriptionUri,
+    Store? store}) async {
   final Link httpLink = HttpLink(url);
   final authLink = _MyAuthLink(
     getToken: () async {
@@ -43,8 +44,9 @@ GraphQLClient clientFor(String url,
     );
     link = link.concat(websocketLink);
   }
+  final s = store ?? await serviceLocator.safelyGetServiceAsync<Store>();
   return GraphQLClient(
-      cache: GraphQLCache(store: HiveStore()),
+      cache: GraphQLCache(store: s),
       link: link,
       defaultPolicies: DefaultPolicies(
           //query just ignore cache
