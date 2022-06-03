@@ -39,7 +39,7 @@ dependencies:
   responsive_builder: ^0.4.1
   flutter_hooks: ^0.18.0
   package_info: ^2.0.0
-  multiple_localization: ^0.2.2
+  multiple_localization: ^0.3.0
 
   graphview: ^1.0.0
 
