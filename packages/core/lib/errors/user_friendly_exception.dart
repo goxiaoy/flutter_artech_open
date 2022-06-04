@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:artech_core/core.dart';
 
 class UserFriendlyException implements Exception {
   UserFriendlyException._({
@@ -59,6 +60,9 @@ class UserFriendlyException implements Exception {
   }
 
   @override
-  String toString() =>
-      'UserFriendlyException($_code, $_message, $details, $stacktrace)';
+  String toString() {
+    final context =
+        serviceLocator.get<NavigationService>().navigatorKey.currentContext!;
+    return 'UserFriendlyException(${getCode(context)},  ${getMessage(context)}, $details, $stacktrace)';
+  }
 }
