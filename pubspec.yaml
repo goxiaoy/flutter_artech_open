@@ -1,0 +1,7 @@
+name: flutter_artech_open_workspace
+
+environment:
+  sdk: '>=2.15.0 <3.0.0'
+dev_dependencies:
+  melos: ^3.0.1
+
