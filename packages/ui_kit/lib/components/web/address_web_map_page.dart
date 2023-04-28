@@ -9,10 +9,7 @@ import 'package:universal_html/html.dart' as html;
 
 class AddressMapPage extends StatefulWidget {
   final String address;
-  final String googleKey;
-  const AddressMapPage(
-      {Key? key, required this.address, required this.googleKey})
-      : super(key: key);
+  const AddressMapPage({Key? key, required this.address}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -81,7 +78,8 @@ class _AddressMapPageState extends State<AddressMapPage> with HasNamedLogger {
   @override
   void initState() {
     super.initState();
-    googleGeocoding = decode.GoogleGeocoding(widget.googleKey);
+    googleGeocoding = decode.GoogleGeocoding(
+        serviceLocator.get<AppConfig>().getValue("google.map.key"));
     geocodingSearch(widget.address);
     logger.info('initState:');
   }
