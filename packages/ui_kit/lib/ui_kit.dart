@@ -26,7 +26,6 @@ export 'package:webview_flutter/webview_flutter.dart';
 export 'artech_app.dart';
 export 'background_location/background_location.dart';
 export 'background_location/position_widget.dart';
-export 'capture/capture.dart';
 export 'color_extension.dart';
 export 'components/components.dart';
 export 'data/gender.dart';

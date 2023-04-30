@@ -15,7 +15,7 @@ class CommonSettingPage extends StatelessWidget with ServiceGetter {
   @override
   Widget build(BuildContext context) {
     const bgColor = backgroundGray;
-    TextStyle style = (Theme.of(context).textTheme.bodyText1 ?? TextStyle())
+    TextStyle style = (Theme.of(context).textTheme.bodyLarge ?? TextStyle())
         .copyWith(color: Theme.of(context).disabledColor);
     return scaffoldBuilder(context,
         resizeToAvoidBottomInset: true,
@@ -31,7 +31,9 @@ class CommonSettingPage extends StatelessWidget with ServiceGetter {
                   builder: (BuildContext context) {
                     final value = useMenuGroup(settingMenuName);
                     final sections = value
-                        .where((element) => element.widget!(context) is SettingsSection).toList();
+                        .where((element) =>
+                            element.widget!(context) is SettingsSection)
+                        .toList();
                     final display = value
                         .where((element) =>
                             element.priority <= settingMenuDisplayPriority &&

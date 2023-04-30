@@ -62,6 +62,7 @@ mixin RefreshablePageMixin<T extends StatefulWidget> on State<T> {
 
   ///manual call refresh
   Future refreshAll({bool needMove: false}) async {
-    Future.microtask(() => _controller.requestRefresh(needMove: needMove));
+    return Future.microtask(
+        () => _controller.requestRefresh(needMove: needMove));
   }
 }

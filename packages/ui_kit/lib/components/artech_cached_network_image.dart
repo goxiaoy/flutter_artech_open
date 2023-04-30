@@ -1,9 +1,19 @@
+import 'package:artech_core/core.dart';
+import 'package:artech_ui_kit/ui_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:artech_ui_kit/ui_kit.dart';
-import 'package:artech_core/core.dart';
 
 const double _defaultRadius = 8.0;
+
+Widget defaultErrorBuilder(
+  BuildContext context,
+  String url,
+  dynamic error,
+) {
+  return ImageErrorHolder(
+    error: error,
+  );
+}
 
 class ArtechCachedNetworkImage extends StatelessWidget {
   final String imageUrl;
@@ -17,12 +27,12 @@ class ArtechCachedNetworkImage extends StatelessWidget {
   const ArtechCachedNetworkImage(
       {Key? key,
       required this.imageUrl,
-      this.errorWidget,
+      this.errorWidget = defaultErrorBuilder,
       this.width,
       this.height,
       this.fit,
       this.radius,
-      this.enabledClipper=true,
+      this.enabledClipper = true,
       this.placeholder})
       : super(key: key);
 

@@ -3,8 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 class DioOptions {
-  int? connectTimeout = 10000;
-  int? receiveTimeout = 10000;
+  Duration? connectTimeout = const Duration(seconds: 10);
+  Duration? receiveTimeout = const Duration(seconds: 10);
   Interceptors interceptors = Interceptors();
   bool webWithCredentials = true;
   bool ignoreBadCert = false;
