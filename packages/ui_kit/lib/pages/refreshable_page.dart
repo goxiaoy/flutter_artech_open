@@ -53,7 +53,7 @@ mixin RefreshablePageMixin<T extends StatefulWidget> on State<T> {
     );
   }
 
-  Function addListener(RefreshFunc f) {
+  void Function() addListener(RefreshFunc f) {
     _refreshFuncs.add(f);
     return () {
       _refreshFuncs.removeWhere((element) => element == f);
