@@ -1,6 +1,7 @@
-import 'ui_kit.dart';
-import 'package:flutter/material.dart';
 import 'package:artech_core/core.dart';
+import 'package:flutter/material.dart';
+
+import 'ui_kit.dart';
 
 class UIKitRoute {
   static String settingPageRoute = '/settings';
@@ -11,15 +12,20 @@ class UIKitRoute {
 }
 
 /// Build param then call FluroRouter navigateTo
-Future navigateTo(BuildContext context, String path,
-    {Map<String, dynamic>? params,
-    bool replace = false,
-    bool clearStack = false,
-    bool maintainState = true,
-    bool rootNavigator = false,
-    Duration? transitionDuration,
-    RouteTransitionsBuilder? transitionBuilder,
-    TransitionType transition = TransitionType.native}) async {
+Future navigateTo(
+  BuildContext context,
+  String path, {
+  Map<String, dynamic>? params,
+  bool replace = false,
+  bool clearStack = false,
+  bool maintainState = true,
+  bool rootNavigator = false,
+  Duration? transitionDuration,
+  RouteSettings? routeSettings,
+  RouteTransitionsBuilder? transitionBuilder,
+  TransitionType transition = TransitionType.native,
+  bool? opaque,
+}) async {
   if (router.match(path) == null) {
     // Don't want to get asserts
     showErrorDialog('Route Error', 'Route $path not provided');
@@ -42,17 +48,16 @@ Future navigateTo(BuildContext context, String path,
   }
   path = path + query;
   try {
-    return await router.navigateTo(
-      context,
-      path,
-      transition: transition,
-      replace: replace,
-      clearStack: clearStack,
-      maintainState: maintainState,
-      rootNavigator: rootNavigator,
-      transitionDuration: transitionDuration,
-      transitionBuilder: transitionBuilder,
-    );
+    return await router.navigateTo(context, path,
+        transition: transition,
+        replace: replace,
+        clearStack: clearStack,
+        maintainState: maintainState,
+        rootNavigator: rootNavigator,
+        routeSettings: routeSettings,
+        transitionDuration: transitionDuration,
+        transitionBuilder: transitionBuilder,
+        opaque: opaque);
   } catch (error) {
     rethrow;
   }
