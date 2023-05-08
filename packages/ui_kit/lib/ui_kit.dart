@@ -20,6 +20,7 @@ export 'package:flutter_settings_ui/flutter_settings_ui.dart';
 export 'package:flutter_slidable/flutter_slidable.dart';
 export 'package:flutter_spinbox/flutter_spinbox.dart';
 export 'package:font_awesome_flutter/font_awesome_flutter.dart';
+export 'package:form_builder_validators/form_builder_validators.dart';
 export 'package:sprintf/sprintf.dart';
 export 'package:webview_flutter/webview_flutter.dart';
 
