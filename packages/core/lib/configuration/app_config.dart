@@ -41,6 +41,6 @@ class AppConfig {
 
   T? getValue<T>(String key, {T? defaultValue}) {
     assert(_isLoaded);
-    return GlobalConfiguration().getValue<T>(key) ?? defaultValue;
+    return GlobalConfiguration().getValue<T?>(key) ?? defaultValue;
   }
 }
