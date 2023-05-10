@@ -59,7 +59,6 @@ dependencies:
   duration_picker: ^1.0.1
 
   timeago_flutter: ^3.4.0
-  image_gallery_saver: ^1.7.1
   share_plus: ^4.0.6
   flutter_colorpicker: ^1.0.2
   flutter_date_pickers: ^0.4.0

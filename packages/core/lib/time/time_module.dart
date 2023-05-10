@@ -1,6 +1,6 @@
 import 'package:artech_core/app_module_base.dart';
 import 'package:artech_core/core.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:logging/logging.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -41,7 +41,7 @@ class TimeModule extends AppSubModuleBase {
     try {
       //TODO GMT can not be used https://github.com/pinkfish/flutter_native_timezone/issues/15
       final String currentTimeZone = await executeWithStopwatch(
-          () => FlutterNativeTimezone.getLocalTimezone(),
+          () => FlutterTimezone.getLocalTimezone(),
           name: 'FlutterNativeTimezone.getLocalTimezone');
       _log.info('Native Time zone: $currentTimeZone');
       return currentTimeZone;

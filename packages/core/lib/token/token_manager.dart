@@ -78,9 +78,12 @@ class TokenManager with HasNamedLogger {
       } else {
         //TODO flutter timer in web may overflow
         const maxTimer = Duration(days: 14);
-        _refreshTimer =
-            Timer(time > maxTimer ? maxTimer : time, () => _fetchNewToken());
-        logger.info('Refresh token start in  ${time.inMinutes} minutes!');
+        if (time <= maxTimer) {
+          _refreshTimer = Timer(time, () => _fetchNewToken());
+          logger.info('Refresh token start in  ${time.inMinutes} minutes!');
+        } else {
+          logger.info('Refresh token timer ignored due to long period');
+        }
       }
     }
   }

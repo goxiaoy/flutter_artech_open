@@ -22,7 +22,6 @@ export 'package:artech_core/time/date_time_extension.dart';
 export 'package:artech_core/ui/navigation_service.dart';
 export 'package:artech_core/ui/ui.dart';
 export 'package:artech_core/utils/utils.dart';
-export 'package:flutter_native_timezone/flutter_native_timezone.dart';
 export 'package:json_annotation/json_annotation.dart';
 export 'package:logging/logging.dart';
 export 'package:multiple_localization/multiple_localization.dart';
