@@ -15,7 +15,6 @@ export 'package:artech_core/locale/localization_option.dart';
 export 'package:artech_core/logging/logger_mixin.dart';
 export 'package:artech_core/security/persistent_security_storage.dart';
 export 'package:artech_core/service_getter_mixin.dart';
-export 'package:artech_core/service_getter_mixin.dart';
 export 'package:artech_core/settings/setting_store.dart';
 export 'package:artech_core/store/kv_store.dart';
 export 'package:artech_core/time/date_time_extension.dart';

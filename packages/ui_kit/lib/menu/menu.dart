@@ -2,43 +2,16 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-const mainMenuName = 'main';
-
-class MenuOption {
-  final Map<String, MenuGroup> _map = {};
-
-  MenuOption addGroup(MenuGroup group) {
-    if (_map.containsKey(group.name)) {
-      throw Exception('${group.name} already exists');
-    }
-    _map[group.name] = group;
-    return this;
-  }
-
-  MenuOption addOrReplaceGroup(MenuGroup group) {
-    _map[group.name] = group;
-    return this;
-  }
-
-  MenuGroup getOrThrow(String name) {
-    final res = _map[name];
-    if (res == null) {
-      throw Exception('$name not exists');
-    }
-    return res;
-  }
-}
-
 class MenuGroup extends ChangeNotifier
     implements ValueListenable<Iterable<MenuGroupItem>> {
-  MenuGroup(this.name, {Iterable<MenuGroupItem> value = const []}) {
+  MenuGroup({this.name, Iterable<MenuGroupItem> value = const []}) {
     // ignore: prefer_foreach
     for (final v in value) {
       _m.add(v);
     }
     notifyListeners();
   }
-  final String name;
+  final String? name;
 
   final HeapPriorityQueue<MenuGroupItem> _m =
       HeapPriorityQueue((a, b) => b.priority.compareTo(a.priority));
@@ -82,7 +55,8 @@ class MenuGroup extends ChangeNotifier
   }
 
   MenuGroup batch(
-      {List<MenuGroupItem> adds = const [], List<String> removeNames = const []}) {
+      {List<MenuGroupItem> adds = const [],
+      List<String> removeNames = const []}) {
     // ignore: prefer_foreach
     for (final value in removeNames) {
       _removeMenuWithoutNotify(value);

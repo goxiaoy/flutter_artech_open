@@ -12,7 +12,7 @@ class SocketExceptionHandler implements ExceptionHandlerBase {
 
   @override
   void handle(ExceptionContext context) {
-    final e = context.latestError as SocketException;
+    // final e = context.latestError as SocketException;
     context.hasHandled = true;
     context.parsedException = UserFriendlyException.fromCodeLocaleMessage(
         code: (context) => 'NetworkException',
@@ -28,7 +28,7 @@ class HandshakeExceptionHandler implements ExceptionHandlerBase {
 
   @override
   void handle(ExceptionContext context) {
-    final e = context.latestError as HandshakeException;
+    // final e = context.latestError as HandshakeException;
     context.hasHandled = true;
     context.parsedException = UserFriendlyException.fromCodeLocaleMessage(
         code: (context) => 'NetworkException',

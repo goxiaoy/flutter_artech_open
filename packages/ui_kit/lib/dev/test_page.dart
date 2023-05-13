@@ -1,6 +1,7 @@
 import 'package:artech_ui_kit/ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TestPage extends StatelessWidget {
   @override
@@ -13,27 +14,26 @@ class TestPage extends StatelessWidget {
           //   icon: new Icon(Icons.ac_unit),
           //   onPressed: () => Navigator.of(context).pop(),
           // ),
-        ),
-        body: SafeArea(
-          child: HookBuilder(builder: (BuildContext context) {
-            final value = useMenuGroup(testMenuName);
-            return ListView(
-              children: value
-                  .map(
-                    (e) => e.widget2 != null
-                        ? ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => e.widget2!(context)));
-                            },
-                            child: Center(
-                              child: Text(e.label(context)),
-                            ))
-                        : e.widget!(context),
-                  )
-                  .toList(),
-            );
-          }),
-        ));
+        ), body: SafeArea(
+      child: HookConsumer(builder: (context, ref, child) {
+        final value = ref.watch(testingMenuProvider).value;
+        return ListView(
+          children: value
+              .map(
+                (e) => e.widget2 != null
+                    ? ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => e.widget2!(context)));
+                        },
+                        child: Center(
+                          child: Text(e.label(context)),
+                        ))
+                    : e.widget!(context),
+              )
+              .toList(),
+        );
+      }),
+    ));
   }
 }

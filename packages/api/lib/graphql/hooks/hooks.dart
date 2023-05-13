@@ -2,7 +2,6 @@ import 'package:artech_core/core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:logging/logging.dart';
 
 final Logger _logger = Logger('GraphQLHooks');
 AsyncSnapshot<T?> useMemoizedWatchQuery<T>(

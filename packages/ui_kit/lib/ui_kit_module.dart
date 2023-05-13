@@ -23,11 +23,6 @@ class UIKitModule extends AppSubModuleBase {
     configTyped<AppBarOptions>(creator: () {
       return AppBarOptions();
     });
-    configTyped<MenuOption>(
-        creator: () => MenuOption().addGroup(MenuGroup(mainMenuName)));
-    configTyped<MenuOption>(configurator: (opt) {
-      opt.addGroup(MenuGroup(settingMenuName));
-    });
 
     configTyped<ApplicationConfig>(creator: () {
       return ApplicationConfig();
@@ -35,69 +30,13 @@ class UIKitModule extends AppSubModuleBase {
 
     services.registerSingleton<MediaFileUrlNormalizer>(
         EmptyMediaFileUrlNormalizer());
-    if (kIsDebug) {
-      configTyped<MenuOption>(configurator: (opt) {
-        opt.addGroup(MenuGroup(testMenuName)
-          ..addOrReplaceMenu(MenuGroupItem('launchService',
-              widget2: (_) => LaunchTestPage())));
-      });
 
-      if (!kIsWeb) {
-        services
-            .get<MenuOption>()
-            .getOrThrow(testMenuName)
-            .addIfNotExits(MenuGroupItem('qr_scanner',
-                widget: (_) => QrScannerWidget(
-                      onQrCode: (context, code) {
-                        showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                                  content: Text(code),
-                                  actions: [
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Ok'))
-                                  ],
-                                ));
-                      },
-                    )));
-        services
-            .get<MenuOption>()
-            .getOrThrow(testMenuName)
-            .addIfNotExits(MenuGroupItem('barcode_scanner',
-                widget: (_) => BarcodeScannerWidget(
-                      onBarcode: (context, code) {
-                        showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                                  content: Text(code),
-                                  actions: [
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Ok'))
-                                  ],
-                                ));
-                      },
-                    )));
-        if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS)
-          _addGpsSettings();
-        if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS)
-          _addAppSettings();
-      }
-    }
     configTyped<LocalizationOption>(configurator: (opt) {
       opt.delegates.add(MultiAppLocalizationsDelegate.delegate);
       opt.delegates.add(RefreshLocalizations.delegate);
     });
     addUIKitRoute();
-    _addLanguageSettings();
     initTimeAgo();
-    _addLocationTestMenu();
-    _addAddressMapTest();
 
     services.registerSingleton<LaunchService>(LaunchService());
     services.registerSingleton<BackgroundLocation>(BackgroundLocation());
@@ -108,98 +47,130 @@ class UIKitModule extends AppSubModuleBase {
     // });
   }
 
-  void _addLocationTestMenu() {
+  testMenu(MenuGroup t) {
     if (kIsDebug) {
-      configTyped<MenuOption>(configurator: (opt) {
-        final testMenu = opt.getOrThrow(testMenuName);
-        testMenu.addIfNotExits(MenuGroupItem('location_test_page',
-            label: (_) => 'GPS position test Page',
-            widget2: (_) => PositionTestPage(),
-            widget: (_) => Icon(Icons.location_off_sharp)));
-      });
+      t
+        ..addOrReplaceMenu(
+            MenuGroupItem('launchService', widget2: (_) => LaunchTestPage()));
+
+      if (!kIsWeb) {
+        t
+          ..addIfNotExits(MenuGroupItem('qr_scanner',
+              widget: (_) => QrScannerWidget(
+                    onQrCode: (context, code) {
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                                content: Text(code),
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Ok'))
+                                ],
+                              ));
+                    },
+                  )))
+          ..addIfNotExits(MenuGroupItem('barcode_scanner',
+              widget: (_) => BarcodeScannerWidget(
+                    onBarcode: (context, code) {
+                      showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                                content: Text(code),
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Ok'))
+                                ],
+                              ));
+                    },
+                  )));
+      }
     }
   }
 
-  void _addAddressMapTest() {
+  void _addLocationTestMenu(MenuGroup testMenu) {
     if (kIsDebug) {
-      configTyped<MenuOption>(configurator: (opt) {
-        final testMenu = opt.getOrThrow(testMenuName);
-        testMenu.addIfNotExits(MenuGroupItem('address_widget_test',
-            widget: (_) => AddressWidget(
-                address: '225 W Valley Blvd, San Gabriel, CA 91776')));
-      });
+      testMenu.addIfNotExits(MenuGroupItem('location_test_page',
+          label: (_) => 'GPS position test Page',
+          widget2: (_) => PositionTestPage(),
+          widget: (_) => Icon(Icons.location_off_sharp)));
     }
   }
 
-  void _addAppSettings() {
-    configTyped<MenuOption>(configurator: (opt) {
-      final settings = opt.getOrThrow(settingMenuName);
-      settings.addIfNotExits(MenuGroupItem('app_setting',
-          priority: settingMenuSystemPriority - 50,
-          label: (context) => S.of(context).appSettings,
-          widget: (context) => SettingsTile(
-                title: S.of(context).appSettings,
-                leading: Icon(
-                  Icons.app_settings_alt_outlined,
-                  color: Colors.blue.shade700,
-                ),
-                trailing: ForwardIcon(),
-                onPressed: (context) {
-                  AppSettings.openAppSettings();
-                },
-              )));
-    });
+  void _addAddressMapTest(MenuGroup testMenu) {
+    if (kIsDebug) {
+      testMenu.addIfNotExits(MenuGroupItem('address_widget_test',
+          widget: (_) => AddressWidget(
+              address: '225 W Valley Blvd, San Gabriel, CA 91776')));
+    }
+    ;
   }
 
-  void _addGpsSettings() {
-    configTyped<MenuOption>(configurator: (opt) {
-      final settings = opt.getOrThrow(settingMenuName);
-      settings.addIfNotExits(MenuGroupItem('gps_position',
-          priority: settingMenuSystemPriority - 1,
-          label: (context) => S.of(context).locationSettings,
-          widget: (context) => SettingsTile(
-                title: S.of(context).locationSettings,
-                leading: Icon(
-                  Icons.gps_fixed_outlined,
-                  color: Colors.red.shade700,
-                ),
-                trailing: ForwardIcon(),
-                onPressed: (_) {
-                  Geolocator.openLocationSettings();
-                },
-              )));
-    });
+  void _addAppSettings(MenuGroup settings) {
+    settings.addIfNotExits(MenuGroupItem('app_setting',
+        priority: settingMenuSystemPriority - 50,
+        label: (context) => S.of(context).appSettings,
+        widget: (context) => SettingsTile(
+              title: S.of(context).appSettings,
+              leading: Icon(
+                Icons.app_settings_alt_outlined,
+                color: Colors.blue.shade700,
+              ),
+              trailing: ForwardIcon(),
+              onPressed: (context) {
+                AppSettings.openAppSettings();
+              },
+            )));
   }
 
-  void _addLanguageSettings() {
-    configTyped<MenuOption>(configurator: (opt) {
-      opt.getOrThrow(settingMenuName).addOrReplaceMenu(MenuGroupItem(
-            'language',
-            priority: settingMenuDisplayPriority,
-            widget: (context) {
-              var languageOpt = services.get<LocalizationOption>();
-              var current = Localizations.localeOf(context);
-              return SettingsTile(
-                title: S.of(context).language,
-                subtitle: languageOpt.support
-                        .firstWhereOrNull(
-                            (element) => element.locale == current)
-                        ?.textBuilder(context) ??
-                    "",
-                leading: Icon(
-                  Icons.language,
-                  color: Colors.lightBlueAccent,
-                ),
-                trailing: ForwardIcon(),
-                iosChevron: null,
-                onPressed: (BuildContext context) async {
-                  Navigator.of(context)
-                      .pushNamed(UIKitRoute.settingLanguagePageRoute);
-                },
-              );
-            },
-          ));
-    });
+  void _addGpsSettings(MenuGroup settings) {
+    settings.addIfNotExits(MenuGroupItem('gps_position',
+        priority: settingMenuSystemPriority - 1,
+        label: (context) => S.of(context).locationSettings,
+        widget: (context) => SettingsTile(
+              title: S.of(context).locationSettings,
+              leading: Icon(
+                Icons.gps_fixed_outlined,
+                color: Colors.red.shade700,
+              ),
+              trailing: ForwardIcon(),
+              onPressed: (_) {
+                Geolocator.openLocationSettings();
+              },
+            )));
+  }
+
+  void _addLanguageSettings(MenuGroup settings) {
+    settings.addOrReplaceMenu(MenuGroupItem(
+      'language',
+      priority: settingMenuDisplayPriority,
+      widget: (context) {
+        var languageOpt = services.get<LocalizationOption>();
+        var current = Localizations.localeOf(context);
+        return SettingsTile(
+          title: S.of(context).language,
+          subtitle: languageOpt.support
+                  .firstWhereOrNull((element) => element.locale == current)
+                  ?.textBuilder(context) ??
+              "",
+          leading: Icon(
+            Icons.language,
+            color: Colors.lightBlueAccent,
+          ),
+          trailing: ForwardIcon(),
+          iosChevron: null,
+          onPressed: (BuildContext context) async {
+            Navigator.of(context)
+                .pushNamed(UIKitRoute.settingLanguagePageRoute);
+          },
+        );
+      },
+    ));
   }
 
   @override
@@ -225,23 +196,36 @@ class UIKitModule extends AppSubModuleBase {
             // enableLoadingWhenFailed: true, //在加载失败的状态下,用户仍然可以通过手势上拉来触发加载更多
             // hideFooterWhenNotFull: false, // Viewport不满一屏时,禁用上拉加载更多功能
             enableBallisticLoad: true, // 可以通过惯性滑动触发加载更多
-            child: child));
+            child: MenuModifierWidget(
+              provider: testingMenuProvider,
+              child: MenuModifierWidget(
+                provider: settingMenuProvider,
+                child: child,
+                modifer: [
+                  _addLanguageSettings,
+                  if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS)
+                    _addGpsSettings,
+                  if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS)
+                    _addAppSettings
+                ],
+              ),
+              modifer: [testMenu, _addLocationTestMenu, _addAddressMapTest],
+            )));
   }
 }
 
 extension AppMainModuleExtension on AppMainModuleBase {
-  void addModuleVisualization() {
-    if (kIsDebug) {
-      configTyped<MenuOption>(configurator: (opt) {
-        opt
-            .getOrThrow(testMenuName)
-            .addOrReplaceMenu(MenuGroupItem('dependency_view',
-                widget: (_) => Text("dependency_view"),
-                widget2: (_) => ModuleVisualization(
-                      mainModule: this,
-                    )));
-      });
-    }
+  MenuModifier addModuleVisualization() {
+    return (MenuGroup menu) {
+      if (kIsDebug) {
+        menu.addOrReplaceMenu(MenuGroupItem('dependency_view',
+            widget: (_) => Text("dependency_view"),
+            widget2: (_) => ModuleVisualization(
+                  mainModule: this,
+                )));
+      }
+      ;
+    };
   }
 }
 

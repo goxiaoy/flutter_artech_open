@@ -5,8 +5,8 @@ import 'package:artech_ui_kit/generated/l10n.dart';
 import 'package:artech_ui_kit/ui_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_settings_ui/src/colors.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
 export 'package:restart_app/restart_app.dart';
@@ -27,9 +27,9 @@ class CommonSettingPage extends StatelessWidget with ServiceGetter {
                 decoration: new BoxDecoration(
                   color: bgColor,
                 ),
-                child: HookBuilder(
-                  builder: (BuildContext context) {
-                    final value = useMenuGroup(settingMenuName);
+                child: HookConsumer(
+                  builder: (context,ref,child) {
+                    final value = ref.watch(settingMenuProvider).value;
                     final sections = value
                         .where((element) =>
                             element.widget!(context) is SettingsSection)

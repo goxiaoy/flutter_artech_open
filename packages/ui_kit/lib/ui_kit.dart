@@ -40,19 +40,20 @@ export 'gender_extension.dart';
 export 'hooks/hooks.dart';
 export 'launch_service/launch_service.dart';
 export 'menu/menu.dart';
+export 'menu/menu_modifier.dart';
 export 'pages/pages.dart';
 export 'provider/provider.dart';
 export 'routes.dart';
 export 'ui_kit_module.dart';
 
-const settingMenuName = 'settings';
+
 const int settingMenuDisplayPriority = 800;
 const int settingMenuUserPriority = 600;
 const int settingMenuSystemPriority = 400;
 const int settingMenuHelpPriority = 200;
 
 const homeRoute = Navigator.defaultRouteName;
-const testMenuName = 'test';
+
 
 /// [appName] override application name in about
 /// [image] company log in about page

@@ -8,8 +8,8 @@ class LaunchService with HasNamedLogger {
 
   Future<bool> call(String? number) async {
     try {
-      return await URL.launch("tel:$number");
-    } catch (error,stackTrace) {
+      return await URL.launchUrl(Uri.parse("tel:$number"));
+    } catch (error, stackTrace) {
       logger.severe(error, [error, stackTrace]);
       rethrow;
     }
@@ -18,8 +18,8 @@ class LaunchService with HasNamedLogger {
   // TODO:
   Future<bool> sendSms(String? number) async {
     try {
-      return await URL.launch("sms:$number");
-    } catch (error,stackTrace) {
+      return await URL.launchUrl(Uri.parse("sms:$number"));
+    } catch (error, stackTrace) {
       logger.severe(error, [error, stackTrace]);
       rethrow;
     }
@@ -28,8 +28,8 @@ class LaunchService with HasNamedLogger {
   // TODO:
   Future<bool> sendEmail(String email) async {
     try {
-      return await URL.canLaunch("mailto:$email");
-    } catch (error,stackTrace) {
+      return await URL.launchUrl(Uri.parse("mailto:$email"));
+    } catch (error, stackTrace) {
       logger.severe(error, [error, stackTrace]);
       rethrow;
     }
@@ -38,10 +38,12 @@ class LaunchService with HasNamedLogger {
   Future<bool> webView(String url,
       {bool enableJavaScript = true, bool enableDomStorage = true}) async {
     try {
-      return await URL.launch(url,
-          forceWebView: true,
-          enableJavaScript: enableJavaScript,
-          enableDomStorage: enableDomStorage);
+      return await URL.launchUrl(
+        Uri.parse(url),
+        webViewConfiguration: URL.WebViewConfiguration(
+            enableJavaScript: enableJavaScript,
+            enableDomStorage: enableDomStorage),
+      );
     } catch (error, stackTrace) {
       logger.severe(error, [error, stackTrace]);
       rethrow;
@@ -49,14 +51,12 @@ class LaunchService with HasNamedLogger {
   }
 
   Future<bool> launch(String url,
-      {bool forceSafariVC = true,
-      bool enableJavaScript = true,
-      bool enableDomStorage = true}) async {
+      {bool enableJavaScript = true, bool enableDomStorage = true}) async {
     try {
-      return await URL.launch(url,
-          forceSafariVC: forceSafariVC,
-          enableJavaScript: enableJavaScript,
-          enableDomStorage: enableDomStorage,
+      return await URL.launchUrl(Uri.parse(url),
+          webViewConfiguration: URL.WebViewConfiguration(
+              enableJavaScript: enableJavaScript,
+              enableDomStorage: enableDomStorage),
           webOnlyWindowName: null);
     } catch (error, stackTrace) {
       logger.severe(error, [error, stackTrace]);

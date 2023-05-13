@@ -115,7 +115,7 @@ void useRefreshablePage(BuildContext context, RefreshFunc refreshFunc) {
   final page = RefreshablePage.of(context);
   useEffect(() {
     if (page != null) {
-      return page.addListener(refreshFunc) as void Function()?;
+      return page.addListener(refreshFunc);
     }
     return () {};
   }, [page]);
@@ -142,7 +142,7 @@ class MainMenuState {
   void setSelected(int newIndex) {
     var selectedMenu = menus![newIndex];
     final newName = selectedMenu.name;
-    final _homeSelected = ref.read(homeSelectedProvider.state);
+    final _homeSelected = ref.read(homeSelectedProvider.notifier);
     if (_homeSelected.state != newName) {
       serviceLocator.get<SettingStore>().set(_tagSelectedKey, newName);
       _homeSelected.update((state) => newName);
@@ -151,20 +151,13 @@ class MainMenuState {
   }
 
   set showDrawer(bool show) {
-    final _showDrawer = ref.read(showDrawerProvider.state);
+    final _showDrawer = ref.read(showDrawerProvider.notifier);
     if (show != _showDrawer.state) {
       Future.microtask(() => _showDrawer.state = show);
     }
   }
 
   bool get showDrawer => ref.read(showDrawerProvider);
-}
-
-// hook with menu items
-List<MenuGroupItem> useMenuGroup(String name) {
-  var _mainMenu = serviceLocator.get<MenuOption>().getOrThrow(name);
-  final menus = useValueListenable(_mainMenu);
-  return menus.toList(growable: false);
 }
 
 MainMenuState useMainMenuState(WidgetRef ref) {
@@ -175,9 +168,10 @@ MainMenuState useMainMenuState(WidgetRef ref) {
   final AsyncSnapshot<Null> _ = useMemoizedFuture(() async {
     final v =
         await serviceLocator.get<SettingStore>().get<String>(_tagSelectedKey);
-    final homeSelected = ref.read(homeSelectedProvider.state);
+    final homeSelected = ref.read(homeSelectedProvider.notifier);
     homeSelected.state = homeSelected.state ?? v;
   });
-  final menus = useMenuGroup(mainMenuName);
+  final mainmenu = ref.watch(mainMenuProvider);
+  final menus = mainmenu.value.toList();
   return MainMenuState(ref: ref, menus: menus);
 }
