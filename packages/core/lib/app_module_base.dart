@@ -11,7 +11,7 @@ abstract class AppSubModuleBase with AppModuleMixin {
 
 //App最上层
 abstract class AppMainModuleBase with AppModuleMixin {
-  late Widget Function(TransitionBuilder innerBuilder) bootstrap;
+  Widget bootstrap(TransitionBuilder innerBuilder);
 }
 
 mixin AppModuleMixin {

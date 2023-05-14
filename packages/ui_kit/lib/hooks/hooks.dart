@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:artech_core/core.dart';
 import 'package:artech_ui_kit/pages/refreshable_page.dart';
 import 'package:artech_ui_kit/provider/provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -174,4 +175,52 @@ MainMenuState useMainMenuState(WidgetRef ref) {
   final mainmenu = ref.watch(mainMenuProvider);
   final menus = mainmenu.value.toList();
   return MainMenuState(ref: ref, menus: menus);
+}
+
+class TokenPaginationValue<TData, TParams> extends ChangeNotifier {
+  int _limit = 10;
+  String? _nextAfterPageToken;
+  String? _nextBeforePageToken;
+  Iterable<TData>? _data;
+  TParams? _params;
+
+  TokenPaginationValue({int limit = 10}) {
+    this._limit = limit;
+  }
+
+  int get limit => _limit;
+  set limit(int v) {
+    _limit = v;
+    notifyListeners();
+  }
+
+  String? get nextAfterPageToken => _nextAfterPageToken;
+  String? get nextBeforePageToken => _nextBeforePageToken;
+  TParams? get params => _params;
+  Iterable<TData>? get data => _data;
+
+  setParams(TParams? v) {
+    _params = v;
+    notifyListeners();
+  }
+
+  clearToken() {
+    _nextAfterPageToken = _nextBeforePageToken = null;
+    notifyListeners();
+  }
+
+  clearData() {
+    _data = [];
+    notifyListeners();
+  }
+
+  updateResult(
+      {String? nextAfterPageToken,
+      String? nextBeforePageToken,
+      Iterable<TData>? data}) {
+    _nextAfterPageToken = nextAfterPageToken;
+    _nextBeforePageToken = nextBeforePageToken;
+    _data = data;
+    notifyListeners();
+  }
 }
