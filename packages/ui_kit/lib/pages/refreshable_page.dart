@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
-typedef RefreshFunc = FutureOr Function();
+typedef RefreshFunc<T> = Future<T> Function();
 
 class RefreshablePage extends StatefulWidget {
   //If child is  extends ScrollView,It will help you get the internal slivers and add footer and header in it.
@@ -42,7 +42,7 @@ mixin RefreshablePageMixin<T extends StatefulWidget> on State<T> {
         //find handlers
         try {
           for (final f in _refreshFuncs) {
-            await f.call();
+            await f();
           }
           _controller.refreshCompleted();
         } catch (e) {

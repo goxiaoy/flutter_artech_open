@@ -9,10 +9,6 @@ class TestPage extends StatelessWidget {
         appBar: appBarBuilder(
           context,
           title: new Text("Test Page"),
-          // leading: new IconButton(
-          //   icon: new Icon(Icons.ac_unit),
-          //   onPressed: () => Navigator.of(context).pop(),
-          // ),
         ), body: SafeArea(
       child: HookConsumer(builder: (context, ref, child) {
         final value = ref.watch(testingMenuProvider).value;

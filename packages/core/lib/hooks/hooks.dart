@@ -48,7 +48,7 @@ class RefreshableAsyncSnapshot<T> {
   const RefreshableAsyncSnapshot(this.snapshot, this.refresh,
       {this.isRefreshing});
   final AsyncSnapshot<T> snapshot;
-  final void Function() refresh;
+  final Future<dynamic> Function() refresh;
   final bool? isRefreshing;
 }
 
@@ -66,31 +66,50 @@ class RefreshableAsyncSnapshot<T> {
 ///   * [useFuture], the hook responsible for getting the future.
 ///   * [useMemoized], the hook responsible for the memoization.
 RefreshableAsyncSnapshot<T?> useMemoizedRefreshableFuture<T>(
-  FutureOr<T?>? Function() future, {
+  Future<T?>? future(), {
   List<Object?> keys = const [],
   T? initialData,
   bool preserveState = true,
 }) {
-  final refresh = useState(0);
   final isRefreshing = useState(false);
+
+  final initialSnapshot = () => initialData == null
+      ? AsyncSnapshot<T?>.nothing()
+      : AsyncSnapshot.withData(ConnectionState.none, initialData);
+
+  final snapshot = useState(initialSnapshot());
+
   final futureWrapper = () async {
     isRefreshing.value = true;
     try {
-      return await future();
+      snapshot.value = snapshot.value.inState(ConnectionState.waiting);
+      final ret = await future();
+      snapshot.value = AsyncSnapshot<T?>.withData(
+        ConnectionState.done,
+        ret,
+      );
+    } catch (error, stackTrace) {
+      snapshot.value = AsyncSnapshot<T?>.withError(
+        ConnectionState.done,
+        error,
+        stackTrace,
+      );
     } finally {
       isRefreshing.value = false;
     }
   };
 
-  final result = useMemoizedFuture(
-    futureWrapper,
-    keys: [refresh.value, ...keys],
-    initialData: initialData,
-    preserveState: preserveState,
-  );
+  useMemoized(() {
+    if (preserveState) {
+      snapshot.value = snapshot.value.inState(ConnectionState.none);
+    } else {
+      snapshot.value = initialSnapshot();
+    }
+    //trigger refresh
+    futureWrapper();
+  }, keys);
 
-  final refreshFunc = () => refresh.value++;
-  return RefreshableAsyncSnapshot<T?>(result, refreshFunc,
+  return RefreshableAsyncSnapshot<T?>(snapshot.value, futureWrapper,
       isRefreshing: isRefreshing.value);
 }
 

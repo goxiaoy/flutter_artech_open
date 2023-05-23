@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:artech_core/core.dart';
 import 'package:artech_ui_kit/pages/refreshable_page.dart';
 import 'package:artech_ui_kit/provider/provider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
