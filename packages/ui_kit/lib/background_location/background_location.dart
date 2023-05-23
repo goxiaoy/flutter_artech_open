@@ -3,10 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 
-class BackgroundLocation {
-
-  Logger _logger = Logger('BackgroundLocation');
-
+class BackgroundLocation with HasNamedLogger {
   BackgroundLocation();
 
   Future<Null> saveLocation(Position position) async {
@@ -14,7 +11,8 @@ class BackgroundLocation {
   }
 
   @mustCallSuper
-  void dispose() {
-  }
+  void dispose() {}
 
+  @override
+  String get loggerName => 'BackgroundLocation';
 }

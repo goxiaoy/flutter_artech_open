@@ -61,11 +61,9 @@ Future<GraphQLClient> clientFor(String url,
 typedef _RequestTransformer = FutureOr<Request> Function(Request request);
 
 class _MyAuthLink extends Link {
+  _MyAuthLink({required this.getToken, this.headerKey = 'Authorization'});
   final FutureOr<String?> Function() getToken;
   final String headerKey;
-
-  _MyAuthLink({required this.getToken, this.headerKey = 'Authorization'});
-
   @override
   Stream<Response> request(
     Request request, [

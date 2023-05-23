@@ -49,7 +49,7 @@ Future<T> executeWithStopwatch<T>(FutureOr<T> Function() f,
     {bool debugOnly = true,
     String name = '',
     int thresholdMilliseconds = 20,
-    Function(int t)? overAction}) async {
+    void Function(int t)? overAction}) async {
   if (!debugOnly || kIsDebug) {
     _timeLogger.fine('Start execution $name');
     final Stopwatch sw = Stopwatch();

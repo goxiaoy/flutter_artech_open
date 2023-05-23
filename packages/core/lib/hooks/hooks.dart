@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:artech_core/settings/setting_store.dart';
+import 'package:artech_core/core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logging/logging.dart';
 
 final Logger _logger = Logger('Hooks');
 
@@ -29,7 +28,8 @@ AsyncSnapshot<T?> useMemoizedStream<T>(
       initialData: initialData, preserveState: preserveState);
 }
 
-void useInterval(FutureOr callback(), Duration delay, {bool initial = false}) {
+void useInterval(FutureOr<void> callback(), Duration delay,
+    {bool initial = false}) {
   final savedCallback = useRef(callback);
   savedCallback.value = callback;
 
@@ -48,7 +48,7 @@ class RefreshableAsyncSnapshot<T> {
   const RefreshableAsyncSnapshot(this.snapshot, this.refresh,
       {this.isRefreshing});
   final AsyncSnapshot<T> snapshot;
-  final Function() refresh;
+  final void Function() refresh;
   final bool? isRefreshing;
 }
 
@@ -108,7 +108,7 @@ T? useSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
 
 T? useWatchSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
   final res = useState<T?>(defaultValue);
-  late StreamSubscription ss;
+  late StreamSubscription<KeyChangeEvent> ss;
   final mounted = useIsMounted();
   useEffect(() {
     //clear previous state

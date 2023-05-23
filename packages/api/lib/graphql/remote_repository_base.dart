@@ -4,7 +4,6 @@ import 'package:artech_core/core.dart';
 import 'package:artemis/schema/graphql_query.dart';
 import 'package:artemis/schema/graphql_response.dart';
 import 'package:graphql_flutter/graphql_flutter.dart' hide JsonSerializable;
-import 'package:json_annotation/json_annotation.dart';
 
 import 'graphql_query_extension.dart';
 
@@ -51,8 +50,8 @@ abstract class GraphQLRemoteRepositoryBase with ServiceGetter, HasNamedLogger {
     }
   }
 
-  ObservableQuery watchQuery(WatchQueryOptions options, {String? name}) {
-    final ObservableQuery result = clientNamed(name: name).watchQuery(options);
+  ObservableQuery<T> watchQuery<T>(WatchQueryOptions<T> options, {String? name}) {
+    final result = clientNamed(name: name).watchQuery<T>(options);
     return result;
   }
 
@@ -82,7 +81,7 @@ typedef QueryResultToTypedData<T> = T Function(
     Map<String, dynamic>? json, QueryResult queryResult);
 
 T? toSingleData<T>(
-    QueryResult queryResult, QueryResultToTypedData<T> fromJson, String key) {
+    QueryResult queryResult, QueryResultToTypedData<T> fromJson, String? key) {
   if (queryResult.data != null) {
     return fromJson(
         (key != null ? queryResult.data![key] : queryResult.data)

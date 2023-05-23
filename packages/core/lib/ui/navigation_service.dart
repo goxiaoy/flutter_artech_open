@@ -9,13 +9,13 @@ class NavigationService {
     return navigatorKey.currentState!.pushNamed(routeName);
   }
 
-  Future<dynamic> pushTo(MaterialPageRoute route) {
+  Future<dynamic> pushTo(MaterialPageRoute<dynamic> route) {
     return navigatorKey.currentState!.push(route);
   }
 
-  Future showErrorDialog(String title, Object error,
+  Future<void> showErrorDialog(String title, Object error,
       {StackTrace? stackTrace, BuildContext? context}) async {
-    BuildContext? newCtx = context ?? navigatorKey.currentState?.context;
+    final newCtx = context ?? navigatorKey.currentState?.context;
     if (newCtx != null) {
       final processor = serviceLocator.get<ExceptionProcessor>();
       final e = processor.process(error, stackTrace);
@@ -52,7 +52,7 @@ class NavigationService {
                 ],
               ));
     } else {
-      return null;
+      return;
     }
   }
 }

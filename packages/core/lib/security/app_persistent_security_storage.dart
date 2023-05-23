@@ -16,7 +16,7 @@ class AppPersistentSecurityStorage implements PersistentSecurityStorage {
   }
 
   @override
-  Future delete(String key) async {
+  Future<void> delete(String key) async {
     return _storage.delete(key: key);
   }
 
@@ -31,7 +31,7 @@ class AppPersistentSecurityStorage implements PersistentSecurityStorage {
   }
 
   @override
-  Future set(String key, String? value) {
+  Future<void> set(String key, String? value) {
     return _storage.write(key: key, value: value);
   }
 

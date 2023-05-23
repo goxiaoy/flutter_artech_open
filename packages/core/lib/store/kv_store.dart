@@ -5,13 +5,13 @@ abstract class KVStore {
 
   Future<T?> get<T>(String key, {T? defaultValue});
 
-  Future set<T>(String key, T? value);
+  Future<void> set<T>(String key, T? value);
 
-  Future delete(String key);
+  Future<void> delete(String key);
 
   Future<Map<String, dynamic>> getList({String? prefix});
 
-  Future clearAll();
+  Future<void> clearAll();
 }
 
 abstract class KVStoreTyped<T> {
@@ -19,13 +19,13 @@ abstract class KVStoreTyped<T> {
 
   Future<T> get(String key, {T? defaultValue});
 
-  Future set(String key, T? value);
+  Future<void> set(String key, T? value);
 
-  Future delete(String key);
+  Future<void> delete(String key);
 
   Future<Map<String, T>> getList({String? prefix});
 
-  Future clearAll();
+  Future<void> clearAll();
 }
 
 class KeyChangeEvent extends KeyChangeEventTyped<dynamic> {

@@ -17,7 +17,7 @@ class ShareFile extends StatelessWidget {
 
   // TODO: file type is maters
   Future<bool?> _shareFile() async {
-    await FlutterShare.shareFile(
+    return await FlutterShare.shareFile(
         title: title, text: text, filePath: filePath, fileType: '*/pdf');
   }
 

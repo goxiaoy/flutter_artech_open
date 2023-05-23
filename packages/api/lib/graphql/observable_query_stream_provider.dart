@@ -7,7 +7,7 @@ typedef QueryResultTransformer<T> = T Function(QueryResult? queryResult);
 
 class ObservableQueryStreamProvider<T> implements RefreshableStreamProvider<T> {
   ObservableQueryStreamProvider(this.query, this.transformer);
-  final ObservableQuery query;
+  final ObservableQuery<T> query;
   final QueryResultTransformer<T> transformer;
 
   @override
@@ -16,7 +16,7 @@ class ObservableQueryStreamProvider<T> implements RefreshableStreamProvider<T> {
       .map<T>((event) => transformer(event));
 
   @override
-  FutureOr close() => query.close();
+  FutureOr<void> close() => query.close();
 
   @override
   FutureOr<T> refresh() async {

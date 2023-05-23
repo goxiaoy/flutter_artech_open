@@ -21,19 +21,19 @@ class TokenManager with HasNamedLogger {
   Timer? _refreshTimer;
   Completer<TokenModel?>? _refreshTokenCompleter;
 
-  Future set(TokenModel? token) async {
+  Future<void> set(TokenModel? token) async {
     await tokenStorage.set(token);
     if (token != null) _startTimer(token.expireAt);
   }
 
   ///call this after app started
-  Future start() async {
+  Future<void> start() async {
     //load token
     final token = await tokenStorage.get();
     _startTimer(token?.expireAt);
   }
 
-  Future clear() async {
+  Future<void> clear() async {
     _clearTimer();
     if (_refreshTokenCompleter != null) {
       //TODO cancel this future?

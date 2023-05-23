@@ -1,11 +1,9 @@
-import 'package:artech_core/app_module_base.dart';
 import 'package:artech_core/core.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:logging/logging.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-late Future loadTimeFuture;
+late Future<void> loadTimeFuture;
 
 class TimeModule extends AppSubModuleBase {
   final Logger _log = Logger('TimeModule');

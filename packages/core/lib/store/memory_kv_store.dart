@@ -9,7 +9,7 @@ class MemoryKVStore extends KVStore {
   final StreamController<KeyChangeEvent> _controller = StreamController();
 
   @override
-  Future clearAll() async {
+  Future<void> clearAll() async {
     final keys = _store.keys.toList(growable: false);
     for (final k in keys) {
       await delete(k);
@@ -17,7 +17,7 @@ class MemoryKVStore extends KVStore {
   }
 
   @override
-  Future delete(String key) async {
+  Future<void> delete(String key) async {
     _store.remove(key);
     _controller.add(KeyChangeEvent(key, null, true));
   }
@@ -35,7 +35,7 @@ class MemoryKVStore extends KVStore {
   }
 
   @override
-  Future set<T>(String key, T? value) async {
+  Future<void> set<T>(String key, T? value) async {
     _store[key] = value;
     _controller.add(KeyChangeEvent(key, value, false));
   }
@@ -46,7 +46,7 @@ class MemoryKVStore extends KVStore {
     if (key != null) {
       stream = stream.where((event) => event.key == key);
       if (immediate) {
-        stream = Stream.fromFuture(get(key))
+        stream = Stream.fromFuture(get<dynamic>(key))
             .map((event) => KeyChangeEvent(key, event, false))
             .concatWith([stream]);
       }

@@ -5,10 +5,10 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 final Logger _logger = Logger('GraphQLHooks');
 AsyncSnapshot<T?> useMemoizedWatchQuery<T>(
-    ObservableQuery Function() queryBuilder,
+    ObservableQuery<T> Function() queryBuilder,
     T Function(QueryResult) deserializeFunc,
     [List<Object> keys = const <Object>[]]) {
-  final ObservableQuery query = useMemoized(queryBuilder, keys);
+  final query = useMemoized(queryBuilder, keys);
   useEffect(
     () {
       // final subs = query.stream.listen((event) {
@@ -32,10 +32,10 @@ AsyncSnapshot<T?> useMemoizedWatchQuery<T>(
 }
 
 RefreshableAsyncSnapshot<T?> useMemoizedRefreshableWatchQuery<T>(
-    ObservableQuery Function() queryBuilder,
+    ObservableQuery<T> Function() queryBuilder,
     T Function(QueryResult) deserializeFunc,
     [List<Object> keys = const <Object>[]]) {
-  final ObservableQuery query = useMemoized(queryBuilder, keys);
+  final query = useMemoized(queryBuilder, keys);
   useEffect(
     () {
       //query 变化 或者dispose的时候会调用close

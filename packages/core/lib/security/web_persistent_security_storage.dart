@@ -23,7 +23,7 @@ class WebPersistentSecurityStorage implements PersistentSecurityStorage {
   }
 
   @override
-  Future delete(String key) async {
+  Future<void> delete(String key) async {
     _storage.remove(_normalizeKey(key));
   }
 
@@ -42,7 +42,7 @@ class WebPersistentSecurityStorage implements PersistentSecurityStorage {
   }
 
   @override
-  Future set(String key, String? value) async {
+  Future<void> set(String key, String? value) async {
     assert(value != null);
     _storage[_normalizeKey(key)] = value ?? '';
   }

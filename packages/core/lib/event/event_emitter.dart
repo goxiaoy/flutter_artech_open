@@ -1,18 +1,18 @@
 import 'dart:async';
 
-typedef EventEmitterHandlerFunction<T> = FutureOr Function(T? data);
+typedef EventEmitterHandlerFunction<T> = FutureOr<void> Function(T? data);
 
 abstract class EventEmitterHandlerBase {
   FutureOr<bool> canHandle(dynamic data);
 
-  Future handle(dynamic data);
+  Future<void> handle(dynamic data);
 }
 
 class TypedEventEmitterHandler<T> extends EventEmitterHandlerBase {
   TypedEventEmitterHandler(this.handleFunction);
   final EventEmitterHandlerFunction<T> handleFunction;
   @override
-  Future handle(dynamic data) async {
+  Future<void> handle(dynamic data) async {
     final d = data as T;
     await handleFunction.call(d);
   }
@@ -28,7 +28,7 @@ class EventEmitter {
 
   late List<EventEmitterHandlerBase> _handlers;
 
-  Future emitAsync(dynamic data) async {
+  Future<void> emitAsync(dynamic data) async {
     for (final handler in _handlers) {
       final canHandle = await handler.canHandle(data);
       if (canHandle) {

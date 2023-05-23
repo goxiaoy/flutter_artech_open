@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -8,9 +6,10 @@ class LocalizationOption {
   //default locale
   Locale? defaultLocale;
   final Set<SettingLocale> support = <SettingLocale>{};
-  final Set<LocalizationsDelegate> delegates = <LocalizationsDelegate>{};
+  final Set<LocalizationsDelegate<dynamic>> delegates =
+      <LocalizationsDelegate<dynamic>>{};
 
-  Iterable<LocalizationsDelegate> get reversedDelegates =>
+  Iterable<LocalizationsDelegate<dynamic>> get reversedDelegates =>
       [...delegates].reversed;
 }
 

@@ -10,24 +10,24 @@ final Logger _logger = Logger('HiveKVStore');
 class HiveKVStore extends KVStore with ServiceGetter {
   HiveKVStore(this.boxCreator);
 
-  Box? _box;
+  Box<dynamic>? _box;
 
-  Box get box {
+  Box<dynamic> get box {
     if (_box == null) {
       throw Exception('HiveKVStore not initialized');
     }
     return _box!;
   }
 
-  final Future<Box> Function() boxCreator;
+  final Future<Box<dynamic>> Function() boxCreator;
 
-  Future init() async {
+  Future<void> init() async {
     await services.initHiveSafely();
     _box = await boxCreator();
     _logger.info('Created box ${_box?.name}');
   }
 
-  Future unInit() async {
+  Future<void> unInit() async {
     await box.close();
     _logger.info('Closed box ${_box?.name}');
   }
@@ -38,7 +38,7 @@ class HiveKVStore extends KVStore with ServiceGetter {
   }
 
   @override
-  Future set<T>(String key, T? value) async {
+  Future<void> set<T>(String key, T? value) async {
     await box.put(key, value);
   }
 
@@ -56,7 +56,7 @@ class HiveKVStore extends KVStore with ServiceGetter {
     var stream = box.watch(key: key).map((event) =>
         KeyChangeEvent(event.key as String, event.value, event.deleted));
     if (key != null && immediate) {
-      stream = Stream.fromFuture(get(key))
+      stream = Stream.fromFuture(get<dynamic>(key))
           .map((event) => KeyChangeEvent(key, event, false))
           .concatWith([stream]);
     }
@@ -64,12 +64,12 @@ class HiveKVStore extends KVStore with ServiceGetter {
   }
 
   @override
-  Future clearAll() async {
+  Future<void> clearAll() async {
     await box.clear();
   }
 
   @override
-  Future delete(String key) async {
+  Future<void> delete(String key) async {
     await box.delete(key);
   }
 }

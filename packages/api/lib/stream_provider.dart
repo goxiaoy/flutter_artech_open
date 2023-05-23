@@ -6,7 +6,7 @@ abstract class StreamProvider<T> {
   Stream<T> get stream;
 
   ///close function of this provider
-  FutureOr close() {}
+  FutureOr<void> close() {}
 }
 
 abstract class RefreshableStreamProvider<T> extends StreamProvider<T> {
@@ -19,11 +19,11 @@ class DelegateStreamProvider<T> implements StreamProvider<T> {
     this.streamFunc,
     this.closeFunc,
   );
-  final FutureOr Function() closeFunc;
+  final FutureOr<void> Function() closeFunc;
   final Stream<T> Function() streamFunc;
 
   @override
-  FutureOr close() async {
+  FutureOr<void> close() async {
     await closeFunc.call();
   }
 
