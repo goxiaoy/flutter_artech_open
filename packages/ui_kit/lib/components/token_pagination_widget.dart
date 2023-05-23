@@ -36,6 +36,7 @@ class TokenPaginationWidget<TData, TParams> extends StatefulHookConsumerWidget {
   final bool enablePullDown;
   final bool enablePullUp;
   final bool initialRefresh;
+  final bool preserveStateOnRefresh;
 
   final TokenPaginationBuilder<TData, TParams> builder;
 
@@ -45,7 +46,8 @@ class TokenPaginationWidget<TData, TParams> extends StatefulHookConsumerWidget {
       this.limit = 10,
       this.enablePullDown = true,
       this.enablePullUp = true,
-      this.initialRefresh = true});
+      this.initialRefresh = true,
+      this.preserveStateOnRefresh = true});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -95,7 +97,9 @@ class TokenPaginationWidgetState<TData, TParams>
     //clear data
     try {
       tokenPaginationValue.clearToken();
-      tokenPaginationValue.clearData();
+      if (!widget.preserveStateOnRefresh) {
+        tokenPaginationValue.clearData();
+      }
       final ret = await widget.request(tokenPaginationValue);
 
       tokenPaginationValue.updateResult(
@@ -123,7 +127,7 @@ class TokenPaginationWidgetState<TData, TParams>
       if (widget.initialRefresh) {
         Future.microtask(refresh);
       }
-    },[]);
+    }, []);
     useRefreshablePage(context, forceRefresh);
 
     return SmartRefresher(
