@@ -111,7 +111,8 @@ PaginationValue<T> usePagination<T>(
       fetching: fetching);
 }
 
-void useRefreshablePage(BuildContext context, RefreshFunc refreshFunc) {
+void useRefreshablePage(RefreshFunc refreshFunc) {
+  final context = useContext();
   final page = RefreshablePage.of(context);
   useEffect(() {
     if (page != null) {

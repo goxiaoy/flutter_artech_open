@@ -89,7 +89,7 @@ extension MessageTypeExtension on MessageType {
       case MessageType.error:
         return Colors.red;
       default:
-        _logger.warning('MessageType ${this} has no color');
+        _logger.warning('MessageType $this has no color');
         return Colors.black;
     }
   }

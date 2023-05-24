@@ -2,10 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:artech_core/core.dart';
-import 'package:logging/logging.dart';
-import 'package:rxdart/rxdart.dart';
 
-import 'token_model.dart';
 
 ///[TokenStorage] stores tokens and check expire time. Please use [TokenManager] to safely get token
 class TokenStorage with ServiceGetter, HasNamedLogger {

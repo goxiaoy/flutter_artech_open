@@ -78,24 +78,30 @@ RefreshableAsyncSnapshot<T?> useMemoizedRefreshableFuture<T>(
       : AsyncSnapshot.withData(ConnectionState.none, initialData);
 
   final snapshot = useState(initialSnapshot());
-
+  final context = useContext();
   final futureWrapper = () async {
     isRefreshing.value = true;
     try {
       snapshot.value = snapshot.value.inState(ConnectionState.waiting);
       final ret = await future();
-      snapshot.value = AsyncSnapshot<T?>.withData(
-        ConnectionState.done,
-        ret,
-      );
+      if (context.mounted) {
+        snapshot.value = AsyncSnapshot<T?>.withData(
+          ConnectionState.done,
+          ret,
+        );
+      }
     } catch (error, stackTrace) {
-      snapshot.value = AsyncSnapshot<T?>.withError(
-        ConnectionState.done,
-        error,
-        stackTrace,
-      );
+      if (context.mounted) {
+        snapshot.value = AsyncSnapshot<T?>.withError(
+          ConnectionState.done,
+          error,
+          stackTrace,
+        );
+      }
     } finally {
-      isRefreshing.value = false;
+      if (context.mounted) {
+        isRefreshing.value = false;
+      }
     }
   };
 

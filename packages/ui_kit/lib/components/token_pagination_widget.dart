@@ -128,7 +128,7 @@ class TokenPaginationWidgetState<TData, TParams>
         Future.microtask(refresh);
       }
     }, []);
-    useRefreshablePage(context, forceRefresh);
+    useRefreshablePage(forceRefresh);
 
     return SmartRefresher(
       enablePullDown: widget.enablePullDown,

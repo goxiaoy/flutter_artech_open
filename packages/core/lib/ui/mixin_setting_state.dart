@@ -1,5 +1,4 @@
 import 'package:artech_core/core.dart';
-import 'package:artech_core/settings/setting_store.dart';
 import 'package:flutter/material.dart';
 
 mixin MixinSettingState<T extends StatefulWidget> on State<T> {

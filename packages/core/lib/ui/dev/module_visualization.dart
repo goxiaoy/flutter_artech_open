@@ -1,6 +1,4 @@
-import 'package:artech_core/app_module_base.dart';
 import 'package:artech_core/core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 

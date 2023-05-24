@@ -1,5 +1,4 @@
 import 'package:artech_core/core.dart';
-import 'package:logging/logging.dart';
 
 // @Deprecated('Use HasNamedLogger instead')
 // mixin HasNamedLogger<T> {

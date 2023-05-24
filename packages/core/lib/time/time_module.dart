@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:artech_core/core.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -16,10 +18,6 @@ class TimeModule extends AppSubModuleBase {
   @override
   void configureServices() {
     loadTimeFuture = _setCurrentZoneTime();
-    // services.registerSingletonAsync(()async{
-    //   await setCurrentZoneTdevice_calendarime();
-    //   return TimeReady();
-    // });
   }
 
   Future<void> _setCurrentZoneTime() async {
@@ -37,7 +35,6 @@ class TimeModule extends AppSubModuleBase {
   Future<String?> _getCurrentTimeZone() async {
     //try load from native
     try {
-      //TODO GMT can not be used https://github.com/pinkfish/flutter_native_timezone/issues/15
       final String currentTimeZone = await executeWithStopwatch(
           () => FlutterTimezone.getLocalTimezone(),
           name: 'FlutterNativeTimezone.getLocalTimezone');
@@ -49,5 +46,3 @@ class TimeModule extends AppSubModuleBase {
     return null;
   }
 }
-
-class TimeReady {}

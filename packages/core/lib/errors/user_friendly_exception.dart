@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:artech_core/core.dart';
+import 'package:flutter/cupertino.dart';
 
 class UserFriendlyException implements Exception {
   UserFriendlyException._({
