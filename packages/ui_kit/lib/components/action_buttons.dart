@@ -2,8 +2,6 @@ import 'package:artech_core/core.dart';
 import 'package:artech_ui_kit/ui_kit.dart';
 import 'package:flutter/material.dart';
 
-import 'app_bar.dart';
-
 class ArtechRaisedButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Widget child;

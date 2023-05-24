@@ -45,7 +45,7 @@ export 'pages/pages.dart';
 export 'provider/provider.dart';
 export 'routes.dart';
 export 'ui_kit_module.dart';
-
+export 'pagination_result.dart';
 
 const int settingMenuDisplayPriority = 800;
 const int settingMenuUserPriority = 600;
@@ -53,7 +53,6 @@ const int settingMenuSystemPriority = 400;
 const int settingMenuHelpPriority = 200;
 
 const homeRoute = Navigator.defaultRouteName;
-
 
 /// [appName] override application name in about
 /// [image] company log in about page

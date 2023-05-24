@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:artech_core/core.dart';
 import 'package:device_preview_screenshot/device_preview_screenshot.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,7 +14,9 @@ class ArtechDevicePreview extends HookWidget {
   Widget build(BuildContext context) {
     var opt = serviceLocator.get<LocalizationOption>();
     var enable = kIsDebug &&
-        !(window.physicalSize.width / window.devicePixelRatio < 600.0);
+        !(View.of(context).physicalSize.width /
+                View.of(context).devicePixelRatio <
+            600.0);
     return DevicePreview(
         enabled: enable,
         availableLocales:

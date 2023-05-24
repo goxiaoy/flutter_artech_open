@@ -4,22 +4,19 @@ import 'package:artech_core/core.dart';
 import 'package:artech_ui_kit/pages/refreshable_page.dart';
 import 'package:artech_ui_kit/provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../menu/menu.dart';
 
 Locale useSettingLocale() {
-  var opt = serviceLocator.get<LocalizationOption>();
-  var ss = serviceLocator.get<SettingStore>();
-  //watch changes
-  var entry =
-      useMemoizedStream(() => ss.watch(key: LocalizationOption.settingKey));
-  //load from store
-  var load =
-      useMemoizedFuture(() => ss.get<String>(LocalizationOption.settingKey));
-  var current = (entry.data?.value as String?) ?? load.data;
-  var locale = current == null
+  final opt = serviceLocator.get<LocalizationOption>();
+  final ss = serviceLocator.get<SettingStore>();
+
+  final current = useWatchSettingKey<String>(ss, LocalizationOption.settingKey);
+
+  final locale = current == null
       ? opt.support.first.locale
       : opt.support
           .firstWhere((element) => element.locale.languageCode == current,
@@ -28,87 +25,18 @@ Locale useSettingLocale() {
   return locale;
 }
 
-class PaginationValue<T> {
-  final ValueNotifier<int> start;
-  final ValueNotifier<int> limit;
-  final ValueNotifier<String?> sort;
-  final ValueNotifier<bool> desc;
-  final ValueNotifier<String?> search;
-  final ValueNotifier<Iterable<T>?> data;
-  final ValueNotifier<bool> cacheFlag;
-  final ValueNotifier<bool> networkOnly;
-  final ValueNotifier<bool> forceRefreshFlag;
-  final ValueNotifier<bool> isRefresh;
-  final ValueNotifier<bool> fetching;
-
-  PaginationValue(
-      {required this.start,
-      required this.limit,
-      required this.sort,
-      required this.search,
-      required this.desc,
-      required this.data,
-      required this.cacheFlag,
-      required this.networkOnly,
-      required this.forceRefreshFlag,
-      required this.isRefresh,
-      required this.fetching});
-
-  void loadMore() {
-    fetching.value = true;
-    start.value = start.value + limit.value;
-    cacheFlag.value = !cacheFlag.value;
-    isRefresh.value = false;
-  }
-
-  void refresh() {
-    // p.start.value = max(0, p.start.value - p.limit.value);
-    //refresh set start value to 0
-    fetching.value = true;
-    start.value = 0;
-    cacheFlag.value = !cacheFlag.value;
-    isRefresh.value = true;
-  }
-
-  //clear previous data and refresh
-  void forceRefresh() {
-    forceRefreshFlag.value = true;
-    //clear previous data
-    data.value = null;
-  }
-}
-
-PaginationValue<T> usePagination<T>(
-    {int initStart = 0,
-    int initLimit = 10,
-    String? initSort,
-    bool initDesc = true,
-    String? initSearch,
-    bool initNetworkOnly = false,
-    bool initFetching = false}) {
-  final start = useState(initStart);
-  final limit = useState(initLimit);
-  final sort = useState(initSort);
-  final search = useState(initSearch);
-  final desc = useState(initDesc);
-  final dataList = useState<Iterable<T>?>(null);
-  final cacheFlag = useState(true);
-  final networkOnly = useState(initNetworkOnly);
-  final forceRefreshFlag = useState(false);
-  final isRefresh = useState(false);
-  final fetching = useState(initFetching);
-  return PaginationValue<T>(
-      start: start,
-      limit: limit,
-      sort: sort,
-      search: search,
-      desc: desc,
-      data: dataList,
-      cacheFlag: cacheFlag,
-      networkOnly: networkOnly,
-      forceRefreshFlag: forceRefreshFlag,
-      isRefresh: isRefresh,
-      fetching: fetching);
+void useLockOrientation() {
+  useEffect(() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    return () {
+      SystemChrome.setPreferredOrientations([
+        ...DeviceOrientation.values,
+      ]);
+    };
+  });
 }
 
 void useRefreshablePage(RefreshFunc refreshFunc) {
@@ -177,50 +105,3 @@ MainMenuState useMainMenuState(WidgetRef ref) {
   return MainMenuState(ref: ref, menus: menus);
 }
 
-class TokenPaginationValue<TData, TParams> extends ChangeNotifier {
-  int _limit = 10;
-  String? _nextAfterPageToken;
-  String? _nextBeforePageToken;
-  Iterable<TData>? _data;
-  TParams? _params;
-
-  TokenPaginationValue({int limit = 10}) {
-    this._limit = limit;
-  }
-
-  int get limit => _limit;
-  set limit(int v) {
-    _limit = v;
-    notifyListeners();
-  }
-
-  String? get nextAfterPageToken => _nextAfterPageToken;
-  String? get nextBeforePageToken => _nextBeforePageToken;
-  TParams? get params => _params;
-  Iterable<TData>? get data => _data;
-
-  setParams(TParams? v) {
-    _params = v;
-    notifyListeners();
-  }
-
-  clearToken() {
-    _nextAfterPageToken = _nextBeforePageToken = null;
-    notifyListeners();
-  }
-
-  clearData() {
-    _data = [];
-    notifyListeners();
-  }
-
-  updateResult(
-      {String? nextAfterPageToken,
-      String? nextBeforePageToken,
-      Iterable<TData>? data}) {
-    _nextAfterPageToken = nextAfterPageToken;
-    _nextBeforePageToken = nextBeforePageToken;
-    _data = data;
-    notifyListeners();
-  }
-}

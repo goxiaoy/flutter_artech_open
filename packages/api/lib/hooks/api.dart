@@ -1,7 +1,7 @@
+import 'package:artech_api/stream_provider.dart';
 import 'package:artech_core/core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:artech_api/stream_provider.dart';
 
 AsyncSnapshot<T?> useMemoizedStreamProvider<T>(
     StreamProvider<T>? Function() streamProviderBuilder,

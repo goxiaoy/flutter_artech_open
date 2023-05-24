@@ -8,14 +8,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:artech_core/core.dart';
 
-class TokenPaginationValue<TData, TParams> extends ChangeNotifier {
+class PaginationValue<TData, TParams> extends ChangeNotifier {
   int _limit = 10;
-  String? _nextAfterPageToken;
-  String? _nextBeforePageToken;
+  int _currentPage = 0;
   Iterable<TData>? _data;
   TParams? _params;
 
-  TokenPaginationValue({int limit = 10}) {
+  PaginationValue({int limit = 10}) {
     this._limit = limit;
   }
 
@@ -25,8 +24,7 @@ class TokenPaginationValue<TData, TParams> extends ChangeNotifier {
     notifyListeners();
   }
 
-  String? get nextAfterPageToken => _nextAfterPageToken;
-  String? get nextBeforePageToken => _nextBeforePageToken;
+  int? get currentPage => _currentPage;
   TParams? get params => _params;
   Iterable<TData>? get data => _data;
 
@@ -36,7 +34,7 @@ class TokenPaginationValue<TData, TParams> extends ChangeNotifier {
   }
 
   clearState() {
-    _nextAfterPageToken = _nextBeforePageToken = null;
+    _currentPage = 0;
     notifyListeners();
   }
 
@@ -45,37 +43,32 @@ class TokenPaginationValue<TData, TParams> extends ChangeNotifier {
     notifyListeners();
   }
 
-  updateResult(
-      {String? nextAfterPageToken,
-      String? nextBeforePageToken,
-      Iterable<TData>? data}) {
-    _nextAfterPageToken = nextAfterPageToken;
-    _nextBeforePageToken = nextBeforePageToken;
+  updateResult({Iterable<TData>? data}) {
+    _currentPage++;
     _data = data;
     notifyListeners();
   }
 }
 
-typedef TokenPaginationRequestFunc<TData, TParams>
-    = FutureOr<PaginationResult<TData>> Function(
-        TokenPaginationValue<TData, TParams> params);
+typedef PaginationRequestFunc<TData, TParams> = FutureOr<PaginationResult<TData>>
+    Function(PaginationValue<TData, TParams> params);
 
-typedef TokenPaginationBuilder<TData, TParams> = Widget Function(
-    TokenPaginationValue<TData, TParams> value);
+typedef PaginationBuilder<TData, TParams> = Widget Function(
+    PaginationValue<TData, TParams> value);
 
-class TokenPaginationWidget<TData, TParams> extends StatefulHookConsumerWidget {
+class PaginationWidget<TData, TParams> extends StatefulHookConsumerWidget {
   final int limit;
 
-  final TokenPaginationRequestFunc<TData, TParams> request;
+  final PaginationRequestFunc<TData, TParams> request;
 
   final bool enablePullDown;
   final bool enablePullUp;
   final bool initialRefresh;
   final bool preserveStateOnRefresh;
 
-  final TokenPaginationBuilder<TData, TParams> builder;
+  final PaginationBuilder<TData, TParams> builder;
 
-  TokenPaginationWidget(
+  PaginationWidget(
       {required this.request,
       required this.builder,
       this.limit = 10,
@@ -86,32 +79,30 @@ class TokenPaginationWidget<TData, TParams> extends StatefulHookConsumerWidget {
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      TokenPaginationWidgetState<TData, TParams>();
+      PaginationWidgetState<TData, TParams>();
 }
 
-class TokenPaginationWidgetState<TData, TParams>
-    extends ConsumerState<TokenPaginationWidget<TData, TParams>>
+class PaginationWidgetState<TData, TParams>
+    extends ConsumerState<PaginationWidget<TData, TParams>>
     with HasNamedLogger {
-  late TokenPaginationValue<TData, TParams> tokenPaginationValue =
-      TokenPaginationValue<TData, TParams>(limit: widget.limit);
+  late PaginationValue<TData, TParams> paginationValue =
+      PaginationValue<TData, TParams>(limit: widget.limit);
 
   final RefreshController controller = RefreshController(initialRefresh: false);
 
   Future loadAfterMore() async {
     try {
-      final ret = await widget.request(tokenPaginationValue);
+      final ret = await widget.request(paginationValue);
 
-      tokenPaginationValue.updateResult(
-          nextAfterPageToken: ret.nextAfterPageToken,
-          nextBeforePageToken: ret.nextBeforePageToken,
+      paginationValue.updateResult(
           //append data
-          data: [...tokenPaginationValue.data ?? [], ...ret.items]);
+          data: [...paginationValue.data ?? [], ...ret.items]);
       controller.loadComplete();
       if (ret.totalSize != null &&
-          ((tokenPaginationValue.data?.length ?? 0) >= ret.totalSize!)) {
+          ((paginationValue.data?.length ?? 0) >= ret.totalSize!)) {
         controller.loadNoData();
       }
-      if (ret.items.length < tokenPaginationValue.limit) {
+      if (ret.items.length < paginationValue.limit) {
         controller.loadNoData();
       }
     } catch (e) {
@@ -131,18 +122,15 @@ class TokenPaginationWidgetState<TData, TParams>
   Future refresh() async {
     //clear data
     try {
-      tokenPaginationValue.clearState();
+      paginationValue.clearState();
       if (!widget.preserveStateOnRefresh) {
-        tokenPaginationValue.clearData();
+        paginationValue.clearData();
       }
-      final ret = await widget.request(tokenPaginationValue);
+      final ret = await widget.request(paginationValue);
 
-      tokenPaginationValue.updateResult(
-          nextAfterPageToken: ret.nextAfterPageToken,
-          nextBeforePageToken: ret.nextBeforePageToken,
-          data: ret.items);
+      paginationValue.updateResult(data: ret.items);
       controller.refreshCompleted();
-      if (ret.items.length < tokenPaginationValue.limit) {
+      if (ret.items.length < paginationValue.limit) {
         controller.loadNoData();
       }
     } catch (e) {
@@ -153,7 +141,7 @@ class TokenPaginationWidgetState<TData, TParams>
 
   @override
   Widget build(BuildContext context) {
-    final token = useListenable(tokenPaginationValue);
+    final token = useListenable(paginationValue);
     useEffect(() {
       token.limit = widget.limit;
       return null;
@@ -172,10 +160,10 @@ class TokenPaginationWidgetState<TData, TParams>
       onLoading: loadAfterMore,
       onRefresh: refresh,
       // listBuilder call has not state info, null data will cause problems!!!-Charles
-      child: widget.builder(tokenPaginationValue),
+      child: widget.builder(paginationValue),
     );
   }
 
   @override
-  String get loggerName => "TokenPaginationWidgetState";
+  String get loggerName => "PaginationWidgetState";
 }
