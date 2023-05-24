@@ -10,26 +10,32 @@ class RefreshablePage extends StatefulWidget {
   /// else it will put child into SliverToBoxAdapter and add footer and header
   final Widget? child;
 
-  const RefreshablePage({Key? key, this.child}) : super(key: key);
+  final RefreshController? controller;
+
+  const RefreshablePage({Key? key, this.child, this.controller})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => RefreshablePageState();
 
-  static RefreshablePageMixin? of(BuildContext context) {
-    return context.findAncestorStateOfType<RefreshablePageMixin>();
+  static RefreshablePageState? of(BuildContext context) {
+    return context.findAncestorStateOfType<RefreshablePageState>();
   }
 }
 
-class RefreshablePageState extends State<RefreshablePage>
-    with RefreshablePageMixin<RefreshablePage> {
+class RefreshablePageState extends State<RefreshablePage> {
+  late RefreshController _controller;
+
+  @override
+  void initState() {
+    _controller = widget.controller ?? RefreshController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return buildRefreshWidget(context, widget.child!);
   }
-}
-
-mixin RefreshablePageMixin<T extends StatefulWidget> on State<T> {
-  final RefreshController _controller = RefreshController();
 
   final List<RefreshFunc> _refreshFuncs = [];
 
