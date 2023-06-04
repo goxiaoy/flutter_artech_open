@@ -1,5 +1,0 @@
-# melos_managed_dependency_overrides: artech_core,intl
-dependency_overrides:
-  artech_core:
-    path: ..\\core
-  intl: ^0.18.0
