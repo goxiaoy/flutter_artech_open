@@ -153,7 +153,7 @@ class UIKitModule extends AppSubModuleBase {
       widget: (context) {
         var languageOpt = services.get<LocalizationOption>();
         var current = Localizations.localeOf(context);
-        return SettingsTile(
+        return SettingsTile.navigation(
           title: Text(S.of(context).language),
           value: Text(languageOpt.support
                   .firstWhereOrNull((element) => element.locale == current)

@@ -95,7 +95,6 @@ class ArtechAppState extends State<ArtechApp> with HasNamedLogger {
     final _locale = settingLocale != null
         ? Locale(settingLocale)
         : (opt.defaultLocale ?? widget.defaultLocale);
-
     return ArtechDevicePreview(
       locale: _locale,
       builder: (context, locale, builder) => MaterialApp(

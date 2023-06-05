@@ -34,18 +34,6 @@ mixin AppModuleMixin {
   //dispose services here
   Future<void> onApplicationQuit() async {}
 
-  // void onModuleEnter() {
-  //   services.pushNewScope(scopeName: name, dispose: disposeScopeServices);
-  //   configureScopeServices();
-  // }
-
-  //register get_it scope services here
-  void configureScopeServices() {}
-  void disposeScopeServices() {}
-
-  // void onModuleExit() {
-  //   services.popScopesTill(name);
-  // }
   TransitionBuilder innerBuilder() {
     return (context, child) {
       assert(child != null);
