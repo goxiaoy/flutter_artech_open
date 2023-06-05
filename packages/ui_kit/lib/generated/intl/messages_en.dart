@@ -51,6 +51,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "clickToSort":
             MessageLookupByLibrary.simpleMessage("Click to select sort field"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
+        "completeLoad": MessageLookupByLibrary.simpleMessage("Load done"),
+        "completeRefresh": MessageLookupByLibrary.simpleMessage("Refresh done"),
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
         "connecting": MessageLookupByLibrary.simpleMessage("Connecting..."),
         "content": MessageLookupByLibrary.simpleMessage("Content"),
@@ -94,6 +96,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "language": MessageLookupByLibrary.simpleMessage("Language"),
         "lastName": MessageLookupByLibrary.simpleMessage("Last name"),
         "launchWeb": MessageLookupByLibrary.simpleMessage("Launch"),
+        "loadFailed": MessageLookupByLibrary.simpleMessage("Load failed"),
+        "loadFinish": MessageLookupByLibrary.simpleMessage("Load completed"),
+        "loadMore": MessageLookupByLibrary.simpleMessage("LoadMore"),
+        "loaded": MessageLookupByLibrary.simpleMessage("Load completed"),
+        "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "locationSettings":
             MessageLookupByLibrary.simpleMessage("Location Settings"),
         "lostConnectivity":
@@ -104,6 +111,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mobilePhone": MessageLookupByLibrary.simpleMessage("Mobile"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "noData": MessageLookupByLibrary.simpleMessage("No Data"),
+        "noMore": MessageLookupByLibrary.simpleMessage("No more"),
         "offLine": MessageLookupByLibrary.simpleMessage("Offline"),
         "ok": MessageLookupByLibrary.simpleMessage("Ok"),
         "online": MessageLookupByLibrary.simpleMessage("Online"),
@@ -112,6 +120,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "photoPicker": MessageLookupByLibrary.simpleMessage("Photo Picker"),
         "postCode": MessageLookupByLibrary.simpleMessage("Post Code"),
         "publish_at": MessageLookupByLibrary.simpleMessage("Publish time"),
+        "pullToRefresh":
+            MessageLookupByLibrary.simpleMessage("Pull to refresh"),
+        "pushToLoad": MessageLookupByLibrary.simpleMessage("Push to load"),
+        "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
+        "refreshFailed": MessageLookupByLibrary.simpleMessage("Refresh failed"),
+        "refreshFinish":
+            MessageLookupByLibrary.simpleMessage("Refresh completed"),
+        "refreshed": MessageLookupByLibrary.simpleMessage("Refresh completed"),
+        "refreshing": MessageLookupByLibrary.simpleMessage("Refreshing..."),
+        "releaseToLoad":
+            MessageLookupByLibrary.simpleMessage("Release to load"),
+        "releaseToRefresh":
+            MessageLookupByLibrary.simpleMessage("Release to refresh"),
         "remove": MessageLookupByLibrary.simpleMessage("Remove"),
         "restoreMessage": MessageLookupByLibrary.simpleMessage(
             "Restore will clean all your app settings,cashes and will restart the app."),
@@ -139,6 +160,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "success": MessageLookupByLibrary.simpleMessage("Success"),
         "systemSettings": MessageLookupByLibrary.simpleMessage("System"),
         "title": MessageLookupByLibrary.simpleMessage("Title"),
+        "updateAt": MessageLookupByLibrary.simpleMessage("Update at %T"),
         "updatedAt": MessageLookupByLibrary.simpleMessage("Updated time"),
         "userAvatar": MessageLookupByLibrary.simpleMessage("User Avatar"),
         "userName": MessageLookupByLibrary.simpleMessage("Username"),

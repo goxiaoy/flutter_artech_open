@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:artech_ui_kit/hooks/hooks.dart';
 import 'package:artech_ui_kit/pagination_result.dart';
+import 'package:artech_ui_kit/provider/easy_refresh.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:artech_core/core.dart';
 
 class TokenPaginationValue<TData, TParams> extends ChangeNotifier {
@@ -95,7 +96,8 @@ class TokenPaginationWidgetState<TData, TParams>
   late TokenPaginationValue<TData, TParams> tokenPaginationValue =
       TokenPaginationValue<TData, TParams>(limit: widget.limit);
 
-  final RefreshController controller = RefreshController(initialRefresh: false);
+  final EasyRefreshController controller = EasyRefreshController(
+      controlFinishLoad: true, controlFinishRefresh: true);
 
   Future loadAfterMore() async {
     try {
@@ -106,23 +108,23 @@ class TokenPaginationWidgetState<TData, TParams>
           nextBeforePageToken: ret.nextBeforePageToken,
           //append data
           data: [...tokenPaginationValue.data ?? [], ...ret.items]);
-      controller.loadComplete();
+      controller.finishLoad();
       if (ret.totalSize != null &&
           ((tokenPaginationValue.data?.length ?? 0) >= ret.totalSize!)) {
-        controller.loadNoData();
+        controller.finishLoad(IndicatorResult.noMore);
       }
       if (ret.items.length < tokenPaginationValue.limit) {
-        controller.loadNoData();
+        controller.finishLoad(IndicatorResult.noMore);
       }
     } catch (e) {
       logger.severe(e);
-      controller.loadFailed();
+      controller.finishLoad(IndicatorResult.fail);
     }
   }
 
   Future forceRefresh() async {
     if (widget.enablePullDown) {
-      controller.requestRefresh();
+      await controller.callRefresh();
     } else {
       await refresh();
     }
@@ -141,13 +143,13 @@ class TokenPaginationWidgetState<TData, TParams>
           nextAfterPageToken: ret.nextAfterPageToken,
           nextBeforePageToken: ret.nextBeforePageToken,
           data: ret.items);
-      controller.refreshCompleted();
+      controller.finishRefresh();
       if (ret.items.length < tokenPaginationValue.limit) {
-        controller.loadNoData();
+        controller.finishRefresh(IndicatorResult.noMore);
       }
     } catch (e) {
       logger.severe(e);
-      controller.refreshFailed();
+      controller.finishRefresh(IndicatorResult.fail);
     }
   }
 
@@ -164,13 +166,14 @@ class TokenPaginationWidgetState<TData, TParams>
       }
     }, []);
     useRefreshablePage(forceRefresh);
-
-    return SmartRefresher(
-      enablePullDown: widget.enablePullDown,
-      enablePullUp: widget.enablePullUp,
+    final cfg = ref.watch(easyRefreshConfigProvider);
+    return EasyRefresh(
+      refreshOnStart: widget.initialRefresh,
+      header: cfg.header?.call(context),
+      footer: cfg.footer?.call(context),
       controller: controller,
-      onLoading: loadAfterMore,
-      onRefresh: refresh,
+      onLoad: widget.enablePullUp ? loadAfterMore : null,
+      onRefresh: widget.enablePullDown ? refresh : null,
       // listBuilder call has not state info, null data will cause problems!!!-Charles
       child: widget.builder(tokenPaginationValue),
     );

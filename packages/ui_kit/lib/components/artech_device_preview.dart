@@ -17,6 +17,7 @@ class ArtechDevicePreview extends HookWidget {
         !(View.of(context).physicalSize.width /
                 View.of(context).devicePixelRatio <
             600.0);
+
     return DevicePreview(
         enabled: enable,
         availableLocales:
@@ -28,7 +29,9 @@ class ArtechDevicePreview extends HookWidget {
         builder: (context) {
           return builder(
               context,
-              enable ? DevicePreview.locale(context) : locale,
+              enable && DevicePreview.isEnabled(context)
+                  ? DevicePreview.locale(context)
+                  : locale,
               DevicePreview.appBuilder);
         });
   }
