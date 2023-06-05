@@ -119,26 +119,26 @@ RefreshableAsyncSnapshot<T?> useMemoizedRefreshableFuture<T>(
       isRefreshing: isRefreshing.value);
 }
 
-T? useSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
+T? useSettingKey<T>(SettingStore ss, String key, [T? defaultValue]) {
   final s = useMemoizedFuture(
-      () => uss
+      () => ss
               .get<T?>(key, defaultValue: defaultValue)
               .catchError((Object e, StackTrace stackTrace) {
             _logger.severe(e, e, stackTrace);
             throw e;
           }),
-      keys: [uss, key, defaultValue]);
+      keys: [ss, key, defaultValue]);
   return s.data;
 }
 
-T? useWatchSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
+T? useWatchSettingKey<T>(SettingStore ss, String key, [T? defaultValue]) {
   final res = useState<T?>(defaultValue);
-  late StreamSubscription<KeyChangeEvent> ss;
+  late StreamSubscription<KeyChangeEvent> subs;
   final mounted = useIsMounted();
   useEffect(() {
     //clear previous state
     res.value = defaultValue;
-    ss = uss.watch(key: key).listen((event) {
+    subs = ss.watch(key: key).listen((event) {
       if (event.isDelete) {
         res.value = null;
       } else {
@@ -146,19 +146,19 @@ T? useWatchSettingKey<T>(SettingStore uss, String key, [T? defaultValue]) {
       }
     });
     return () {
-      ss.cancel();
+      subs.cancel();
     };
-  }, [uss, key, defaultValue]);
+  }, [ss, key, defaultValue]);
   useMemoizedFuture(() async {
     try {
-      await uss.get<T?>(key, defaultValue: defaultValue).then((value) {
+      await ss.get<T?>(key, defaultValue: defaultValue).then((value) {
         if (mounted()) {
           res.value = value;
         }
       });
     } catch (e, s) {
-      _logger.severe('Fail to get setting key $key from store $uss', e, s);
+      _logger.severe('Fail to get setting key $key from store $ss', e, s);
     }
-  }, keys: [uss, key, defaultValue]);
+  }, keys: [ss, key, defaultValue]);
   return res.value;
 }

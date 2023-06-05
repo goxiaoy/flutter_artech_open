@@ -1,10 +1,9 @@
-import 'dart:async';
-
 import 'package:artech_core/core.dart';
 import 'package:artech_ui_kit/generated/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class LanguageListTile extends StatefulWidget {
+class LanguageListTile extends StatefulHookWidget {
   const LanguageListTile({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
@@ -12,45 +11,14 @@ class LanguageListTile extends StatefulWidget {
   }
 }
 
-class _LanguageListTileState extends State<LanguageListTile>
-    with MixinSettingState, ServiceGetter {
-  String? _language;
-  late StreamSubscription<KeyChangeEvent> _languageSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-    _languageSubscription =
-        settingStore.watch(key: LocalizationOption.settingKey).listen((event) {
-      if (mounted) {
-        setState(() {
-          _language = event.value;
-        });
-      }
-    });
-    settingStore.get<String>(LocalizationOption.settingKey).then((value) {
-      if (mounted) {
-        if (value == null) {
-          final opt = services.get<LocalizationOption>();
-          _language = opt.defaultLocale!.languageCode;
-        } else {
-          setState(() {
-            _language = value;
-          });
-        }
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _languageSubscription.cancel();
-    super.dispose();
-  }
-
+class _LanguageListTileState extends State<LanguageListTile> {
   @override
   Widget build(BuildContext context) {
-    final localOpt = services.get<LocalizationOption>();
+    final localOpt = serviceLocator.get<LocalizationOption>();
+
+    final _language = useWatchSettingKey<String>(
+        serviceLocator.get<SettingStore>(), LocalizationOption.settingKey);
+
     return _language != null
         ? PopupMenuButton<Locale>(
             itemBuilder: (BuildContext context) => localOpt.support
@@ -73,8 +41,9 @@ class _LanguageListTileState extends State<LanguageListTile>
             //value: locale,
             onSelected: (Locale value) {
               if (value.languageCode != _language) {
-                settingStore.set(
-                    LocalizationOption.settingKey, value.languageCode);
+                serviceLocator
+                    .get<SettingStore>()
+                    .set(LocalizationOption.settingKey, value.languageCode);
               }
             },
           )

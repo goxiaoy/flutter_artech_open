@@ -5,30 +5,24 @@ import 'package:artech_ui_kit/generated/l10n.dart';
 import 'package:artech_ui_kit/ui_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_settings_ui/src/colors.dart';
+import 'package:settings_ui/settings_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
-
-export 'package:restart_app/restart_app.dart';
 
 class CommonSettingPage extends StatelessWidget with ServiceGetter {
   @override
   Widget build(BuildContext context) {
-    const bgColor = backgroundGray;
     TextStyle style = (Theme.of(context).textTheme.bodyLarge ?? TextStyle())
         .copyWith(color: Theme.of(context).disabledColor);
     return scaffoldBuilder(context,
         resizeToAvoidBottomInset: true,
-        backgroundColor: bgColor,
         title: Text(S.of(context).settings),
         body: SafeArea(
             child: WidthConstrainContainer(
                 padding: const EdgeInsets.only(top: 10, left: 8.0, right: 8.0),
-                decoration: new BoxDecoration(
-                  color: bgColor,
-                ),
+                decoration: new BoxDecoration(),
                 child: HookConsumer(
-                  builder: (context,ref,child) {
+                  builder: (context, ref, child) {
                     final value = ref.watch(settingMenuProvider).value;
                     final sections = value
                         .where((element) =>
@@ -55,18 +49,18 @@ class CommonSettingPage extends StatelessWidget with ServiceGetter {
                         .toList(growable: false);
                     return SettingsList(
                       shrinkWrap: true,
-                      backgroundColor: bgColor,
                       sections: [
                         if (kIsDebug)
                           SettingsSection(
-                            titleTextStyle: style,
-                            title: "Development Tools",
+                            title: Text(
+                              "Development Tools",
+                              style: style,
+                            ),
                             tiles: [
                               SettingsTile(
-                                  title: "Test Page",
+                                  title: Text("Test Page"),
                                   leading: Icon(Icons.developer_board),
                                   trailing: ForwardIcon(),
-                                  iosChevron: null,
                                   onPressed: (context) async {
                                     Navigator.of(context)
                                         .pushNamed(UIKitRoute.devTestPageRoute);
@@ -76,14 +70,16 @@ class CommonSettingPage extends StatelessWidget with ServiceGetter {
                         // Display
                         if (display.length > 0)
                           SettingsSection(
-                            title: S.of(context).displaySettings,
-                            titleTextStyle: style,
+                            title: Text(
+                              S.of(context).displaySettings,
+                              style: style,
+                            ),
                             tiles: [
                               ...display
                                   .map((e) => e.widget!(context))
-                                  .map((a) => a is AbstractTile
+                                  .map((a) => a is AbstractSettingsTile
                                       ? a
-                                      : CustomTile(child: a))
+                                      : CustomSettingsTile(child: a))
                                   .toList(growable: false),
                             ],
                           ),
@@ -96,37 +92,43 @@ class CommonSettingPage extends StatelessWidget with ServiceGetter {
                         // Users
                         if (users.length > 0)
                           SettingsSection(
-                            title: S.of(context).userSettings,
-                            titleTextStyle: style,
+                            title: Text(
+                              S.of(context).userSettings,
+                              style: style,
+                            ),
                             tiles: [
                               ...users
                                   .map((e) => e.widget!(context))
-                                  .map((a) => a is AbstractTile
+                                  .map((a) => a is AbstractSettingsTile
                                       ? a
-                                      : CustomTile(child: a))
+                                      : CustomSettingsTile(child: a))
                                   .toList(growable: false),
                             ],
                           ),
 
                         // System
                         SettingsSection(
-                          title: S.of(context).systemSettings,
-                          titleTextStyle: style,
+                          title: Text(
+                            S.of(context).systemSettings,
+                            style: style,
+                          ),
                           tiles: [
                             ...systems
                                 .map((e) => e.widget!(context))
-                                .map((a) => a is AbstractTile
+                                .map((a) => a is AbstractSettingsTile
                                     ? a
-                                    : CustomTile(child: a))
+                                    : CustomSettingsTile(child: a))
                                 .toList(growable: false),
                             SettingsTile(
-                                title: S.of(context).restoreSettings,
+                                title: Text(
+                                  S.of(context).restoreSettings,
+                                  style: style,
+                                ),
                                 leading: Icon(
                                   Icons.restore_outlined,
                                   color: Colors.red,
                                 ),
                                 trailing: ForwardIcon(),
-                                iosChevron: null,
                                 onPressed: (context) async {
                                   bool? restore =
                                       await showCupertinoModalPopup<bool>(
@@ -154,16 +156,6 @@ class CommonSettingPage extends StatelessWidget with ServiceGetter {
                                           (await getTemporaryDirectory()).path;
                                       Directory(temp).delete(recursive: true);
                                     }
-
-                                    // Restart
-                                    if (UniversalPlatform.isAndroid) {
-                                      // Not working my debug version
-                                      // TODO:
-                                      Restart.restartApp();
-                                    }
-                                    if (UniversalPlatform.isIOS)
-                                      // TODO:
-                                      exit(0); // iOS fina non packages
                                   }
                                 })
                           ],
@@ -171,14 +163,16 @@ class CommonSettingPage extends StatelessWidget with ServiceGetter {
 
                         if (helps.length > 0)
                           SettingsSection(
-                            titleTextStyle: style,
-                            title: S.of(context).helper,
+                            title: Text(
+                              S.of(context).helper,
+                              style: style,
+                            ),
                             tiles: [
                               ...helps
                                   .map((e) => e.widget!(context))
-                                  .map((a) => a is AbstractTile
+                                  .map((a) => a is AbstractSettingsTile
                                       ? a
-                                      : CustomTile(child: a))
+                                      : CustomSettingsTile(child: a))
                                   .toList(growable: false),
                             ],
                           ),

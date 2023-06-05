@@ -1,9 +1,8 @@
-import 'dart:async';
-
 import 'package:artech_core/core.dart';
 import 'package:artech_ui_kit/ui_kit.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 class MyRouteObserver<R extends Route<dynamic>> extends RouteObserver<R>
     with HasNamedLogger {
@@ -48,8 +47,7 @@ class MyRouteObserver<R extends Route<dynamic>> extends RouteObserver<R>
   }
 }
 
-// T is MeData extends User
-class ArtechApp extends StatefulWidget {
+class ArtechApp extends StatefulHookWidget {
   final Widget? home;
   final String? initialRoute;
   final ThemeData? themeData;
@@ -75,58 +73,29 @@ class ArtechApp extends StatefulWidget {
   }
 }
 
-class ArtechAppState extends State<ArtechApp>
-    with MixinSettingState, HasNamedLogger, ServiceGetter {
-  Locale? _locale;
-
-  Locale? get locale => _locale;
-
+class ArtechAppState extends State<ArtechApp> with HasNamedLogger {
   final RouteObserver<Route<dynamic>> routeObserver = MyRouteObserver();
-  late StreamSubscription<KeyChangeEvent> _languageSubscription;
 
   Locale get defaultLocale {
-    final opt = services.get<LocalizationOption>();
+    final opt = serviceLocator.get<LocalizationOption>();
     return opt.defaultLocale ?? widget.defaultLocale;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _languageSubscription =
-        settingStore.watch(key: LocalizationOption.settingKey).listen((event) {
-      if (mounted) {
-        setState(() {
-          _locale = event.value != null ? Locale(event.value) : defaultLocale;
-        });
-      }
-    });
-  }
-
-  @override
-  Future<void> onSharedPreferenceInitialized() async {
-    var languageCode =
-        await settingStore.get<String>(LocalizationOption.settingKey);
-
-    final opt = services.get<LocalizationOption>();
-    _locale = languageCode != null
-        ? Locale(languageCode)
-        : (opt.defaultLocale ?? widget.defaultLocale);
   }
 
   @override
   String get loggerName => 'ArtechAppState';
 
   @override
-  void dispose() {
-    _languageSubscription.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final opt = services.get<LocalizationOption>();
+    final opt = serviceLocator.get<LocalizationOption>();
     final initRoute =
         widget.home != null ? null : widget.initialRoute ?? homeRoute;
+
+    final settingLocale = useWatchSettingKey<String>(
+        serviceLocator.get<SettingStore>(), LocalizationOption.settingKey);
+    final _locale = settingLocale != null
+        ? Locale(settingLocale)
+        : (opt.defaultLocale ?? widget.defaultLocale);
+
     return ArtechDevicePreview(
       locale: _locale,
       builder: (context, locale, builder) => MaterialApp(

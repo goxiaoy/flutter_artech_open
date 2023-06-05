@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+import 'package:settings_ui/settings_ui.dart';
 
 import 'multi_localization_delegate.dart';
 import 'timeago_extension.dart';
@@ -116,7 +117,7 @@ class UIKitModule extends AppSubModuleBase {
         priority: settingMenuSystemPriority - 50,
         label: (context) => S.of(context).appSettings,
         widget: (context) => SettingsTile(
-              title: S.of(context).appSettings,
+              title: Text(S.of(context).appSettings),
               leading: Icon(
                 Icons.app_settings_alt_outlined,
                 color: Colors.blue.shade700,
@@ -133,7 +134,7 @@ class UIKitModule extends AppSubModuleBase {
         priority: settingMenuSystemPriority - 1,
         label: (context) => S.of(context).locationSettings,
         widget: (context) => SettingsTile(
-              title: S.of(context).locationSettings,
+              title: Text(S.of(context).locationSettings),
               leading: Icon(
                 Icons.gps_fixed_outlined,
                 color: Colors.red.shade700,
@@ -153,17 +154,16 @@ class UIKitModule extends AppSubModuleBase {
         var languageOpt = services.get<LocalizationOption>();
         var current = Localizations.localeOf(context);
         return SettingsTile(
-          title: S.of(context).language,
-          subtitle: languageOpt.support
+          title: Text(S.of(context).language),
+          value: Text(languageOpt.support
                   .firstWhereOrNull((element) => element.locale == current)
                   ?.textBuilder(context) ??
-              "",
+              ""),
           leading: Icon(
             Icons.language,
             color: Colors.lightBlueAccent,
           ),
           trailing: ForwardIcon(),
-          iosChevron: null,
           onPressed: (BuildContext context) async {
             Navigator.of(context)
                 .pushNamed(UIKitRoute.settingLanguagePageRoute);

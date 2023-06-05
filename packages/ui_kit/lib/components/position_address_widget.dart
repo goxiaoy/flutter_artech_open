@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:artech_core/core.dart';
 import 'package:artech_ui_kit/generated/l10n.dart';
-import 'package:artech_ui_kit/ui_kit.dart' hide Position;
+import 'package:artech_ui_kit/ui_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';

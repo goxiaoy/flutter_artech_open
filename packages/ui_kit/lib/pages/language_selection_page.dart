@@ -2,6 +2,7 @@ import 'package:artech_core/core.dart';
 import 'package:artech_ui_kit/generated/l10n.dart';
 import 'package:artech_ui_kit/ui_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:settings_ui/settings_ui.dart';
 
 class LanguageSelectionPage extends StatefulWidget {
   @override
@@ -22,13 +23,12 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
               SettingsSection(
                   tiles: opt.support
                       .map((e) => SettingsTile(
-                            title: e.textBuilder(context),
+                            title: Text(e.textBuilder(context)),
                             trailing: trailingWidget(e.locale),
                             onPressed: (_) async {
                               changeLanguage(e.locale);
                               Navigator.of(context).pop();
                             },
-                            iosChevron: null,
                           ))
                       .toList()),
             ],

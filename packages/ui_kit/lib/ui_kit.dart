@@ -11,17 +11,17 @@ import 'menu/menu.dart';
 export 'package:app_settings/app_settings.dart';
 export 'package:artech_ui_kit/data/address_data.dart';
 export 'package:artech_ui_kit/data/position_data.dart';
-export 'package:csc_picker/csc_picker.dart';
+
 export 'package:cupertino_icons/cupertino_icons.dart';
 export 'package:email_validator/email_validator.dart';
 export 'package:fluro/fluro.dart';
 export 'package:flutter_form_builder/flutter_form_builder.dart';
-export 'package:flutter_settings_ui/flutter_settings_ui.dart';
+
 export 'package:flutter_slidable/flutter_slidable.dart';
-export 'package:flutter_spinbox/flutter_spinbox.dart';
+
 export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 export 'package:form_builder_validators/form_builder_validators.dart';
-export 'package:sprintf/sprintf.dart';
+
 export 'package:webview_flutter/webview_flutter.dart';
 
 export 'artech_app.dart';
@@ -46,6 +46,7 @@ export 'provider/provider.dart';
 export 'routes.dart';
 export 'ui_kit_module.dart';
 export 'pagination_result.dart';
+export 'responsive.dart';
 
 const int settingMenuDisplayPriority = 800;
 const int settingMenuUserPriority = 600;
@@ -87,5 +88,34 @@ extension RouteParamsExtension<T> on Map<String, List<T>> {
       return null;
     }
     return v.firstWhereOrNull((element) => true);
+  }
+}
+
+extension Neumorphism on Widget {
+  Widget addNeumorphism({
+    double borderRadius = 10.0,
+    Offset offset = const Offset(5, 5),
+    double blurRadius = 10,
+    Color topShadowColor = Colors.white60,
+    Color bottomShadowColor = const Color(0x26234395),
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+        boxShadow: [
+          BoxShadow(
+            offset: offset,
+            blurRadius: blurRadius,
+            color: bottomShadowColor,
+          ),
+          BoxShadow(
+            offset: Offset(-offset.dx, -offset.dx),
+            blurRadius: blurRadius,
+            color: topShadowColor,
+          ),
+        ],
+      ),
+      child: this,
+    );
   }
 }

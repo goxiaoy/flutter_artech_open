@@ -68,6 +68,7 @@ dependencies:
   email_validator: ^2.1.17
   string_validator: ^1.0.0
   image_picker: ^0.8.4+9
+  csc_picker: ^0.2.6
 
   responsive_builder: ^0.7.0
 
