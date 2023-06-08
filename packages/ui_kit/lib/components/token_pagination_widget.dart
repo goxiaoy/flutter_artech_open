@@ -87,69 +87,104 @@ class TokenPaginationWidget<TData, TParams> extends StatefulHookConsumerWidget {
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      TokenPaginationWidgetState<TData, TParams>();
+      _TokenPaginationWidgetState<TData, TParams>();
 }
 
-class TokenPaginationWidgetState<TData, TParams>
+class _TokenPaginationWidgetState<TData, TParams>
     extends ConsumerState<TokenPaginationWidget<TData, TParams>>
-    with HasNamedLogger {
+    with
+        HasNamedLogger,
+        TokenPaginationWidgetState<TData, TParams,
+            TokenPaginationWidget<TData, TParams>> {
+  int get limit => widget.limit;
+  TokenPaginationRequestFunc<TData, TParams> get request => widget.request;
+  bool get enablePullUp => widget.enablePullUp;
+  bool get enablePullDown => widget.enablePullDown;
+  bool get preserveStateOnRefresh => widget.preserveStateOnRefresh;
+  bool get initialRefresh => widget.initialRefresh;
+  TokenPaginationBuilder<TData, TParams> get builder => widget.builder;
+
+  @override
+  String get loggerName => "_TokenPaginationWidgetState";
+
+  @override
+  void initState() {
+    pageController = EasyRefreshController(
+        controlFinishLoad: true, controlFinishRefresh: true);
+    super.initState();
+  }
+}
+
+mixin TokenPaginationWidgetState<TData, TParams, T extends StatefulWidget>
+    on State<T>, HasNamedLogger {
   late TokenPaginationValue<TData, TParams> tokenPaginationValue =
-      TokenPaginationValue<TData, TParams>(limit: widget.limit);
+      TokenPaginationValue<TData, TParams>(limit: limit);
 
-  final EasyRefreshController controller = EasyRefreshController(
-      controlFinishLoad: true, controlFinishRefresh: true);
+  late EasyRefreshController pageController;
 
-  Future loadAfterMore() async {
+  int get limit => 10;
+  TokenPaginationRequestFunc<TData, TParams> get request;
+  bool get enablePullUp => true;
+  bool get enablePullDown => true;
+  bool get preserveStateOnRefresh => true;
+  bool get initialRefresh => true;
+
+  TokenPaginationBuilder<TData, TParams>? get builder => null;
+
+  Future onLoad() async {
     try {
-      final ret = await widget.request(tokenPaginationValue);
-
+      final ret = await request(tokenPaginationValue);
       tokenPaginationValue.updateResult(
           nextAfterPageToken: ret.nextAfterPageToken,
           nextBeforePageToken: ret.nextBeforePageToken,
           //append data
           data: [...tokenPaginationValue.data ?? [], ...ret.items]);
-      controller.finishLoad();
+
       if (ret.totalSize != null &&
           ((tokenPaginationValue.data?.length ?? 0) >= ret.totalSize!)) {
-        controller.finishLoad(IndicatorResult.noMore);
-      }
-      if (ret.items.length < tokenPaginationValue.limit) {
-        controller.finishLoad(IndicatorResult.noMore);
+        pageController.finishLoad(IndicatorResult.noMore);
+      } else if (ret.items.length < tokenPaginationValue.limit) {
+        pageController.finishLoad(IndicatorResult.noMore);
+      } else {
+        pageController.finishLoad();
       }
     } catch (e) {
       logger.severe(e);
-      controller.finishLoad(IndicatorResult.fail);
+      pageController.finishLoad(IndicatorResult.fail);
     }
   }
 
   Future forceRefresh() async {
-    if (widget.enablePullDown) {
-      await controller.callRefresh();
+    if (enablePullDown) {
+      await pageController.callRefresh();
     } else {
-      await refresh();
+      await onRefresh();
     }
   }
 
-  Future refresh() async {
+  Future onRefresh() async {
     //clear data
     try {
       tokenPaginationValue.clearState();
-      if (!widget.preserveStateOnRefresh) {
+      if (!preserveStateOnRefresh) {
         tokenPaginationValue.clearData();
       }
-      final ret = await widget.request(tokenPaginationValue);
+      final ret = await request(tokenPaginationValue);
 
       tokenPaginationValue.updateResult(
           nextAfterPageToken: ret.nextAfterPageToken,
           nextBeforePageToken: ret.nextBeforePageToken,
           data: ret.items);
-      controller.finishRefresh();
-      if (ret.items.length < tokenPaginationValue.limit) {
-        controller.finishRefresh(IndicatorResult.noMore);
+      pageController.finishRefresh();
+       if (ret.totalSize != null &&
+          ((tokenPaginationValue.data?.length ?? 0) >= ret.totalSize!)) {
+        pageController.finishLoad(IndicatorResult.noMore);
+      } else if (ret.items.length < tokenPaginationValue.limit) {
+        pageController.finishLoad(IndicatorResult.noMore);
       }
     } catch (e) {
       logger.severe(e);
-      controller.finishRefresh(IndicatorResult.fail);
+      pageController.finishRefresh(IndicatorResult.fail);
     }
   }
 
@@ -157,28 +192,29 @@ class TokenPaginationWidgetState<TData, TParams>
   Widget build(BuildContext context) {
     final token = useListenable(tokenPaginationValue);
     useEffect(() {
-      token.limit = widget.limit;
+      token.limit = limit;
       return null;
-    }, [widget.limit]);
+    }, [limit]);
     useMemoized(() {
-      if (widget.initialRefresh) {
-        Future.microtask(refresh);
+      if (initialRefresh) {
+        Future.microtask(onRefresh);
       }
-    }, []);
+    }, [initialRefresh]);
     useRefreshablePage(forceRefresh);
-    final cfg = ref.watch(easyRefreshConfigProvider);
-    return EasyRefresh(
-      refreshOnStart: widget.initialRefresh,
-      header: cfg.header?.call(context),
-      footer: cfg.footer?.call(context),
-      controller: controller,
-      onLoad: widget.enablePullUp ? loadAfterMore : null,
-      onRefresh: widget.enablePullDown ? refresh : null,
-      // listBuilder call has not state info, null data will cause problems!!!-Charles
-      child: widget.builder(tokenPaginationValue),
+    return Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final cfg = ref.watch(easyRefreshConfigProvider);
+        return EasyRefresh(
+          refreshOnStart: initialRefresh,
+          header: cfg.header?.call(context),
+          footer: cfg.footer?.call(context),
+          controller: pageController,
+          onLoad: enablePullUp ? onLoad : null,
+          onRefresh: enablePullDown ? onRefresh : null,
+          // listBuilder call has not state info, null data will cause problems!!!-Charles
+          child: builder?.call(tokenPaginationValue),
+        );
+      },
     );
   }
-
-  @override
-  String get loggerName => "TokenPaginationWidgetState";
 }

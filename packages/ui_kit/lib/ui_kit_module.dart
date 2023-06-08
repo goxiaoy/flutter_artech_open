@@ -3,6 +3,7 @@ import 'package:artech_core/core.dart';
 import 'package:artech_ui_kit/background_location/position_test_page.dart';
 import 'package:artech_ui_kit/generated/l10n.dart';
 import 'package:artech_ui_kit/launch_service/launch_test_page.dart';
+import 'package:artech_ui_kit/pages/refreshable_page_test.dart';
 import 'package:artech_ui_kit/riverpod/riverpod.dart';
 import 'package:artech_ui_kit/ui_kit.dart';
 import 'package:collection/collection.dart';
@@ -10,7 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:settings_ui/settings_ui.dart';
-
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'multi_localization_delegate.dart';
 import 'timeago_extension.dart';
 
@@ -89,25 +90,18 @@ class UIKitModule extends AppSubModuleBase {
                     },
                   )));
       }
-    }
-  }
-
-  void _addLocationTestMenu(MenuGroup testMenu) {
-    if (kIsDebug) {
-      testMenu.addIfNotExits(MenuGroupItem('location_test_page',
+      t.addIfNotExits(MenuGroupItem('location_test_page',
           label: (_) => 'GPS position test Page',
           widget2: (_) => PositionTestPage(),
           widget: (_) => Icon(Icons.location_off_sharp)));
-    }
-  }
-
-  void _addAddressMapTest(MenuGroup testMenu) {
-    if (kIsDebug) {
-      testMenu.addIfNotExits(MenuGroupItem('address_widget_test',
+      t.addIfNotExits(MenuGroupItem('refreshable_test_page',
+          label: (_) => 'Refreshable',
+          widget2: (_) => RefreshablePageTest(),
+          widget: (_) => Icon(Icons.refresh)));
+      t.addIfNotExits(MenuGroupItem('address_widget_test',
           widget: (_) => AddressWidget(
               address: '225 W Valley Blvd, San Gabriel, CA 91776')));
     }
-    ;
   }
 
   void _addAppSettings(MenuGroup settings) {
@@ -179,20 +173,20 @@ class UIKitModule extends AppSubModuleBase {
           WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
         },
         child: MenuModifierWidget(
-              provider: testingMenuProvider,
-              child: MenuModifierWidget(
-                provider: settingMenuProvider,
-                child: child,
-                modifer: [
-                  _addLanguageSettings,
-                  if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS)
-                    _addGpsSettings,
-                  if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS)
-                    _addAppSettings
-                ],
-              ),
-              modifer: [testMenu, _addLocationTestMenu, _addAddressMapTest],
-            ));
+          provider: testingMenuProvider,
+          child: MenuModifierWidget(
+            provider: settingMenuProvider,
+            child: child,
+            modifer: [
+              _addLanguageSettings,
+              if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS)
+                _addGpsSettings,
+              if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS)
+                _addAppSettings
+            ],
+          ),
+          modifer: [testMenu],
+        ));
   }
 }
 
@@ -227,6 +221,18 @@ extension FluroRouteModuleExtension on AppModuleMixin {
 
 extension UIKitRouteExtension on UIKitModule {
   void addUIKitRoute() {
+    router.notFoundHandler = Handler(
+        handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
+      return Container(
+        child: HookBuilder(
+          builder: (BuildContext context) {
+            useDelay(
+                () => navigateTo(context, homeRoute), Duration(seconds: 2));
+            return Center(child: Text("Route Not Found"));
+          },
+        ),
+      );
+    });
     addRoute(UIKitRoute.settingPageRoute,
         handler: Handler(handlerFunc: (context, params) {
       return CommonSettingPage();

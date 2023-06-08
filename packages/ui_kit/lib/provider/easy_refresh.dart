@@ -1,7 +1,6 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:artech_ui_kit/generated/l10n.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
 class EasyRefreshConfiguration {
@@ -28,7 +27,6 @@ final easyRefreshConfigProvider = Provider<EasyRefreshConfiguration>(
       safeArea: false,
     ),
     footer: (context) => ClassicFooter(
-      position: IndicatorPosition.locator,
       dragText: S.of(context).pushToLoad,
       armedText: S.of(context).releaseToLoad,
       readyText: S.of(context).loading,

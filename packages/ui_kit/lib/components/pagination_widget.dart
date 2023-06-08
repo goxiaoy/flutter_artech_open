@@ -101,13 +101,13 @@ class PaginationWidgetState<TData, TParams>
           //append data
           data: [...paginationValue.data ?? [], ...ret.items]);
 
-      controller.finishLoad();
       if (ret.totalSize != null &&
           ((paginationValue.data?.length ?? 0) >= ret.totalSize!)) {
         controller.finishLoad(IndicatorResult.noMore);
-      }
-      if (ret.items.length < paginationValue.limit) {
+      } else if (ret.items.length < paginationValue.limit) {
         controller.finishLoad(IndicatorResult.noMore);
+      } else {
+        controller.finishLoad();
       }
     } catch (e) {
       logger.severe(e);
@@ -133,9 +133,13 @@ class PaginationWidgetState<TData, TParams>
       final ret = await widget.request(paginationValue);
 
       paginationValue.updateResult(data: ret.items);
+
       controller.finishRefresh();
-      if (ret.items.length < paginationValue.limit) {
-        controller.finishRefresh(IndicatorResult.noMore);
+      if (ret.totalSize != null &&
+          ((paginationValue.data?.length ?? 0) >= ret.totalSize!)) {
+        controller.finishLoad(IndicatorResult.noMore);
+      } else if (ret.items.length < paginationValue.limit) {
+        controller.finishLoad(IndicatorResult.noMore);
       }
     } catch (e) {
       logger.severe(e);
@@ -154,7 +158,7 @@ class PaginationWidgetState<TData, TParams>
       if (widget.initialRefresh) {
         Future.microtask(refresh);
       }
-    }, []);
+    }, [widget.initialRefresh]);
     useRefreshablePage(forceRefresh);
     final cfg = ref.watch(easyRefreshConfigProvider);
     return EasyRefresh(

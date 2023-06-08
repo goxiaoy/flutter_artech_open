@@ -28,6 +28,21 @@ AsyncSnapshot<T?> useMemoizedStream<T>(
       initialData: initialData, preserveState: preserveState);
 }
 
+void useDelay(
+  FutureOr<void> callback(),
+  Duration delay, [
+  List<Object?> keys = const <Object>[],
+]) {
+  useEffect(() {
+    final t = Timer(delay, () {
+      callback();
+    });
+    return () {
+      t.cancel();
+    };
+  }, keys);
+}
+
 void useInterval(FutureOr<void> callback(), Duration delay,
     {bool initial = false}) {
   final savedCallback = useRef(callback);

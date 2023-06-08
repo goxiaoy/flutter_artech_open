@@ -7,51 +7,61 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 typedef RefreshFunc<T> = Future<T> Function();
 
-class RefreshablePage extends ConsumerStatefulWidget {
+class RefreshablePage extends StatefulWidget {
   //If child is  extends ScrollView,It will help you get the internal slivers and add footer and header in it.
   /// else it will put child into SliverToBoxAdapter and add footer and header
-  final Widget? child;
+  final Widget child;
 
   final EasyRefreshController? controller;
 
-  const RefreshablePage({Key? key, this.child, this.controller})
+  const RefreshablePage({Key? key, required this.child, this.controller})
       : super(key: key);
 
   @override
-  ConsumerState<RefreshablePage> createState() => RefreshablePageState();
+  State<RefreshablePage> createState() => _RefreshablePageState();
 
-  static RefreshablePageState? of(BuildContext context) {
-    return context.findAncestorStateOfType<RefreshablePageState>();
+  static RefreshablePageStateMixin? of(BuildContext context) {
+    return context.findAncestorStateOfType<RefreshablePageStateMixin>();
   }
 }
 
-class RefreshablePageState extends ConsumerState<RefreshablePage> {
-  late EasyRefreshController _controller;
-
+class _RefreshablePageState extends State<RefreshablePage>
+    with RefreshablePageStateMixin {
   @override
   void initState() {
-    _controller =
+    refreshController =
         widget.controller ?? EasyRefreshController(controlFinishRefresh: true);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final cfg = ref.watch(easyRefreshConfigProvider);
-    return EasyRefresh(
-      header: cfg.header?.call(context),
-      controller: _controller,
-      onRefresh: () async {
-        try {
-          for (final f in _refreshFuncs) {
-            await f();
-          }
-          _controller.finishRefresh(IndicatorResult.success, true);
-        } catch (e) {
-          _controller.finishRefresh(IndicatorResult.fail, true);
-        }
+    return buildRefreshable(context, widget.child);
+  }
+}
+
+mixin RefreshablePageStateMixin<T extends StatefulWidget> on State<T> {
+  late EasyRefreshController refreshController;
+
+  Widget buildRefreshable(BuildContext context, Widget? child) {
+    return Consumer(
+      child: child,
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final cfg = ref.watch(easyRefreshConfigProvider);
+        return EasyRefresh(
+          header: cfg.header?.call(context),
+          controller: refreshController,
+          onRefresh: () async {
+            try {
+              callRefresh();
+              refreshController.finishRefresh(IndicatorResult.success, true);
+            } catch (e) {
+              refreshController.finishRefresh(IndicatorResult.fail, true);
+            }
+          },
+          child: child,
+        );
       },
-      child: widget.child,
     );
   }
 
@@ -64,9 +74,16 @@ class RefreshablePageState extends ConsumerState<RefreshablePage> {
     };
   }
 
+  Future callRefresh() async {
+    for (final f in _refreshFuncs) {
+      await f();
+    }
+  }
+
   ///manual call refresh
   Future refreshAll(
       {Duration? duration = const Duration(milliseconds: 200)}) async {
-    return Future.microtask(() => _controller.callRefresh(duration: duration));
+    return Future.microtask(
+        () => refreshController.callRefresh(duration: duration));
   }
 }
