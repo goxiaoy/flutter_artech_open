@@ -1,9 +1,10 @@
+import 'package:artech_ui_kit/routes.dart';
+import 'package:artech_ui_kit/ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:artech_core/core.dart';
 
 class AppBarOptions {
   bool? centerTitle;
-  // VRCA use white app bar
   bool whiteBar = false;
   // Button color, override defaults
   List<Color>? buttonGradientColors;
@@ -28,32 +29,49 @@ AppBar appBarBuilder(BuildContext context,
   final bool useCloseButton = closeButton ??
       parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
 
-  final _canPop = canPop ?? Navigator.of(context).canPop();
+  var _canPop = canPop ?? false;
+  if (Navigator.of(context).canPop()) {
+    _canPop = true;
+  } else if (ModalRoute.of(context)?.settings.name?.isNotEmpty ?? false) {
+    _canPop = true;
+  }
+  final popAction = () {
+    if (Navigator.of(context).canPop()) {
+      Navigator.pop(context);
+    } else {
+      navigateTo(context, homeRoute, replace: true);
+    }
+  };
 
+  Navigator.of(context).canPop();
+  final leadingWidget = leading != null
+      ? leading
+      : _canPop
+          ? useCloseButton
+              ? CloseButton(
+                  onPressed: onExit,
+                )
+              : IconButton(
+                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    if (onExit == null || onExit()) {
+                      popAction();
+                    }
+                  })
+          : null;
   return AppBar(
     title: title,
     automaticallyImplyLeading: automaticallyImplyLeading,
     centerTitle: options.centerTitle,
     shadowColor: shadowColor,
-    leading: leading != null
-        ? leading
-        : _canPop
-            ? useCloseButton
-                ? CloseButton(
-                    onPressed: onExit,
-                  )
-                : IconButton(
-                    tooltip:
-                        MaterialLocalizations.of(context).backButtonTooltip,
-                    icon: Icon(Icons.arrow_back_ios),
-                    onPressed: () {
-                      if (onExit == null)
-                        Navigator.pop(context);
-                      else if (onExit()) Navigator.pop(context);
-                    })
-            : Container(),
+    leading: leadingWidget,
     actions: actions,
-    elevation: elevation!=null? elevation:options.whiteBar ? 0.0 : null,
+    elevation: elevation != null
+        ? elevation
+        : options.whiteBar
+            ? 0.0
+            : null,
     backgroundColor: options.whiteBar
         ? Theme.of(context).canvasColor
         : options.whiteBar

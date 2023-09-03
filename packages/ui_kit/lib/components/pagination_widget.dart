@@ -162,7 +162,6 @@ class PaginationWidgetState<TData, TParams>
     useRefreshablePage(forceRefresh);
     final cfg = ref.watch(easyRefreshConfigProvider);
     return EasyRefresh(
-      refreshOnStart: widget.initialRefresh,
       header: cfg.header?.call(context),
       footer: cfg.footer?.call(context),
       controller: controller,

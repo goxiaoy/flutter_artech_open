@@ -27,7 +27,6 @@ export 'package:webview_flutter/webview_flutter.dart';
 export 'artech_app.dart';
 export 'background_location/background_location.dart';
 export 'background_location/position_widget.dart';
-export 'color_extension.dart';
 export 'components/components.dart';
 export 'data/gender.dart';
 export 'data/media_file_info.dart';
@@ -47,6 +46,7 @@ export 'routes.dart';
 export 'ui_kit_module.dart';
 export 'pagination_result.dart';
 export 'responsive.dart';
+export 'hex_color.dart';
 
 const int settingMenuDisplayPriority = 800;
 const int settingMenuUserPriority = 600;

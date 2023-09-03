@@ -11,3 +11,9 @@ class HexColor extends Color {
     return int.parse(hexColor, radix: 16);
   }
 }
+
+extension ColorExtension on Color {
+  String toHex() {
+    return '#${this.value.toRadixString(16)}';
+  }
+}

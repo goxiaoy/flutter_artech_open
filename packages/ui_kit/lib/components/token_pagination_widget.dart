@@ -176,7 +176,7 @@ mixin TokenPaginationWidgetState<TData, TParams, T extends StatefulWidget>
           nextBeforePageToken: ret.nextBeforePageToken,
           data: ret.items);
       pageController.finishRefresh();
-       if (ret.totalSize != null &&
+      if (ret.totalSize != null &&
           ((tokenPaginationValue.data?.length ?? 0) >= ret.totalSize!)) {
         pageController.finishLoad(IndicatorResult.noMore);
       } else if (ret.items.length < tokenPaginationValue.limit) {
@@ -205,7 +205,6 @@ mixin TokenPaginationWidgetState<TData, TParams, T extends StatefulWidget>
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         final cfg = ref.watch(easyRefreshConfigProvider);
         return EasyRefresh(
-          refreshOnStart: initialRefresh,
           header: cfg.header?.call(context),
           footer: cfg.footer?.call(context),
           controller: pageController,
